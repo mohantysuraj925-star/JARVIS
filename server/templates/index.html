@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080103">
+  <title>JARVIS by Suraj — Personal AI, Reimagined</title>
+  <style>
+    :root { color-scheme: dark; --bg:#080103; --panel:#120205; --panel2:#1a0408;
+      --border:#4a0d18; --red:#ff2a4b; --gold:#ffb703; --text:#ffe5ec; --muted:#c97d8e; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--text); background:
+      radial-gradient(ellipse at 50% 4%, #3c0714 0, transparent 42%), var(--bg);
+      font:16px/1.6 "Segoe UI", system-ui, sans-serif; }
+    a { color:inherit; text-decoration:none; }
+    .wrap { width:min(1120px, calc(100% - 40px)); margin:auto; }
+    header { position:sticky; top:0; z-index:5; border-bottom:1px solid #5a101eaa;
+      background:#080103d9; backdrop-filter:blur(18px); }
+    nav { min-height:72px; display:flex; align-items:center; justify-content:space-between; }
+    .brand { font-weight:800; letter-spacing:.16em; } .brand b { color:var(--red); }
+    .nav-links { display:flex; gap:24px; color:var(--muted); font-size:.9rem; }
+    .hero { text-align:center; padding:112px 0 92px; position:relative; overflow:hidden; }
+    .eyebrow { display:inline-flex; align-items:center; gap:9px; color:var(--gold);
+      border:1px solid #ffb70355; background:#ffb7030c; border-radius:999px;
+      padding:7px 13px; font-size:.78rem; letter-spacing:.13em; text-transform:uppercase; }
+    .pulse { width:7px; height:7px; border-radius:50%; background:var(--gold);
+      box-shadow:0 0 16px var(--gold); animation:pulse 1.8s infinite; }
+    h1 { margin:24px auto 15px; max-width:900px; font-size:clamp(2.7rem,7vw,5.5rem);
+      line-height:1.02; letter-spacing:-.055em; }
+    h1 span { color:var(--red); text-shadow:0 0 36px #ff2a4b66; }
+    .lead { color:var(--muted); max-width:660px; margin:0 auto 30px; font-size:1.1rem; }
+    .actions { display:flex; justify-content:center; gap:13px; flex-wrap:wrap; }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:9px;
+      padding:13px 20px; border-radius:10px; font-weight:700; transition:.2s ease;
+      border:1px solid var(--border); background:linear-gradient(145deg,#21050c,#120205); }
+    .button:hover { transform:translateY(-2px); border-color:var(--red); box-shadow:0 9px 30px #ff2a4b20; }
+    .primary { background:linear-gradient(135deg,#ff2a4b,#a8132b); border-color:#ff657b; color:white; }
+    .gold { color:#180d00; background:linear-gradient(135deg,#ffcf54,#fb8500); border-color:#ffcf54; }
+    .fine { margin-top:15px; color:#8a4f5d; font-size:.8rem; }
+    .reactor { width:min(350px,70vw); aspect-ratio:1; margin:62px auto 0; display:grid;
+      place-items:center; border-radius:50%; border:1px solid #ff2a4b44;
+      background:radial-gradient(circle,#ff2a4b21 0 4%,#ffb7030a 34%,transparent 66%);
+      box-shadow:0 0 90px #ff2a4b18,inset 0 0 70px #ff2a4b0c; animation:float 6s ease-in-out infinite; }
+    .reactor:before,.reactor:after { content:""; position:absolute; width:min(280px,55vw);
+      aspect-ratio:1; border:1px solid #ffb70355; border-radius:50%;
+      animation:spin 22s linear infinite; }
+    .reactor:after { width:min(220px,44vw); border-color:#ff2a4b80; animation-direction:reverse; animation-duration:15s; }
+    .core { width:56px; height:56px; border-radius:50%; background:radial-gradient(circle,#fff 0 8%,#ffcf54 30%,#ff2a4b 78%);
+      box-shadow:0 0 30px #ffb703,0 0 90px #ff2a4b; }
+    section { padding:78px 0; }
+    .section-head { max-width:650px; margin:0 auto 35px; text-align:center; }
+    h2 { font-size:clamp(2rem,4vw,3rem); line-height:1.1; margin:0 0 12px; letter-spacing:-.04em; }
+    .section-head p,.card p { color:var(--muted); }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card { border:1px solid #5a101eaa; border-radius:16px; padding:23px;
+      background:linear-gradient(145deg,#1a0408dd,#100205dd); backdrop-filter:blur(14px);
+      box-shadow:inset 0 1px #ffffff08; }
+    .icon { display:grid; place-items:center; width:44px; height:44px; border-radius:12px;
+      color:var(--gold); border:1px solid #ffb70344; background:#ffb70310; font-size:1.25rem; }
+    .card h3 { margin:16px 0 6px; } .card p { margin:0; font-size:.94rem; }
+    .pricing { max-width:680px; margin:auto; border-color:#ffb70370; position:relative; overflow:hidden; }
+    .pricing:before { content:""; position:absolute; inset:-120px -80px auto; height:240px;
+      background:radial-gradient(ellipse,#ffb70316,transparent 68%); pointer-events:none; }
+    .price-tag { color:var(--gold); font-size:.84rem; text-transform:uppercase; letter-spacing:.14em; }
+    .price-title { font-size:2rem; font-weight:800; margin:8px 0; }
+    .price-list { color:var(--muted); padding-left:20px; }
+    .price-list li { margin:8px 0; }
+    footer { border-top:1px solid var(--border); color:#8a4f5d; padding:26px 0; font-size:.85rem; }
+    @keyframes pulse { 50% { opacity:.45; box-shadow:0 0 4px var(--gold); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes float { 50% { transform:translateY(-8px) scale(1.02); } }
+    @media(max-width:760px) { .nav-links { display:none; } .hero { padding:78px 0 55px; }
+      .grid { grid-template-columns:1fr; } section { padding:56px 0; } }
+    @media(prefers-reduced-motion:reduce) { *,*:before,*:after { animation-duration:.01ms!important; scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+  <header><nav class="wrap">
+    <a class="brand" href="/"><b>◈</b> JARVIS <span>BY SURAJ</span></a>
+    <div class="nav-links"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="/admin/login">Admin</a></div>
+    <a class="button" href="#download">Get JARVIS <span aria-hidden="true">↗</span></a>
+  </nav></header>
+  <main>
+    <section class="hero wrap" id="download">
+      <div class="eyebrow"><i class="pulse"></i> PERSONAL AI. BUILT FOR YOUR DESKTOP.</div>
+      <h1>JARVIS — The Next-Gen<br><span>Personal AI Assistant</span><br>by Suraj</h1>
+      <p class="lead">Natural voice interaction, a living 3D avatar, and useful system automation — designed to feel fast, focused, and personal.</p>
+      <div class="actions">
+        <a class="button primary" href="/download/windows">↓ &nbsp; Download for PC</a>
+        <a class="button gold" href="/download/android">↓ &nbsp; Download APK (Mobile)</a>
+      </div>
+      <p class="fine">Start with a 10-day free trial. No card required.</p>
+      <div class="reactor" aria-hidden="true"><div class="core"></div></div>
+    </section>
+    <section id="features">
+      <div class="wrap">
+        <div class="section-head"><h2>Intelligence with presence.</h2>
+          <p>Thoughtful real-time interaction meets practical tools on the devices you use.</p></div>
+        <div class="grid">
+          <article class="card"><div class="icon">◉</div><h3>Animated 3D face</h3>
+            <p>A software-rendered holographic avatar responds to speech with expressive motion and synchronized lips.</p></article>
+          <article class="card"><div class="icon">⌁</div><h3>Low-bandwidth voice AI</h3>
+            <p>Realtime voice conversations are designed to stay responsive on limited connections, including 20 KB/s links.</p></article>
+          <article class="card"><div class="icon">⌘</div><h3>System automation</h3>
+            <p>Use natural language to work with files, apps, browser tasks, and helpful desktop workflows.</p></article>
+        </div>
+      </div>
+    </section>
+    <section id="pricing">
+      <div class="wrap">
+        <div class="section-head"><h2>Try it. Keep it for life.</h2><p>One clear path from first conversation to lifetime access.</p></div>
+        <article class="card pricing">
+          <div class="price-tag">10-day free trial · No card needed</div>
+          <div class="price-title">One-time Lifetime Pass</div>
+          <p>Explore JARVIS for ten days. When you are ready, a one-time lifetime license keeps your assistant available.</p>
+          <ul class="price-list"><li>Full desktop assistant access during the trial</li><li>One-time lifetime license option</li><li>License checks tied to your device</li></ul>
+          <a class="button gold" href="#download">Start your free 10-day trial</a>
+          <p class="fine">Lifetime checkout is not connected yet; an administrator must activate lifetime access.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap">© 2026 JARVIS by Suraj · Personal AI, designed with care.</div></footer>
+</body>
+</html>

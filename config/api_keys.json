@@ -1,0 +1,14 @@
+{
+    "gemini_api_key": "AQ.Ab8RN6J6pf13UgW0HbH5OVrKFMiC-5MQaoKznK8bpc4iVRHuWw",
+    "os_system": "windows",
+    "input_device": "",
+    "output_device": "",
+    "hud_style": "core",
+    "push_to_talk_enabled": false,
+    "morning_brief_enabled": true,
+    "assistant_name": "JARVIS",
+    "user_name": "Suraj",
+    "ui_color": "#00d4ff",
+    "hud_mode": "face",
+    "camera_index": 0
+}
