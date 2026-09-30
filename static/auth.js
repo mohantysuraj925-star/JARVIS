@@ -1,56 +1,33 @@
-let currentAuthMode = 'login';
+async function performAuth(event) {
+    if (event) event.preventDefault();
+    const uInput = document.querySelector('input[type="text"], input[name="username"], #username');
+    const pInput = document.querySelector('input[type="password"], input[name="password"], #password');
 
-function openAuthModal(mode) {
-  currentAuthMode = mode;
-  const t = document.getElementById('authTitle');
-  const b = document.getElementById('authSubmitBtn');
-  if (t) t.innerText = (mode === 'register') ? 'REGISTER NEW NODE' : 'OPERATOR LOGIN';
-  if (b) b.innerText = (mode === 'register') ? 'CREATE OPERATOR' : 'AUTHENTICATE';
-  const m = document.getElementById('cyberAuthModal');
-  if (m) m.style.display = 'flex';
-}
+    if (!uInput || !pInput) return;
 
-function closeAuthModal() {
-  const m = document.getElementById('cyberAuthModal');
-  if (m) m.style.display = 'none';
-}
+    const username = uInput.value.trim();
+    const password = pInput.value.trim();
 
-async function submitAuth() {
-  const u = document.getElementById('authUsername').value.trim();
-  const p = document.getElementById('authPassword').value.trim();
-  if (!u || !p) {
-    alert('Please enter username and password.');
-    return;
-  }
-
-  const endpoint = (currentAuthMode === 'register') ? '/api/admin/create-user' : '/api/heartbeat';
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: u, password: p })
-    });
-
-    if (res.ok) {
-      closeAuthModal();
-      alert(currentAuthMode === 'register' ? 'Node Registered! 10-Day Trial Active.' : 'Handshake Verified!');
-      location.reload();
-    } else {
-      alert('Authentication Failed');
+    if (!username || !password) {
+        alert("Please enter both username and password");
+        return;
     }
-  } catch (err) {
-    alert('Server Connection Error');
-  }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('button, a').forEach(el => {
-    const txt = (el.innerText || '').toLowerCase();
-    if (txt.includes('login') || txt.includes('sign in')) {
-      el.onclick = (e) => { e.preventDefault(); openAuthModal('login'); };
+    try {
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.status === "success") {
+            document.cookie = `username=${encodeURIComponent(username)}; path=/; max-age=2592000; SameSite=Lax`;
+            window.location.reload();
+        } else {
+            alert(data.message || "Login failed");
+        }
+    } catch (e) {
+        alert("Server connection failed. Try again.");
     }
-    if (txt.includes('register') || txt.includes('sign up')) {
-      el.onclick = (e) => { e.preventDefault(); openAuthModal('register'); };
-    }
-  });
-});
+}
