@@ -1,4 +1,12 @@
 import os
+import sys
+from pathlib import Path
+
+# Add project root to sys.path so "server" module is always resolvable
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import sqlite3
 import time
 from datetime import datetime
@@ -11,24 +19,21 @@ import uvicorn
 app = FastAPI()
 
 # 1. Mount Static Files
-if os.path.exists("static"):
-    app.mount("/static", StaticFiles(directory="static"), name="static")
+static_dir = ROOT_DIR / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-# 2. Template Resolution (Finds portal.html automatically in templates or server/templates)
-root_tpl = os.path.abspath("templates")
-server_tpl = os.path.abspath("server/templates")
+# 2. Template Resolution (Search root templates and server/templates)
+search_dirs = [
+    str(ROOT_DIR / "templates"),
+    str(ROOT_DIR / "server" / "templates"),
+    str(ROOT_DIR)
+]
+valid_dirs = [d for d in search_dirs if os.path.exists(d)]
+templates = Jinja2Templates(directory=valid_dirs if valid_dirs else [str(ROOT_DIR)])
 
-if os.path.exists(os.path.join(root_tpl, "portal.html")):
-    tpl_dir = root_tpl
-elif os.path.exists(os.path.join(server_tpl, "portal.html")):
-    tpl_dir = server_tpl
-else:
-    tpl_dir = root_tpl
-
-templates = Jinja2Templates(directory=tpl_dir)
-
-# 3. Database Initializer (Preserves existing data)
-DB_PATH = os.path.abspath("portal.db")
+# 3. Database Initializer
+DB_PATH = str(ROOT_DIR / "portal.db")
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -194,9 +199,9 @@ async def track_downloads(platform_name: str, req: Request):
     conn.close()
 
     ext = "apk" if ("apk" in plat or "android" in plat) else "zip"
-    fpath = f"downloads/{plat}_installer.{ext}"
-    if os.path.exists(fpath):
-        return FileResponse(fpath, filename=f"jarvis_{plat}.{ext}")
+    fpath = ROOT_DIR / f"downloads/{plat}_installer.{ext}"
+    if fpath.exists():
+        return FileResponse(str(fpath), filename=f"jarvis_{plat}.{ext}")
     return {"status": "success", "platform": plat, "downloaded_by": uname, "timestamp": t_str}
 
 # 10. Operator Lifecycle Management (+5D, -5D, Unlimited, Delete)
@@ -222,4 +227,4 @@ async def update_lifecycle(req: Request):
     return {"status": "ok"}
 
 if __name__ == "__main__":
-    uvicorn.run("server.app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
