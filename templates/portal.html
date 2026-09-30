@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS AI Assistant</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .neon-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #00f2fe;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #00f2fe;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 10px #00f2fe, inset 0 0 10px #00f2fe;
+            text-shadow: 0 0 5px #fff;
+        }
+        .neon-button:hover {
+            background: #00f2fe;
+            color: #0b0f19;
+            box-shadow: 0 0 30px #00f2fe, 0 0 60px #00f2fe;
+        }
+    </style>
+</head>
+<body>
+    <button class="neon-button neon-cta">Download JARVIS</button>
+
+    <script>
+        // Simple helper to capture user interaction
+        function trackUserAction(eventType, elementId, metadata = {}) {
+            const payload = {
+                event: eventType,
+                target: elementId,
+                timestamp: new Date().toISOString(),
+                url: window.location.pathname,
+                ...metadata
+            };
+
+            // Push to your backend API route
+            fetch('/api/track-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(err => console.error("Telemetry failed:", err));
+        }
+
+        // Example usage on the Neon CTA button
+        document.querySelector('.neon-cta').addEventListener('click', (e) => {
+            trackUserAction('click', 'download-button', { screen: 'main-lander' });
+            alert("Tracking download event...");
+        });
+    </script>
+</body>
+</html>
