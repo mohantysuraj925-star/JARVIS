@@ -2,7 +2,6 @@ import os
 import sys
 from pathlib import Path
 
-# Add project root to sys.path so "server" module is always resolvable
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
@@ -11,9 +10,8 @@ import sqlite3
 import time
 from datetime import datetime
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 import uvicorn
 
 app = FastAPI()
@@ -23,14 +21,28 @@ static_dir = ROOT_DIR / "static"
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-# 2. Template Resolution (Search root templates and server/templates)
-search_dirs = [
-    str(ROOT_DIR / "templates"),
-    str(ROOT_DIR / "server" / "templates"),
-    str(ROOT_DIR)
-]
-valid_dirs = [d for d in search_dirs if os.path.exists(d)]
-templates = Jinja2Templates(directory=valid_dirs if valid_dirs else [str(ROOT_DIR)])
+# 2. Resilient Template Resolver (Bypasses Jinja2 crash on Render while preserving exact UI)
+def render_portal_html(username="Guest"):
+    possible_paths = [
+        ROOT_DIR / "templates" / "portal.html",
+        ROOT_DIR / "server" / "templates" / "portal.html",
+        ROOT_DIR / "portal.html"
+    ]
+    html_file = None
+    for p in possible_paths:
+        if p.exists():
+            html_file = p
+            break
+    
+    if not html_file:
+        return "<h3>portal.html not found</h3>"
+
+    with open(html_file, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+
+    # Replaces Jinja {{ username }} tokens with actual active username
+    content = content.replace("{{ username }}", username).replace("{{username}}", username)
+    return content
 
 # 3. Database Initializer
 DB_PATH = str(ROOT_DIR / "portal.db")
@@ -79,7 +91,7 @@ def init_db():
 
 init_db()
 
-# 4. Activity Middleware (Tracks active sessions via cookies)
+# 4. Activity Middleware (Tracks online session via cookies)
 @app.middleware("http")
 async def track_activity(request: Request, call_next):
     uname = request.cookies.get("username")
@@ -93,13 +105,13 @@ async def track_activity(request: Request, call_next):
             pass
     return await call_next(request)
 
-# 5. UI Portal Route
-@app.get("/")
+# 5. UI Portal Route (Direct HTML serving - Zero dependencies)
+@app.get("/", response_class=HTMLResponse)
 async def serve_home(request: Request):
-    uname = request.cookies.get("username")
-    return templates.TemplateResponse(request=request, name="portal.html", context={"username": uname or "Guest"})
+    uname = request.cookies.get("username") or "Guest"
+    return HTMLResponse(content=render_portal_html(uname))
 
-# 6. Universal Auth (Auto Registers new users, Logs in existing users without blocking)
+# 6. Universal Auth (Auto Register + Auto Login)
 @app.post("/api/register")
 @app.post("/api/login")
 async def handle_auth(req: Request):
@@ -227,4 +239,4 @@ async def update_lifecycle(req: Request):
     return {"status": "ok"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("server.app:app", host="0.0.0.0", port=8000, reload=True)
