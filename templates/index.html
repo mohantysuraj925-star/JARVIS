@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS AI Control Matrix</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    body { background:#030712; color:#f8fafc; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; overflow-x:hidden; }
+    .portal-card { background:rgba(15,23,42,0.75); border:1px solid rgba(0,240,255,0.25); border-radius:18px; padding:35px; width:100%; max-width:520px; text-align:center; box-shadow:0 0 50px rgba(0,240,255,0.15); backdrop-filter:blur(16px); }
+    .core-orb { width:90px; height:90px; margin:0 auto 20px; border-radius:50%; background:radial-gradient(circle, #00f0ff 0%, #3b82f6 70%, transparent 100%); box-shadow:0 0 35px #00f0ff; animation:orbPulse 2s infinite alternate; }
+    h1 { font-size:26px; color:#00f0ff; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+    p { color:#94a3b8; font-size:14px; margin-bottom:25px; line-height:1.5; }
+    .btn-group { display:flex; flex-direction:column; gap:14px; }
+    .dl-btn { background:rgba(0,240,255,0.08); border:1px solid #00f0ff; color:#00f0ff; padding:15px 20px; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.25s; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; }
+    .dl-btn:hover { background:#00f0ff; color:#030712; box-shadow:0 0 25px rgba(0,240,255,0.6); transform:translateY(-2px); }
+    .stats-row { margin-top:25px; display:flex; justify-content:space-around; border-top:1px solid rgba(255,255,255,0.08); padding-top:20px; }
+    .stat-val { font-size:18px; font-weight:700; color:#38bdf8; font-family:monospace; }
+    .stat-lbl { font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-top:3px; }
+
+    #quantumOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(3,7,18,0.92); backdrop-filter:blur(14px); z-index:999999; justify-content:center; align-items:center; flex-direction:column; }
+    .reactor-ring { position:relative; width:140px; height:140px; display:flex; align-items:center; justify-content:center; }
+    .ring-outer { position:absolute; width:130px; height:130px; border:2px dashed #00f0ff; border-radius:50%; animation:spin 3s linear infinite; }
+    .ring-inner { position:absolute; width:95px; height:95px; border:2px solid #38bdf8; border-top-color:transparent; border-bottom-color:transparent; border-radius:50%; animation:spinRev 2s linear infinite; }
+    .core-spark { width:35px; height:35px; background:radial-gradient(circle, #00f0ff 0%, #3b82f6 80%); border-radius:50%; box-shadow:0 0 30px #00f0ff; animation:orbPulse 1s infinite alternate; }
+
+    #thankModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,15,0.85); backdrop-filter:blur(10px); z-index:9999999; justify-content:center; align-items:center; }
+    .modal-box { background:rgba(15,23,42,0.95); border:1px solid #00f0ff; box-shadow:0 0 35px rgba(0,240,255,0.3); border-radius:14px; padding:30px; max-width:420px; text-align:center; }
+
+    @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
+    @keyframes spinRev { 0% { transform:rotate(360deg); } 100% { transform:rotate(-360deg); } }
+    @keyframes orbPulse { 0% { transform:scale(0.85); opacity:0.75; } 100% { transform:scale(1.15); opacity:1; } }
+  </style>
+</head>
+<body>
+
+  <div class="portal-card">
+    <div class="core-orb"></div>
+    <h1>JARVIS Operating System</h1>
+    <p>Autonomous AI Interface & Desktop Neural Suite. Select hardware platform:</p>
+
+    <div class="btn-group">
+      <button class="dl-btn" onclick="executeDownload('windows')">
+        <span>💻</span> Download Windows Desktop Client (.exe)
+      </button>
+      <button class="dl-btn" onclick="executeDownload('mobile')">
+        <span>📱</span> Download Android Companion Node (.apk)
+      </button>
+    </div>
+
+    <div class="stats-row">
+      <div><div class="stat-val" id="dlMetric">--</div><div class="stat-lbl">Downloads</div></div>
+      <div><div class="stat-val">ACTIVE</div><div class="stat-lbl">Node Mesh</div></div>
+      <div><div class="stat-val">v1.0.4</div><div class="stat-lbl">Core Build</div></div>
+    </div>
+  </div>
+
+  <div id="quantumOverlay">
+    <div class="reactor-ring">
+      <div class="ring-outer"></div>
+      <div class="ring-inner"></div>
+      <div class="core-spark"></div>
+    </div>
+    <div style="color:#00f0ff; font-family:monospace; margin-top:20px; letter-spacing:3px;" id="loaderText">INITIALIZING QUANTUM STREAM...</div>
+  </div>
+
+  <div id="thankModal">
+    <div class="modal-box">
+      <div style="font-size:48px; margin-bottom:10px;">💠</div>
+      <h2 style="color:#00f0ff; margin-bottom:10px; text-transform:uppercase;">Thank You, Operator!</h2>
+      <p style="color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:20px;">Aapka binary handshake complete ho gaya hai. Setup run karke Face ID aur API authenticate karein.</p>
+      <button onclick="document.getElementById('thankModal').style.display='none'" style="background:#00f0ff; border:none; color:#030712; font-weight:700; padding:10px 22px; border-radius:6px; cursor:pointer;">CONTINUE</button>
+    </div>
+  </div>
+
+  <script>
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const d = await res.json();
+        document.getElementById('dlMetric').innerText = d.downloads;
+      } catch(e) {}
+    }
+    loadStats();
+
+    function executeDownload(platform) {
+      const overlay = document.getElementById('quantumOverlay');
+      const text = document.getElementById('loaderText');
+      overlay.style.display = 'flex';
+
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+        osc.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } catch(e) {}
+
+      fetch('/api/track-download', { method:'POST' }).then(() => loadStats());
+
+      setTimeout(() => { text.innerText = '✔ HANDSHAKE ESTABLISHED'; }, 500);
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        const url = '/get-package/' + platform;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = platform === 'windows' ? 'JARVIS_Installer.exe' : 'JARVIS_Mobile.apk';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => a.remove(), 200);
+
+        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+          window.location.assign(url);
+        }
+        document.getElementById('thankModal').style.display = 'flex';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
