@@ -1,0 +1,101 @@
+import os
+
+targets = [
+    os.path.join("server", "templates", "user_dashboard.html"),
+    os.path.join("templates", "user_dashboard.html")
+]
+
+big_win = """<button type="button" onclick="triggerDirectDownload('windows')" class="w-full min-h-[170px] p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <div class="flex items-center gap-5 text-left">
+        <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
+            <i data-lucide="monitor" class="w-9 h-9 text-purple-200"></i>
+        </div>
+        <div>
+            <div class="text-xl font-bold font-cyber text-white tracking-wide group-hover:text-purple-200 transition-colors">Windows Client</div>
+            <div class="text-xs text-purple-300/70 font-mono mt-1">.EXE STANDALONE // 64-BIT</div>
+        </div>
+    </div>
+    <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-md">
+        <i data-lucide="download" class="w-6 h-6"></i>
+    </div>
+</button>"""
+
+big_apk = """<button type="button" onclick="triggerDirectDownload('android')" class="w-full min-h-[170px] p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <div class="flex items-center gap-5 text-left">
+        <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
+            <i data-lucide="smartphone" class="w-9 h-9 text-purple-200"></i>
+        </div>
+        <div>
+            <div class="text-xl font-bold font-cyber text-white tracking-wide group-hover:text-purple-200 transition-colors">Android Node</div>
+            <div class="text-xs text-purple-300/70 font-mono mt-1">.APK COMPANION // MOBILE</div>
+        </div>
+    </div>
+    <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-md">
+        <i data-lucide="download" class="w-6 h-6"></i>
+    </div>
+</button>"""
+
+win_steps = """<div class="p-5 rounded-2xl bg-purple-950/40 border border-purple-500/30 text-left min-h-[170px] flex flex-col justify-center">
+    <div class="flex items-center gap-2 mb-2.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span class="text-xs font-bold tracking-wide uppercase text-purple-200 font-cyber">HOW TO SETUP (STEP-BY-STEP)</span>
+    </div>
+    <ul class="text-xs text-purple-100/90 space-y-1.5 list-none pl-0">
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">1.</span>
+            <span>Click below to download <b>JARVIS_Desktop_Setup.exe</b>.</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">2.</span>
+            <span>Open your Downloads folder, double-click the file, and if prompted select <b>"More info" &rarr; "Run anyway"</b>.</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">3.</span>
+            <span><b>Wait up to 2 minutes</b> for the assistant daemon to launch and go live.</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">4.</span>
+            <span>Paste your designated <b>API Key</b> when prompted to authenticate and start using JARVIS.</span>
+        </li>
+    </ul>
+</div>"""
+
+apk_steps = """<div class="p-5 rounded-2xl bg-purple-950/40 border border-purple-500/30 text-left min-h-[170px] flex flex-col justify-center">
+    <div class="flex items-center gap-2 mb-2.5">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+        <span class="text-xs font-bold tracking-wide uppercase text-purple-200 font-cyber">HOW TO SETUP (STEP-BY-STEP)</span>
+    </div>
+    <ul class="text-xs text-purple-100/90 space-y-1.5 list-none pl-0">
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">1.</span>
+            <span>Tap the button below to download the Android package (.apk).</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">2.</span>
+            <span>Tap the downloaded file, allow <b>"Install unknown apps"</b>, and complete the installation.</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">3.</span>
+            <span>Open the app and <b>wait up to 2 minutes</b> to establish node connection.</span>
+        </li>
+        <li class="flex items-start gap-2">
+            <span class="text-purple-400 font-bold">4.</span>
+            <span>Enter your <b>API Key</b> to link the mobile companion to your JARVIS server.</span>
+        </li>
+    </ul>
+</div>"""
+
+for p in targets:
+    if os.path.exists(p):
+        with open(p, "r", encoding="utf-8-sig") as f:
+            c = f.read()
+
+        import re
+        # Windows card replacement
+        c = re.sub(r'<div[^>]*class="[^"]*glass-purple[^"]*"[^>]*>[\s\S]*?Windows Client[\s\S]*?\.EXE STANDALONE[\s\S]*?</div>\s*</div>', big_win, c, count=1)
+        # Android card replacement
+        c = re.sub(r'<div[^>]*class="[^"]*glass-purple[^"]*"[^>]*>[\s\S]*?Android Node[\s\S]*?\.APK COMPANION[\s\S]*?</div>\s*</div>', big_apk, c, count=1)
+
+        with open(p, "w", encoding="utf-8") as f:
+            f.write(c)
+        print("Restored and upgraded:", p)

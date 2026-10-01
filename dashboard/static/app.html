@@ -133,6 +133,20 @@
     }
     #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   </style>
+
+    <!-- PWA Config -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
+        });
+      }
+    </script>
+
 </head>
 <body>
   <div id="toast"></div>

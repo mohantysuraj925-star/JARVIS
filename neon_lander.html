@@ -35,6 +35,20 @@
             box-shadow: 0 0 30px #00f2fe, 0 0 60px #00f2fe;
         }
     </style>
+
+    <!-- PWA Config -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
+        });
+      }
+    </script>
+
 </head>
 <body>
     <button class="neon-button neon-cta">Download JARVIS</button>
