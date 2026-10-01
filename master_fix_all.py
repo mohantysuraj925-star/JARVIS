@@ -1,4 +1,60 @@
-<!DOCTYPE html>
+import os
+import shutil
+import sqlite3
+import time
+from datetime import datetime
+
+# 1. Folders Ensure Karein
+for d in ["templates", "server/templates", "static", "downloads"]:
+    os.makedirs(d, exist_ok=True)
+
+# 2. Database Verify & Fix
+conn = sqlite3.connect("portal.db")
+c = conn.cursor()
+c.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    hwid TEXT DEFAULT 'NODE-ACTIVE',
+    role TEXT DEFAULT 'operator',
+    created_at TEXT NOT NULL,
+    days_remaining INTEGER DEFAULT 10,
+    is_unlimited INTEGER DEFAULT 0,
+    is_active INTEGER DEFAULT 1,
+    access_start_date TEXT DEFAULT NULL,
+    access_end_date TEXT DEFAULT NULL,
+    daily_time_start TEXT DEFAULT NULL,
+    daily_time_end TEXT DEFAULT NULL,
+    last_seen REAL DEFAULT 0
+)
+""")
+c.execute("CREATE TABLE IF NOT EXISTS portal_stats (key TEXT PRIMARY KEY, val INTEGER DEFAULT 0)")
+c.execute("INSERT OR IGNORE INTO portal_stats VALUES ('win_downloads', 0)")
+c.execute("INSERT OR IGNORE INTO portal_stats VALUES ('apk_downloads', 0)")
+c.execute("""
+CREATE TABLE IF NOT EXISTS download_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    hwid TEXT,
+    platform TEXT,
+    timestamp TEXT
+)
+""")
+
+# Super Admin Fix
+now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+c.execute("SELECT id FROM users WHERE username = 'admin123'")
+if not c.fetchone():
+    c.execute("INSERT INTO users (username, password, role, created_at, days_remaining, is_unlimited, is_active, last_seen) VALUES ('admin123', 'suraj', 'admin', ?, 9999, 1, 1, ?)", (now_str, time.time()))
+else:
+    c.execute("UPDATE users SET password = 'suraj', role = 'admin', is_active = 1 WHERE username = 'admin123'")
+
+conn.commit()
+conn.close()
+
+# 3. User Dashboard Content (With Big Home Button & Brand New 3D AI Matrix)
+user_dashboard_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -316,3 +372,13 @@
     </script>
 </body>
 </html>
+"""
+
+# Write to both folders so it cannot be missed
+for folder in ["templates", "server/templates"]:
+    with open(os.path.join(folder, "user_dashboard.html"), "w", encoding="utf-8") as f:
+        f.write(user_dashboard_html)
+    with open(os.path.join(folder, "portal.html"), "w", encoding="utf-8") as f:
+        f.write(user_dashboard_html)
+
+print("SUCCESS: User Dashboard written to all template paths.")

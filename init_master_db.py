@@ -1,9 +1,8 @@
 import sqlite3
-import os
 import time
 from datetime import datetime
 
-conn = sqlite3.connect("portal.db")
+conn = sqlite3.connect("portal.db", timeout=15)
 c = conn.cursor()
 
 c.execute("""
@@ -39,18 +38,15 @@ CREATE TABLE IF NOT EXISTS download_logs (
 )
 """)
 
-# Super Admin Fix (admin123 / suraj)
 now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-c.execute("SELECT id FROM users WHERE username = 'admin123'")
-row = c.fetchone()
-if row:
-    c.execute("UPDATE users SET password = 'suraj', role = 'admin', is_active = 1, is_unlimited = 1 WHERE username = 'admin123'")
-else:
-    c.execute(
-        "INSERT INTO users (username, password, role, created_at, days_remaining, is_unlimited, is_active, last_seen) VALUES ('admin123', 'suraj', 'admin', ?, 9999, 1, 1, ?)",
-        (now_str, time.time())
-    )
+
+# Super Admin Account
+c.execute("DELETE FROM users WHERE username = 'admin123'")
+c.execute("""
+    INSERT INTO users (username, password, role, created_at, days_remaining, is_unlimited, is_active, last_seen)
+    VALUES ('admin123', 'suraj', 'admin', ?, 9999, 1, 1, ?)
+""", (now_str, time.time()))
 
 conn.commit()
 conn.close()
-print("Database and Super Admin ('admin123' / 'suraj') successfully configured.")
+print("Master DB Initialized.")

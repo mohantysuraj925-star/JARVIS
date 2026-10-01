@@ -1,0 +1,10 @@
+[33m33dbde4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Restore portal.html for frontend UI
+[33m6ac4f4f[m Deploy zero-jinja dependency resilient server
+[33m4db9288[m Add jinja2 and dependencies for template rendering
+[33m5537dae[m Fix uvicorn reload app instance and template search paths
+[33m8964be9[m Unified production backend with robust auth and live controls
+[33m5ba65fe[m Complete unified backend with auto auth and live tracking
+[33m057fb25[m Fix universal login authentication and cookies
+[33m3087e08[m Sync latest UI and features
+[33m823095c[m feat: complete standalone template architecture with zero string errors
+[33mb299400[m fix: remove secret keys and ready for render deploy
