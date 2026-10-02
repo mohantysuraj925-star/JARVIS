@@ -37,6 +37,47 @@ window.triggerDirectDownload = function(platform) {
         window.location.href = '/downloads/JARVIS_Companion.apk';
     }
 };
+
+async function refreshMobileDownloadAccess() {
+    const mobileButton = document.getElementById('mobileApkDownloadBtn');
+    if (!mobileButton) return;
+    try {
+        const response = await fetch('/api/admin/get_mobile_states');
+        if (!response.ok) throw new Error(`Could not load mobile access (${response.status}).`);
+        const data = await response.json();
+        const title = document.getElementById('mobileApkTitle');
+        const subtitle = document.getElementById('mobileApkSubtitle');
+        if (data.allowed) {
+            mobileButton.disabled = false;
+            mobileButton.setAttribute('aria-disabled', 'false');
+            mobileButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            mobileButton.onclick = () => window.triggerDirectDownload('android');
+            title.textContent = 'Android Node';
+            subtitle.textContent = '.APK COMPANION // MOBILE';
+        } else {
+            mobileButton.disabled = true;
+            mobileButton.setAttribute('aria-disabled', 'true');
+            mobileButton.onclick = null;
+            title.textContent = 'Mobile App (Coming Soon)';
+            subtitle.textContent = 'MOBILE ACCESS LOCKED';
+            mobileButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    } catch (error) {
+        console.error(error);
+        mobileButton.disabled = true;
+        mobileButton.setAttribute('aria-disabled', 'true');
+        mobileButton.onclick = null;
+        document.getElementById('mobileApkTitle').textContent = 'Mobile App (Coming Soon)';
+        document.getElementById('mobileApkSubtitle').textContent = 'MOBILE ACCESS LOCKED';
+        mobileButton.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    refreshMobileDownloadAccess();
+    setInterval(refreshMobileDownloadAccess, 5000);
+});
+
 </script>
 
 </head>
@@ -161,14 +202,14 @@ window.triggerDirectDownload = function(platform) {
             </li>
         </ul>
     </div>
-    <button type="button" onclick="window.location.href='/downloads/JARVIS_Companion.apk'" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <button id="mobileApkDownloadBtn" type="button" disabled aria-disabled="true" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98] opacity-50 cursor-not-allowed">
         <div class="flex items-center gap-5 text-left">
             <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
                 <i data-lucide="smartphone" class="w-9 h-9 text-purple-200"></i>
             </div>
             <div>
-                <div class="text-xl font-bold font-cyber text-white tracking-wide group-hover:text-purple-200 transition-colors">Android Node</div>
-                <div class="text-xs text-purple-300/70 font-mono mt-1">.APK COMPANION // MOBILE</div>
+                <div id="mobileApkTitle" class="text-xl font-bold font-cyber text-white tracking-wide group-hover:text-purple-200 transition-colors">Mobile App (Coming Soon)</div>
+                <div id="mobileApkSubtitle" class="text-xs text-purple-300/70 font-mono mt-1">MOBILE ACCESS LOCKED</div>
             </div>
         </div>
         <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-md">

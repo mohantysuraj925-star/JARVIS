@@ -211,9 +211,11 @@ async def modify_lifecycle(req: Request):
     return {"status": "success"}
 
 @app.get("/get-package/{platform_name}")
-async def get_package(platform_name: str):
+async def get_package(platform_name: str, request: Request):
     plat = platform_name.lower()
     is_win = "win" in plat
+    if not is_win and not _mobile_access_allowed(request):
+        return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
     os.makedirs("downloads", exist_ok=True)
     if is_win:
         fpath = "downloads/JARVIS_Desktop_Setup.exe"
@@ -264,7 +266,9 @@ async def download_windows():
 from fastapi.responses import RedirectResponse, FileResponse
 
 @app.get("/downloads/JARVIS_Companion.apk")
-async def download_android():
+async def download_android(request: Request):
+    if not _mobile_access_allowed(request):
+        return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
     apk_path = os.path.join("downloads", "JARVIS_Companion.apk")
     if os.path.exists(apk_path) and os.path.getsize(apk_path) > 100000:
         return FileResponse(apk_path, filename="JARVIS_Companion.apk", media_type="application/vnd.android.package-archive")
@@ -299,3 +303,144 @@ async def subscription_status(username: str = "current_user"):
 async def renew_request(username: str = "current_user"):
     # Admin approval flag
     return {"status": "pending_admin_approval", "message": "Renewal request sent to Admin."}
+
+
+def _ensure_mobile_permission_tables(conn):
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS global_settings (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS permissions (
+            username TEXT PRIMARY KEY,
+            mobile_allowed INTEGER NOT NULL DEFAULT 0
+        );
+    """)
+    conn.execute(
+        "INSERT OR IGNORE INTO global_settings (key, value) VALUES ('global_mobile', '0')"
+    )
+
+
+def _global_mobile_enabled(conn):
+    row = conn.execute(
+        "SELECT value FROM global_settings WHERE key = 'global_mobile'"
+    ).fetchone()
+    return bool(row and row["value"] == "1")
+
+
+def _user_mobile_allowed(conn, username):
+    row = conn.execute(
+        "SELECT mobile_allowed FROM permissions WHERE username = ?",
+        (username,)
+    ).fetchone()
+    return bool(row and row["mobile_allowed"])
+
+
+def _mobile_access_allowed(request: Request):
+    if request.cookies.get("role") == "admin":
+        return True
+    username = request.cookies.get("username")
+    if not username:
+        return False
+    conn = get_db()
+    try:
+        _ensure_mobile_permission_tables(conn)
+        allowed = _global_mobile_enabled(conn) and _user_mobile_allowed(conn, username)
+        conn.commit()
+        return allowed
+    finally:
+        conn.close()
+
+
+def _admin_access_denied(request: Request):
+    return request.cookies.get("role") != "admin"
+
+
+@app.get("/api/admin/toggle_all_mobile")
+async def toggle_all_mobile(request: Request, enabled: bool):
+    if _admin_access_denied(request):
+        return JSONResponse({"status": "error", "message": "Administrator access required."}, status_code=403)
+    conn = get_db()
+    try:
+        _ensure_mobile_permission_tables(conn)
+        conn.execute(
+            "UPDATE global_settings SET value = ? WHERE key = 'global_mobile'",
+            ("1" if enabled else "0",)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    return {"status": "success", "global_mobile": enabled}
+
+
+@app.get("/api/admin/get_mobile_states")
+async def get_mobile_states(request: Request):
+    username = request.cookies.get("username")
+    if _admin_access_denied(request) and not username:
+        return JSONResponse({"status": "error", "message": "Sign in required."}, status_code=401)
+
+    conn = get_db()
+    try:
+        _ensure_mobile_permission_tables(conn)
+        global_mobile = _global_mobile_enabled(conn)
+        if _admin_access_denied(request):
+            permission = _user_mobile_allowed(conn, username)
+            conn.commit()
+            return {
+                "global_mobile": global_mobile,
+                "mobile_allowed": permission,
+                "allowed": global_mobile and permission,
+            }
+
+        users = conn.execute(
+            "SELECT username, created_at, is_unlimited FROM users WHERE role != 'admin' ORDER BY id DESC"
+        ).fetchall()
+        permissions = {
+            row["username"]: _user_mobile_allowed(conn, row["username"])
+            for row in users
+        }
+        now = datetime.now()
+        user_states = []
+        for row in users:
+            created_at = datetime.fromisoformat(str(row["created_at"]))
+            current_time = datetime.now(created_at.tzinfo) if created_at.tzinfo else now
+            elapsed_days = max(0, int((current_time - created_at).total_seconds() // 86400))
+            user_states.append({
+                "username": row["username"],
+                "created_at": row["created_at"],
+                "days_left": None if row["is_unlimited"] else max(0, 10 - elapsed_days),
+                "is_unlimited": bool(row["is_unlimited"]),
+                "mobile_allowed": permissions[row["username"]],
+            })
+        conn.commit()
+        return {
+            "global_mobile": global_mobile,
+            "permissions": permissions,
+            "users": user_states,
+        }
+    finally:
+        conn.close()
+
+
+@app.get("/api/admin/set_single_mobile")
+async def set_single_mobile(request: Request, username: str, allow: bool):
+    if _admin_access_denied(request):
+        return JSONResponse({"status": "error", "message": "Administrator access required."}, status_code=403)
+    conn = get_db()
+    try:
+        _ensure_mobile_permission_tables(conn)
+        user = conn.execute(
+            "SELECT 1 FROM users WHERE username = ? AND role != 'admin'",
+            (username,)
+        ).fetchone()
+        if not user:
+            return JSONResponse({"status": "error", "message": "User not found."}, status_code=404)
+        conn.execute(
+            "INSERT INTO permissions (username, mobile_allowed) VALUES (?, ?) "
+            "ON CONFLICT(username) DO UPDATE SET mobile_allowed = excluded.mobile_allowed",
+            (username, 1 if allow else 0)
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    return {"status": "success", "username": username, "allowed": allow}

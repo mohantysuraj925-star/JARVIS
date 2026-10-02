@@ -48,6 +48,9 @@
                 <i data-lucide="home" class="w-4 h-4 text-purple-300"></i>
                 <span>← Home Page</span>
             </a>
+            <button id="globalToggleMasterBtn" type="button" onclick="toggleMasterGlobal()" class="px-3 py-2 rounded-xl text-xs font-bold text-white whitespace-nowrap" style="background:#ef4444;">
+                All are Deactivate
+            </button>
             <div class="hidden sm:block text-right">
                 <span class="text-[9px] text-purple-400 block">CREATOR ADMIN</span>
                 <span class="text-xs font-bold text-purple-200">{{ username }}</span>
@@ -141,6 +144,20 @@
                     <span id="nodeCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-900/40 border border-purple-700 text-purple-300">0 NODES</span>
                 </div>
                 <div id="masterNodesContainer" class="flex flex-col gap-3 max-h-[460px] overflow-y-auto pr-1"></div>
+                <div class="overflow-x-auto rounded-xl border border-purple-900/60">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead class="bg-purple-950/70 text-purple-300">
+                            <tr>
+                                <th class="p-3">Username</th>
+                                <th class="p-3">Subscription</th>
+                                <th class="p-3 text-center">Mobile App Access</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mobileAccessTableBody" class="divide-y divide-purple-900/50">
+                            <tr><td colspan="3" class="p-3 text-center text-purple-400">Loading user permissions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
@@ -223,6 +240,112 @@
             render();
         })();
     </script>
+
+
+<script>
+let isAllDeactivated = true;
+
+async function syncMobileAdminSystem() {
+    const tbody = document.getElementById('mobileAccessTableBody');
+    try {
+        const response = await fetch('/api/admin/get_mobile_states');
+        if (!response.ok) throw new Error(`Could not load mobile permissions (${response.status}).`);
+        const data = await response.json();
+        isAllDeactivated = !data.global_mobile;
+        const masterBtn = document.getElementById('globalToggleMasterBtn');
+        masterBtn.textContent = isAllDeactivated ? 'All are Deactivate' : 'All Activate';
+        masterBtn.style.background = isAllDeactivated ? '#ef4444' : '#10b981';
+
+        const users = data.users || [];
+        if (tbody.querySelector('tr:not([data-username])')) tbody.innerHTML = '';
+        const existingRows = new Map(
+            Array.from(tbody.querySelectorAll('tr[data-username]'))
+                .map(row => [row.dataset.username, row])
+        );
+        users.forEach(user => {
+            let row = existingRows.get(user.username);
+            if (!row) {
+                row = document.createElement('tr');
+                row.dataset.username = user.username;
+                const nameCell = document.createElement('td');
+                nameCell.className = 'p-3 text-purple-100';
+                nameCell.textContent = user.username;
+                row.appendChild(nameCell);
+                row.appendChild(document.createElement('td'));
+
+                const accessCell = document.createElement('td');
+                accessCell.className = 'p-3 text-center';
+                const controls = document.createElement('div');
+                controls.className = 'inline-flex items-center justify-center gap-3';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.setAttribute('aria-label', `Allow mobile app access for ${user.username}`);
+                checkbox.addEventListener('change', () => { checkbox.dataset.dirty = 'true'; });
+                const submit = document.createElement('button');
+                submit.type = 'button';
+                submit.textContent = 'Submit';
+                submit.className = 'rounded bg-cyan-400 px-3 py-1 font-bold text-slate-950';
+                submit.addEventListener('click', () => submitUserAccess(user.username, checkbox, submit));
+                controls.append(checkbox, submit);
+                accessCell.appendChild(controls);
+                row.appendChild(accessCell);
+                tbody.appendChild(row);
+            }
+
+            const daysCell = row.children[1];
+            daysCell.textContent = user.is_unlimited ? 'UNLIMITED' : `${user.days_left} Days Left`;
+            daysCell.className = `p-3 font-bold ${user.is_unlimited || user.days_left > 0 ? 'text-cyan-300' : 'text-rose-400'}`;
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox && !checkbox.dataset.dirty && document.activeElement !== checkbox) {
+                checkbox.checked = user.mobile_allowed;
+            }
+            existingRows.delete(user.username);
+        });
+        existingRows.forEach(row => row.remove());
+        if (!users.length) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-purple-400">No managed users found.</td></tr>';
+        }
+    } catch (error) {
+        console.error(error);
+        if (tbody && !tbody.querySelector('[data-username]')) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-rose-400">Unable to load mobile permissions.</td></tr>';
+        }
+    }
+}
+
+async function toggleMasterGlobal() {
+    try {
+        const response = await fetch(`/api/admin/toggle_all_mobile?enabled=${isAllDeactivated}`);
+        if (!response.ok) throw new Error(`Could not update global mobile access (${response.status}).`);
+        await syncMobileAdminSystem();
+    } catch (error) {
+        console.error(error);
+        alert('Could not update global mobile access. Please try again.');
+    }
+}
+
+async function submitUserAccess(username, checkbox, submitButton) {
+    submitButton.disabled = true;
+    try {
+        const response = await fetch(
+            `/api/admin/set_single_mobile?username=${encodeURIComponent(username)}&allow=${checkbox.checked}`
+        );
+        if (!response.ok) throw new Error(`Could not update mobile access for ${username} (${response.status}).`);
+        delete checkbox.dataset.dirty;
+        await syncMobileAdminSystem();
+    } catch (error) {
+        console.error(error);
+        alert(`Could not update mobile access for ${username}. Please try again.`);
+    } finally {
+        submitButton.disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    syncMobileAdminSystem();
+    setInterval(syncMobileAdminSystem, 5000);
+});
+</script>
 
 </body>
 </html>
