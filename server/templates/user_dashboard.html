@@ -28,6 +28,17 @@
             transform: translateY(-2px);
         }
     </style>
+
+<script>
+window.triggerDirectDownload = function(platform) {
+    if (platform === 'windows') {
+        window.location.href = '/downloads/JARVIS_Desktop_Setup.exe';
+    } else if (platform === 'android') {
+        window.location.href = '/downloads/JARVIS_Companion.apk';
+    }
+};
+</script>
+
 </head>
 <body class="p-3 sm:p-5 md:p-8 flex flex-col gap-6 max-w-5xl mx-auto min-h-screen relative">
     <canvas id="cosmicCanvas3D" class="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-80"></canvas>
@@ -110,7 +121,7 @@
             </li>
         </ul>
     </div>
-    <button type="button" onclick="triggerDirectDownload('windows')" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <button type="button" onclick="window.location.href='/downloads/JARVIS_Desktop_Setup.exe'" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
         <div class="flex items-center gap-5 text-left">
             <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
                 <i data-lucide="monitor" class="w-9 h-9 text-purple-200"></i>
@@ -150,7 +161,7 @@
             </li>
         </ul>
     </div>
-    <button type="button" onclick="triggerDirectDownload('android')" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <button type="button" onclick="window.location.href='/downloads/JARVIS_Companion.apk'" class="w-full p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
         <div class="flex items-center gap-5 text-left">
             <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
                 <i data-lucide="smartphone" class="w-9 h-9 text-purple-200"></i>

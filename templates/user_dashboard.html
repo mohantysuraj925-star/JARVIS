@@ -28,6 +28,17 @@
             transform: translateY(-2px);
         }
     </style>
+
+<script>
+window.triggerDirectDownload = function(platform) {
+    if (platform === 'windows') {
+        window.location.href = '/downloads/JARVIS_Desktop_Setup.exe';
+    } else if (platform === 'android') {
+        window.location.href = '/downloads/JARVIS_Companion.apk';
+    }
+};
+</script>
+
 </head>
 <body class="p-3 sm:p-5 md:p-8 flex flex-col gap-6 max-w-5xl mx-auto min-h-screen relative">
     <canvas id="cosmicCanvas3D" class="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-80"></canvas>
