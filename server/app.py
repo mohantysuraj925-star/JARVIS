@@ -6,7 +6,7 @@ import asyncio
 import hashlib
 import secrets
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Literal
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
@@ -22,6 +22,7 @@ if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+MOBILE_OVERRIDE_ROLES = frozenset({"admin", "creator"})
 
 @app.get("/sw.js", include_in_schema=False)
 async def service_worker():
@@ -36,6 +37,91 @@ def get_db():
     conn = sqlite3.connect("portal.db", timeout=15)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _ensure_expiry_schema(conn):
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(users)")}
+    if "expires_at" not in columns:
+        conn.execute("ALTER TABLE users ADD COLUMN expires_at REAL")
+
+    has_access_end_date = "access_end_date" in columns
+    legacy_expiry_column = ", access_end_date" if has_access_end_date else ""
+    rows = conn.execute(
+        "SELECT id, created_at, days_remaining"
+        f"{legacy_expiry_column} FROM users WHERE expires_at IS NULL"
+    ).fetchall()
+    for row in rows:
+        try:
+            if has_access_end_date and row["access_end_date"]:
+                legacy_expiry = str(row["access_end_date"])
+                expiry_datetime = datetime.fromisoformat(legacy_expiry)
+                if len(legacy_expiry) == 10:
+                    expiry_datetime += timedelta(days=1)
+                expires_at = expiry_datetime.timestamp()
+            else:
+                created_at = datetime.fromisoformat(str(row["created_at"])).timestamp()
+                duration_days = max(0, int(row["days_remaining"]))
+                expires_at = created_at + duration_days * 86400
+        except (TypeError, ValueError, OverflowError) as error:
+            raise ValueError(
+                f"Cannot initialize expiry for user record {row['id']}."
+            ) from error
+        conn.execute(
+            "UPDATE users SET expires_at = ? WHERE id = ? AND expires_at IS NULL",
+            (expires_at, row["id"]),
+        )
+        if has_access_end_date and not row["access_end_date"]:
+            conn.execute(
+                "UPDATE users SET access_end_date = ? WHERE id = ?",
+                (datetime.fromtimestamp(expires_at).strftime("%Y-%m-%d"), row["id"]),
+            )
+
+
+def _is_mobile_override_role(role):
+    return role in MOBILE_OVERRIDE_ROLES
+
+
+def _mobile_access_allowed(request: Request):
+    username = request.cookies.get("username")
+    if not username:
+        return False
+    conn = get_db()
+    try:
+        _ensure_mobile_permission_tables(conn)
+        account = conn.execute(
+            "SELECT role, is_active FROM users WHERE username = ?",
+            (username,),
+        ).fetchone()
+        if not account or not account["is_active"]:
+            conn.commit()
+            return False
+        if _is_mobile_override_role(account["role"]):
+            conn.commit()
+            return True
+        allowed = (
+            _global_mobile_enabled(conn)
+            and _user_mobile_allowed(conn, username)
+        )
+        conn.commit()
+        return allowed
+    finally:
+        conn.close()
+
+
+def _companion_apk_path(minimum_size=1000):
+    apk_candidates = (
+        os.path.join("downloads", "app-debug.apk"),
+        os.path.join("downloads", "JARVIS_Node_Companion.apk"),
+        os.path.join("downloads", "JARVIS_Companion.apk"),
+    )
+    return next(
+        (
+            candidate for candidate in apk_candidates
+            if os.path.isfile(candidate) and os.path.getsize(candidate) > minimum_size
+        ),
+        None,
+    )
+
 
 @app.middleware("http")
 async def track_activity(request: Request, call_next):
@@ -61,18 +147,38 @@ async def root(request: Request):
 @app.get("/dashboard")
 async def user_dashboard(request: Request):
     uname = request.cookies.get("username")
-    role = request.cookies.get("role")
     if not uname:
         return RedirectResponse(url="/")
-    return templates.TemplateResponse(request=request, name="user_dashboard.html", context={"username": uname, "role": role})
+    conn = get_db()
+    try:
+        account = conn.execute(
+            "SELECT role, is_active FROM users WHERE username = ?",
+            (uname,),
+        ).fetchone()
+        if not account or not account["is_active"]:
+            return RedirectResponse(url="/logout")
+        _ensure_expiry_schema(conn)
+        conn.commit()
+    finally:
+        conn.close()
+    return templates.TemplateResponse(request=request, name="user_dashboard.html", context={"username": uname, "role": account["role"]})
 
 @app.get("/admin")
 async def admin_portal(request: Request):
     uname = request.cookies.get("username")
-    role = request.cookies.get("role")
-    if not uname or role != "admin":
+    if not uname:
         return RedirectResponse(url="/")
-    return templates.TemplateResponse(request=request, name="admin_portal.html", context={"username": uname, "role": role})
+    conn = get_db()
+    try:
+        account = conn.execute(
+            "SELECT role, is_active FROM users WHERE username = ?",
+            (uname,),
+        ).fetchone()
+    finally:
+        conn.close()
+    if not account or not account["is_active"] or not _is_mobile_override_role(account["role"]):
+        return RedirectResponse(url="/")
+    return templates.TemplateResponse(request=request, name="admin_portal.html", context={"username": uname, "role": account["role"]})
 
 @app.post("/api/auth/register")
 async def register(req: Request):
@@ -83,17 +189,27 @@ async def register(req: Request):
         return JSONResponse({"status": "error", "message": "Fields required"}, status_code=400)
 
     conn = get_db()
+    _ensure_expiry_schema(conn)
+    conn.commit()
     c = conn.cursor()
     c.execute("SELECT id FROM users WHERE LOWER(username) = LOWER(?)", (u,))
     if c.fetchone():
         conn.close()
         return JSONResponse({"status": "error", "message": "Username already taken"}, status_code=400)
 
+    now = time.time()
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     c.execute("""
-        INSERT INTO users (username, password, hwid, role, created_at, days_remaining, is_unlimited, is_active, last_seen)
-        VALUES (?, ?, 'NODE-ACTIVE', 'operator', ?, 10, 0, 1, ?)
-    """, (u, p, now_str, time.time()))
+        INSERT INTO users (username, password, hwid, role, created_at, days_remaining, is_unlimited, is_active, last_seen, expires_at)
+        VALUES (?, ?, 'NODE-ACTIVE', 'operator', ?, 10, 0, 1, ?, ?)
+    """, (u, p, now_str, now, now + 10 * 86400))
+    if "access_end_date" in {
+        column["name"] for column in c.execute("PRAGMA table_info(users)")
+    }:
+        c.execute(
+            "UPDATE users SET access_end_date = ? WHERE username = ?",
+            (datetime.fromtimestamp(now + 10 * 86400).strftime("%Y-%m-%d"), u),
+        )
     conn.commit()
     conn.close()
 
@@ -109,6 +225,8 @@ async def login(req: Request):
     p = str(data.get("password", "")).strip()
 
     conn = get_db()
+    _ensure_expiry_schema(conn)
+    conn.commit()
     c = conn.cursor()
     c.execute("SELECT * FROM users WHERE LOWER(TRIM(username)) = LOWER(TRIM(?))", (u,))
     row = c.fetchone()
@@ -129,7 +247,7 @@ async def login(req: Request):
         conn.commit()
     conn.close()
 
-    target = "/admin" if role == "admin" else "/dashboard"
+    target = "/admin" if _is_mobile_override_role(role) else "/dashboard"
     res = JSONResponse({"status": "success", "username": uname, "role": role, "redirect": target})
     res.set_cookie("username", uname, max_age=86400*30, path="/")
     res.set_cookie("role", role, max_age=86400*30, path="/")
@@ -217,11 +335,39 @@ async def modify_lifecycle(req: Request):
     if not uid:
         return JSONResponse({"status": "error"}, status_code=400)
     conn = get_db()
+    _ensure_expiry_schema(conn)
     c = conn.cursor()
     if data.get("delete"):
         c.execute("DELETE FROM users WHERE id = ?", (uid,))
     elif "delta_days" in data:
-        c.execute("UPDATE users SET days_remaining = MAX(0, days_remaining + ?) WHERE id = ?", (data["delta_days"], uid))
+        account = c.execute(
+            "SELECT expires_at FROM users WHERE id = ?",
+            (uid,),
+        ).fetchone()
+        if not account:
+            conn.close()
+            return JSONResponse({"status": "error", "message": "User not found."}, status_code=404)
+        try:
+            delta_days = int(data["delta_days"])
+        except (TypeError, ValueError):
+            conn.close()
+            return JSONResponse({"status": "error", "message": "Invalid day adjustment."}, status_code=400)
+        remaining_seconds = max(
+            0,
+            float(account["expires_at"]) - time.time() + delta_days * 86400,
+        )
+        expires_at = time.time() + remaining_seconds
+        c.execute(
+            "UPDATE users SET expires_at = ?, days_remaining = ? WHERE id = ?",
+            (expires_at, int((remaining_seconds + 86399) // 86400), uid),
+        )
+        if "access_end_date" in {
+            column["name"] for column in c.execute("PRAGMA table_info(users)")
+        }:
+            c.execute(
+                "UPDATE users SET access_end_date = ? WHERE id = ?",
+                (datetime.fromtimestamp(expires_at).strftime("%Y-%m-%d"), uid),
+            )
     elif "is_unlimited" in data:
         c.execute("UPDATE users SET is_unlimited = CASE WHEN is_unlimited = 1 THEN 0 ELSE 1 END WHERE id = ?", (uid,))
     conn.commit()
@@ -243,14 +389,14 @@ async def get_package(platform_name: str, request: Request):
             with open(fpath, "wb") as f:
                 f.write(b"MZ\x90\x00" + b"\x00"*60 + b"JARVIS_DESKTOP")
     else:
-        fpath = "downloads/JARVIS_Node_Companion.apk"
+        fpath = _companion_apk_path()
         fname = "JARVIS_Node_Companion.apk"
         media = "application/vnd.android.package-archive"
-        if not os.path.exists(fpath) or os.path.getsize(fpath) <= 1000:
+        if not fpath:
             return JSONResponse(
                 {
                     "status": "error",
-                    "message": "The Android companion APK is not available on this server. Please try again later or contact the administrator.",
+                    "message": "PWA is ready to use. Android APK is building via GitHub Actions.",
                 },
                 status_code=503,
             )
@@ -297,34 +443,56 @@ from fastapi.responses import RedirectResponse, FileResponse
 async def download_android(request: Request):
     if not _mobile_access_allowed(request):
         return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
-    apk_path = os.path.join("downloads", "JARVIS_Companion.apk")
-    if os.path.exists(apk_path) and os.path.getsize(apk_path) > 100000:
+    apk_path = _companion_apk_path(minimum_size=100000)
+    if apk_path:
         return FileResponse(apk_path, filename="JARVIS_Companion.apk", media_type="application/vnd.android.package-archive")
-    # Reliable GitHub mirror fallback taaki mobile user ko kabhi download error na mile
-    return RedirectResponse(url="https://github.com/Oliv4945/jarvis-android-app/releases/download/v0.2.4/Jarvis_v0.2.4.apk")
-
-
-
-from datetime import datetime, timedelta
+    return JSONResponse(
+        {
+            "status": "error",
+            "message": "PWA is ready to use. Android APK is building via GitHub Actions.",
+        },
+        status_code=503,
+    )
 
 @app.get("/api/user/subscription_status")
-async def subscription_status(username: str = "current_user"):
-    # Real dynamic calculation: 10 din ka trial, daily remaining time update
-    # Agar expiry date set nahi hai toh initialize karein
-    created_at = datetime.now() - timedelta(days=1)  # demo/active user tracking
-    expiry_date = created_at + timedelta(days=10)
-    now = datetime.now()
-    remaining = (expiry_date - now).total_seconds()
-    days_left = max(0, int(remaining // 86400))
-    hours_left = max(0, int((remaining % 86400) // 3600))
-    
-    is_expired = remaining <= 0
+async def subscription_status(request: Request):
+    username = request.cookies.get("username")
+    if not username:
+        return JSONResponse(
+            {"status": "error", "message": "Sign in required."},
+            status_code=401,
+        )
+    conn = get_db()
+    try:
+        _ensure_expiry_schema(conn)
+        account = conn.execute(
+            "SELECT role, is_active, is_unlimited, expires_at FROM users WHERE username = ?",
+            (username,),
+        ).fetchone()
+        conn.commit()
+    finally:
+        conn.close()
+    if not account or not account["is_active"]:
+        return JSONResponse(
+            {"status": "error", "message": "Active account required."},
+            status_code=403,
+        )
+
+    is_unlimited = bool(account["is_unlimited"]) or _is_mobile_override_role(account["role"])
+    expires_at = None if is_unlimited else float(account["expires_at"])
+    server_time = time.time()
+    remaining = None if is_unlimited else max(0, expires_at - server_time)
+    days_left = None if is_unlimited else int(remaining // 86400)
+    hours_left = None if is_unlimited else int((remaining % 86400) // 3600)
     return {
-        "status": "expired" if is_expired else "active",
+        "status": "unlimited" if is_unlimited else "expired" if remaining == 0 else "active",
         "days_left": days_left,
         "hours_left": hours_left,
-        "expiry_date": expiry_date.strftime("%Y-%m-%d"),
-        "needs_renewal": days_left <= 1
+        "remaining_seconds": remaining,
+        "expires_at": expires_at,
+        "server_time": server_time,
+        "is_unlimited": is_unlimited,
+        "needs_renewal": False if is_unlimited else days_left <= 1,
     }
 
 @app.post("/api/user/renew_request")
@@ -362,22 +530,6 @@ def _user_mobile_allowed(conn, username):
         (username,)
     ).fetchone()
     return bool(row and row["mobile_allowed"])
-
-
-def _mobile_access_allowed(request: Request):
-    if request.cookies.get("role") == "admin":
-        return True
-    username = request.cookies.get("username")
-    if not username:
-        return False
-    conn = get_db()
-    try:
-        _ensure_mobile_permission_tables(conn)
-        allowed = _global_mobile_enabled(conn) and _user_mobile_allowed(conn, username)
-        conn.commit()
-        return allowed
-    finally:
-        conn.close()
 
 
 class CompanionPairRequest(BaseModel):
@@ -461,7 +613,7 @@ def _companion_account_error(username, password, require_mobile=True):
                 {"status": "error", "message": "Account deactivated."},
                 status_code=403,
             ), None
-        if require_mobile and row["role"] != "admin":
+        if require_mobile and not _is_mobile_override_role(row["role"]):
             _ensure_mobile_permission_tables(conn)
             if not _global_mobile_enabled(conn) or not _user_mobile_allowed(conn, row["username"]):
                 return JSONResponse(
@@ -561,7 +713,7 @@ async def companion_socket(websocket: WebSocket):
             await websocket.close(code=4401, reason="Invalid or revoked pairing token")
             return
         _ensure_mobile_permission_tables(conn)
-        if device["role"] != "admin" and (
+        if not _is_mobile_override_role(device["role"]) and (
             not _global_mobile_enabled(conn)
             or not _user_mobile_allowed(conn, device["username"])
         ):
@@ -616,7 +768,7 @@ async def companion_socket(websocket: WebSocket):
                         or owner["revoked"]
                         or not owner["is_active"]
                         or (
-                            owner["role"] != "admin"
+                            not _is_mobile_override_role(owner["role"])
                             and (
                                 not _global_mobile_enabled(conn)
                                 or not _user_mobile_allowed(conn, owner["username"])
@@ -786,7 +938,22 @@ async def get_companion_command_result(payload: CompanionCommandResultRequest):
 
 
 def _admin_access_denied(request: Request):
-    return request.cookies.get("role") != "admin"
+    username = request.cookies.get("username")
+    if not username:
+        return True
+    conn = get_db()
+    try:
+        account = conn.execute(
+            "SELECT role, is_active FROM users WHERE username = ?",
+            (username,),
+        ).fetchone()
+        return (
+            not account
+            or not account["is_active"]
+            or not _is_mobile_override_role(account["role"])
+        )
+    finally:
+        conn.close()
 
 
 @app.get("/api/admin/toggle_all_mobile")
@@ -815,6 +982,7 @@ async def get_mobile_states(request: Request):
     conn = get_db()
     try:
         _ensure_mobile_permission_tables(conn)
+        _ensure_expiry_schema(conn)
         global_mobile = _global_mobile_enabled(conn)
         if _admin_access_denied(request):
             permission = _user_mobile_allowed(conn, username)
@@ -826,30 +994,35 @@ async def get_mobile_states(request: Request):
             }
 
         users = conn.execute(
-            "SELECT username, created_at, is_unlimited FROM users WHERE role != 'admin' ORDER BY id DESC"
+            "SELECT username, expires_at, is_unlimited FROM users "
+            "WHERE role NOT IN ('admin', 'creator') ORDER BY id DESC"
         ).fetchall()
         permissions = {
             row["username"]: _user_mobile_allowed(conn, row["username"])
             for row in users
         }
-        now = datetime.now()
+        now = time.time()
         user_states = []
         for row in users:
-            created_at = datetime.fromisoformat(str(row["created_at"]))
-            current_time = datetime.now(created_at.tzinfo) if created_at.tzinfo else now
-            elapsed_days = max(0, int((current_time - created_at).total_seconds() // 86400))
+            is_unlimited = bool(row["is_unlimited"])
+            remaining = None if is_unlimited else max(0, float(row["expires_at"]) - now)
             user_states.append({
                 "username": row["username"],
-                "created_at": row["created_at"],
-                "days_left": None if row["is_unlimited"] else max(0, 10 - elapsed_days),
-                "is_unlimited": bool(row["is_unlimited"]),
+                "expires_at": None if is_unlimited else row["expires_at"],
+                "remaining_seconds": remaining,
+                "days_left": None if is_unlimited else int(remaining // 86400),
+                "hours_left": None if is_unlimited else int((remaining % 86400) // 3600),
+                "is_unlimited": is_unlimited,
                 "mobile_allowed": permissions[row["username"]],
             })
         conn.commit()
         return {
             "global_mobile": global_mobile,
+            "server_time": now,
             "permissions": permissions,
             "users": user_states,
+            "mobile_allowed": True,
+            "allowed": True,
         }
     finally:
         conn.close()

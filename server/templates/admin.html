@@ -126,7 +126,7 @@
             <td><span class="badge {% if user.status != 'active' %}inactive{% elif user.category == 'lifetime' %}lifetime{% endif %}">
               <i data-lucide="{% if user.status != 'active' %}ban{% elif user.category == 'lifetime' %}infinity{% else %}circle-check{% endif %}" aria-hidden="true"></i>
               {{ user.status|title }} · {{ user.category|title }}</span></td>
-            <td>{% if user.days_remaining is none %}Lifetime{% else %}{{ user.days_remaining }}{% endif %}</td>
+            <td>{% if user.days_remaining is none %}Lifetime{% elif user.expires_at is defined and user.expires_at %}<span data-expires-at="{{ user.expires_at }}">Loading…</span>{% else %}{{ user.days_remaining }} days{% endif %}</td>
             <td><div class="actions">
               <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/extend">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="number" name="days" value="7" min="1" max="3650" aria-label="Days to extend">
@@ -151,5 +151,21 @@
   </main>
 {% endif %}
 <script>lucide.createIcons();</script>
-</body>
-</html>
+  <script>
+  function refreshExpiryCountdowns() {
+    document.querySelectorAll('[data-expires-at]').forEach(badge => {
+      const expiryValue = Number(badge.dataset.expiresAt);
+      const expiry = Number.isFinite(expiryValue) ? expiryValue * 1000 : Date.parse(badge.dataset.expiresAt);
+      const remaining = Math.max(0, Math.floor((expiry - Date.now()) / 1000));
+      const days = Math.floor(remaining / 86400);
+      const hours = Math.floor((remaining % 86400) / 3600);
+      const minutes = Math.floor((remaining % 3600) / 60);
+      const seconds = remaining % 60;
+      badge.textContent = remaining ? `${days}d ${hours}h ${minutes}m ${seconds}s` : 'Expired';
+    });
+  }
+  refreshExpiryCountdowns();
+  setInterval(refreshExpiryCountdowns, 1000);
+  </script>
+  </body>
+  </html>
