@@ -30,7 +30,6 @@
     </style>
 </head>
 <body class="min-h-screen relative flex flex-col justify-between">
-    <!-- 100% Native 3D Cosmic Space Canvas -->
     <canvas id="cosmicCanvas3D" class="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-80"></canvas>
 
     <header class="relative z-10 glass-purple m-4 md:m-6 rounded-2xl p-4 md:px-8 flex justify-between items-center">
@@ -235,78 +234,7 @@
             document.getElementById('specDetailModal').classList.add('hidden');
         }
 
-        // Native 3D Space Engine (Zero CDN Dependency)
-        (function() {
-            const canvas = document.getElementById('cosmicCanvas3D');
-            const ctx = canvas.getContext('2d');
-            let w, h, cx, cy;
-            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cx = w/2; cy = h/2; }
-            window.addEventListener('resize', resize);
-            resize();
-
-            const stars = [];
-            for (let i = 0; i < 900; i++) {
-                stars.push({
-                    x: (Math.random() - 0.5) * 3200,
-                    y: (Math.random() - 0.5) * 3200,
-                    z: Math.random() * 2000 + 1,
-                    size: Math.random() * 1.8 + 0.8,
-                    color: Math.random() > 0.4 ? '#c084fc' : '#f0abfc'
-                });
-            }
-
-            let mouseX = 0, currentSpeed = 5.0, targetSpeed = 5.0;
-            window.addEventListener('mousemove', (e) => {
-                const normX = (e.clientX / w) * 2 - 1;
-                mouseX = normX * 220;
-                if (normX > 0.15) targetSpeed = 8.0 + (normX * 18.0);
-                else if (normX < -0.15) targetSpeed = -6.0 - (Math.abs(normX) * 14.0);
-                else targetSpeed = 5.0;
-            });
-
-            function render() {
-                ctx.fillStyle = 'rgba(6, 2, 12, 0.42)';
-                ctx.fillRect(0, 0, w, h);
-                currentSpeed += (targetSpeed - currentSpeed) * 0.12;
-
-                for (let i = 0; i < 900; i++) {
-                    const s = stars[i];
-                    const prevZ = s.z;
-                    s.z -= currentSpeed;
-                    if (s.z <= 1) { s.z = 2000; s.x = (Math.random() - 0.5) * 3200; s.y = (Math.random() - 0.5) * 3200; continue; }
-                    if (s.z > 2000) { s.z = 2; continue; }
-
-                    const k = 420 / s.z;
-                    const px = s.x * k + cx - mouseX * 0.4;
-                    const py = s.y * k + cy;
-
-                    const kPrev = 420 / (prevZ + currentSpeed * 0.9);
-                    const prevPx = s.x * kPrev + cx - mouseX * 0.4;
-                    const prevPy = s.y * kPrev + cy;
-
-                    if (px >= 0 && px <= w && py >= 0 && py <= h) {
-                        const d = 1 - s.z / 2000;
-                        ctx.strokeStyle = s.color;
-                        ctx.fillStyle = s.color;
-                        ctx.globalAlpha = Math.min(1, d * 1.2);
-                        if (Math.abs(currentSpeed) > 6.5) {
-                            ctx.lineWidth = s.size * d * 2.5;
-                            ctx.beginPath();
-                            ctx.moveTo(prevPx, prevPy);
-                            ctx.lineTo(px, py);
-                            ctx.stroke();
-                        } else {
-                            ctx.beginPath();
-                            ctx.arc(px, py, s.size * d * 2.5, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-                ctx.globalAlpha = 1.0;
-                requestAnimationFrame(render);
-            }
-            render();
-        })();
     </script>
+    <script src="/static/cosmic-background.js"></script>
 </body>
 </html>

@@ -75,6 +75,21 @@ window.installMobileApp = async function() {
 };
 
 async function handleMobileAppAction() {
+    const modal = document.getElementById('mobileDownloadConfirmModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.getElementById('mobileDownloadConfirmButton').focus();
+}
+
+function closeCompanionDownloadConfirmation() {
+    const modal = document.getElementById('mobileDownloadConfirmModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.getElementById('mobileApkDownloadBtn').focus();
+}
+
+async function confirmCompanionDownload() {
+    closeCompanionDownloadConfirmation();
     if (deferredInstallPrompt) {
         await window.installMobileApp();
         return;
@@ -153,6 +168,13 @@ async function downloadCompanionApk() {
         link.click();
         link.remove();
         setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+        fetch('/api/tracker/confirm-download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ platform: 'android' })
+        }).then((trackingResponse) => {
+            if (!trackingResponse.ok) throw new Error(`Could not record the companion download (${trackingResponse.status}).`);
+        }).catch((error) => console.error('The companion download started, but its tracking update failed.', error));
     } catch (error) {
         console.error('The Android companion download failed.', error);
         showMobileNotice('The Android companion download could not start. The PWA dashboard is ready to use; please try again later.');
@@ -361,6 +383,16 @@ document.addEventListener('DOMContentLoaded', () => {
         </section>
     </main>
 
+    <div id="mobileDownloadConfirmModal" class="fixed inset-0 z-[100001] hidden items-center justify-center bg-black/75 backdrop-blur-md p-4" role="alertdialog" aria-modal="true" aria-labelledby="mobileDownloadConfirmTitle" aria-describedby="mobileDownloadConfirmMessage">
+        <div class="glass-purple w-full max-w-md rounded-2xl border border-purple-500/50 p-6 text-center shadow-2xl">
+            <h2 id="mobileDownloadConfirmTitle" class="font-cyber text-base font-bold text-purple-100">Confirm companion download</h2>
+            <p id="mobileDownloadConfirmMessage" class="mt-3 text-sm leading-relaxed text-purple-200">Do you want to download the companion file?</p>
+            <div class="mt-6 grid grid-cols-2 gap-3">
+                <button type="button" onclick="closeCompanionDownloadConfirmation()" class="min-h-11 rounded-xl border border-purple-800 bg-purple-950/70 px-4 py-3 text-sm font-bold text-purple-200">Cancel</button>
+                <button id="mobileDownloadConfirmButton" type="button" onclick="confirmCompanionDownload()" class="purple-btn min-h-11 rounded-xl px-4 py-3 text-sm font-bold text-purple-100">Download</button>
+            </div>
+        </div>
+    </div>
     <div id="mobileNoticeModal" class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="alertdialog" aria-modal="true" aria-labelledby="mobileNoticeTitle" aria-describedby="mobileNoticeMessage">
         <div class="glass-purple w-full max-w-md rounded-2xl border border-purple-500/50 p-6 text-center shadow-2xl">
             <h2 id="mobileNoticeTitle" class="font-cyber text-base font-bold text-purple-100">Android APK</h2>
@@ -419,81 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     </script>
     
-    <!-- Same 100% Working 3D Warp Engine as Landing Page -->
-    <script>
-        (function() {
-            const canvas = document.getElementById('cosmicCanvas3D');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let w, h, cx, cy;
-            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cx = w/2; cy = h/2; }
-            window.addEventListener('resize', resize);
-            resize();
-
-            const stars = [];
-            for (let i = 0; i < 900; i++) {
-                stars.push({
-                    x: (Math.random() - 0.5) * 3200,
-                    y: (Math.random() - 0.5) * 3200,
-                    z: Math.random() * 2000 + 1,
-                    size: Math.random() * 1.8 + 0.8,
-                    color: Math.random() > 0.4 ? '#c084fc' : '#f0abfc'
-                });
-            }
-
-            let mouseX = 0, currentSpeed = 5.0, targetSpeed = 5.0;
-            window.addEventListener('mousemove', (e) => {
-                const normX = (e.clientX / w) * 2 - 1;
-                mouseX = normX * 220;
-                if (normX > 0.15) targetSpeed = 8.0 + (normX * 18.0);
-                else if (normX < -0.15) targetSpeed = -6.0 - (Math.abs(normX) * 14.0);
-                else targetSpeed = 5.0;
-            });
-
-            function render() {
-                ctx.fillStyle = 'rgba(6, 2, 12, 0.42)';
-                ctx.fillRect(0, 0, w, h);
-                currentSpeed += (targetSpeed - currentSpeed) * 0.12;
-
-                for (let i = 0; i < 900; i++) {
-                    const s = stars[i];
-                    const prevZ = s.z;
-                    s.z -= currentSpeed;
-                    if (s.z <= 1) { s.z = 2000; s.x = (Math.random() - 0.5) * 3200; s.y = (Math.random() - 0.5) * 3200; continue; }
-                    if (s.z > 2000) { s.z = 2; continue; }
-
-                    const k = 420 / s.z;
-                    const px = s.x * k + cx - mouseX * 0.4;
-                    const py = s.y * k + cy;
-
-                    const kPrev = 420 / (prevZ + currentSpeed * 0.9);
-                    const prevPx = s.x * kPrev + cx - mouseX * 0.4;
-                    const prevPy = s.y * kPrev + cy;
-
-                    if (px >= 0 && px <= w && py >= 0 && py <= h) {
-                        const d = 1 - s.z / 2000;
-                        ctx.strokeStyle = s.color;
-                        ctx.fillStyle = s.color;
-                        ctx.globalAlpha = Math.min(1, d * 1.2);
-                        if (Math.abs(currentSpeed) > 6.5) {
-                            ctx.lineWidth = s.size * d * 2.5;
-                            ctx.beginPath();
-                            ctx.moveTo(prevPx, prevPy);
-                            ctx.lineTo(px, py);
-                            ctx.stroke();
-                        } else {
-                            ctx.beginPath();
-                            ctx.arc(px, py, s.size * d * 2.5, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-                ctx.globalAlpha = 1.0;
-                requestAnimationFrame(render);
-            }
-            render();
-        })();
-    </script>
+    <script src="/static/cosmic-background.js"></script>
 
 </body>
 </html>
