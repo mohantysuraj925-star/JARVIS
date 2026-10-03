@@ -44,6 +44,7 @@
 
 <script>
 let deferredInstallPrompt = null;
+let mobileApkAllowed = true;
 
 window.triggerDirectDownload = function(platform) {
     if (platform === 'windows') {
@@ -73,6 +74,18 @@ window.installMobileApp = async function() {
     }
 };
 
+async function handleMobileAppAction() {
+    if (deferredInstallPrompt) {
+        await window.installMobileApp();
+        return;
+    }
+    if (!mobileApkAllowed) {
+        showMobileNotice('The Android companion APK is not currently available. You can still use JARVIS in your browser or add it from your browser menu.');
+        return;
+    }
+    await downloadCompanionApk();
+}
+
 window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredInstallPrompt = event;
@@ -92,26 +105,26 @@ async function refreshMobileDownloadAccess() {
         mobileButton.disabled = false;
         mobileButton.setAttribute('aria-disabled', 'false');
         mobileButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        mobileButton.onclick = downloadCompanionApk;
+        mobileButton.onclick = handleMobileAppAction;
     };
     try {
         const response = await fetch('/api/admin/get_mobile_states');
         if (!response.ok) throw new Error(`Could not load mobile access (${response.status}).`);
         const data = await response.json();
         if (data.allowed) {
+            mobileApkAllowed = true;
             enableButton();
             title.textContent = 'Download Android Companion';
-            subtitle.textContent = 'PWA READY // ANDROID APK';
+            subtitle.textContent = 'INSTALL PWA // DOWNLOAD APK';
         } else {
-            mobileButton.disabled = true;
-            mobileButton.setAttribute('aria-disabled', 'true');
-            mobileButton.onclick = null;
-            title.textContent = 'Mobile App (Coming Soon)';
-            subtitle.textContent = 'MOBILE ACCESS LOCKED';
-            mobileButton.classList.add('opacity-50', 'cursor-not-allowed');
+            mobileApkAllowed = false;
+            enableButton();
+            title.textContent = 'Download Android Companion';
+            subtitle.textContent = 'PWA READY // APK ACCESS LOCKED';
         }
     } catch (error) {
         console.error(error);
+        mobileApkAllowed = true;
         enableButton();
         title.textContent = 'Download Android Companion';
         subtitle.textContent = 'ACCESS WILL BE CHECKED ON DOWNLOAD';
@@ -329,9 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>If the APK is not ready yet, the PWA dashboard remains available in your browser.</span>
             </li>
         </ul>
-        <button type="button" onclick="window.installMobileApp()" class="purple-btn mt-4 min-h-11 w-full rounded-xl px-4 py-3 text-sm font-bold text-purple-100">Install / Add JARVIS to Home Screen</button>
     </div>
-    <button id="mobileApkDownloadBtn" type="button" aria-disabled="false" onclick="downloadCompanionApk()" class="w-full min-h-20 p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
+    <button id="mobileApkDownloadBtn" type="button" aria-disabled="false" onclick="handleMobileAppAction()" class="w-full min-h-20 p-6 rounded-2xl bg-gradient-to-br from-purple-900/40 via-purple-950/60 to-black/70 border-2 border-purple-500/40 hover:border-purple-400 flex items-center justify-between gap-6 group transition-all duration-300 shadow-2xl hover:shadow-purple-500/20 active:scale-[0.98]">
         <div class="flex items-center gap-5 text-left">
             <div class="w-16 h-16 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 group-hover:bg-purple-500/30 transition-all shadow-inner">
                 <i data-lucide="smartphone" class="w-9 h-9 text-purple-200"></i>
