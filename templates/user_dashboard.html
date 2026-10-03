@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS PORTAL // OPERATOR CONSOLE</title>
+    <meta name="theme-color" content="#8b5cf6">
+    <link rel="manifest" href="/static/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -30,13 +32,53 @@
     </style>
 
 <script>
+let deferredInstallPrompt = null;
+let mobileInstallMessage = '';
+
 window.triggerDirectDownload = function(platform) {
     if (platform === 'windows') {
         window.location.href = '/downloads/JARVIS_Desktop_Setup.exe';
-    } else if (platform === 'android') {
-        window.location.href = '/downloads/JARVIS_Companion.apk';
     }
 };
+
+window.installMobileApp = async function() {
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        mobileInstallMessage = 'ALREADY INSTALLED // HOME SCREEN';
+        refreshMobileDownloadAccess();
+        return;
+    }
+    if (!deferredInstallPrompt) {
+        mobileInstallMessage = 'USE BROWSER MENU TO INSTALL';
+        refreshMobileDownloadAccess();
+        return;
+    }
+
+    const installPrompt = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    try {
+        await installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        mobileInstallMessage = choice.outcome === 'accepted'
+            ? 'INSTALLING // CHECK HOME SCREEN'
+            : 'INSTALL PROMPT DISMISSED';
+    } catch (error) {
+        console.error('The browser install prompt failed.', error);
+        mobileInstallMessage = 'INSTALL UNAVAILABLE // USE BROWSER MENU';
+    }
+    refreshMobileDownloadAccess();
+};
+
+window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    mobileInstallMessage = '';
+});
+
+window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    mobileInstallMessage = 'INSTALLED // HOME SCREEN';
+    refreshMobileDownloadAccess();
+});
 
 async function refreshMobileDownloadAccess() {
     const mobileButton = document.getElementById('mobileApkDownloadBtn');
@@ -51,9 +93,9 @@ async function refreshMobileDownloadAccess() {
             mobileButton.disabled = false;
             mobileButton.setAttribute('aria-disabled', 'false');
             mobileButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            mobileButton.onclick = () => window.triggerDirectDownload('android');
-            title.textContent = 'Android Node';
-            subtitle.textContent = '.APK COMPANION // MOBILE';
+            mobileButton.onclick = () => window.installMobileApp();
+            title.textContent = 'Install Mobile App';
+            subtitle.textContent = mobileInstallMessage || 'PWA // MOBILE COMPANION';
         } else {
             mobileButton.disabled = true;
             mobileButton.setAttribute('aria-disabled', 'true');
@@ -74,6 +116,11 @@ async function refreshMobileDownloadAccess() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch((error) => {
+            console.error('Could not register the JARVIS service worker.', error);
+        });
+    }
     refreshMobileDownloadAccess();
     setInterval(refreshMobileDownloadAccess, 5000);
 });
@@ -186,19 +233,19 @@ document.addEventListener('DOMContentLoaded', () => {
         <ul class="text-xs text-purple-100/90 space-y-2 list-none pl-0">
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">1.</span>
-                <span>Tap the button to download the Android package (.apk).</span>
+                <span>Tap <b>Install Mobile App</b> and accept the browser install prompt. If no prompt appears, use the browser menu to install or add it to your home screen.</span>
             </li>
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">2.</span>
-                <span>Open file, enable <b>"Install unknown apps"</b>, and install.</span>
+                <span>Open JARVIS from your home screen for a standalone app experience.</span>
             </li>
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">3.</span>
-                <span>Open the app and <b>wait up to 2 minutes</b> to establish connection.</span>
+                <span>The app shell is cached for offline access; account data and live features require a connection.</span>
             </li>
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">4.</span>
-                <span>Enter your <b>API Key</b> to link the mobile companion to server.</span>
+                <span>Mobile installation is available only when enabled for your account by an administrator.</span>
             </li>
         </ul>
     </div>

@@ -14,6 +14,15 @@ if os.path.exists("static"):
 
 templates = Jinja2Templates(directory="templates")
 
+@app.get("/sw.js", include_in_schema=False)
+async def service_worker():
+    sw_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static", "sw.js"))
+    return FileResponse(
+        path=sw_path,
+        media_type="application/javascript",
+        headers={"Cache-Control": "no-cache"},
+    )
+
 def get_db():
     conn = sqlite3.connect("portal.db", timeout=15)
     conn.row_factory = sqlite3.Row
@@ -228,9 +237,19 @@ async def get_package(platform_name: str, request: Request):
         fpath = "downloads/JARVIS_Node_Companion.apk"
         fname = "JARVIS_Node_Companion.apk"
         media = "application/vnd.android.package-archive"
-        if not os.path.exists(fpath):
-            with open(fpath, "wb") as f:
-                f.write(b"PK\x03\x04" + b"JARVIS_MOBILE_NODE")
+        if not os.path.exists(fpath) or os.path.getsize(fpath) <= 1000:
+            return JSONResponse(
+                {
+                    "status": "error",
+                    "message": "The Android companion APK is not available on this server. Please try again later or contact the administrator.",
+                },
+                status_code=503,
+            )
+        return FileResponse(
+            path=fpath,
+            filename="JARVIS_Node_Companion.apk",
+            media_type="application/vnd.android.package-archive",
+        )
 
     return FileResponse(
         path=fpath,

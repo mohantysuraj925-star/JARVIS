@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#8b5cf6">
+    <title>JARVIS Companion - Offline</title>
+    <style>
+        body {
+            align-items: center;
+            background: #06020c;
+            color: #f3e8ff;
+            display: flex;
+            font: 16px/1.6 system-ui, sans-serif;
+            justify-content: center;
+            margin: 0;
+            min-height: 100vh;
+            text-align: center;
+        }
+        main { max-width: 28rem; padding: 2rem; }
+        h1 { color: #d8b4fe; }
+        button {
+            background: #7e22ce;
+            border: 1px solid #c084fc;
+            border-radius: .75rem;
+            color: white;
+            cursor: pointer;
+            font: inherit;
+            padding: .75rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>You're offline</h1>
+        <p>The JARVIS app shell is available, but your dashboard and account features need an internet connection.</p>
+        <button type="button" onclick="location.reload()">Try again</button>
+    </main>
+</body>
+</html>
