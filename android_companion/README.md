@@ -49,11 +49,12 @@ The project uses Android Gradle Plugin 8.7.3, Kotlin 2.0.21, and Gradle 8.9.
 3. Select **Build > Make Project**, or run the `app` configuration on an
    Android 8.0+ device/emulator.
 
-With Gradle 8.9 installed and `ANDROID_HOME` configured, the command-line
-equivalent from this directory is:
+With Android Studio/JDK 17 and `ANDROID_HOME` configured, run the wrapper from
+this directory (it downloads the pinned Gradle 8.9 distribution and verifies
+its SHA-256 checksum):
 
 ```powershell
-gradle :app:testDebugUnitTest :app:assembleDebug
+.\gradlew.bat :app:testDebugUnitTest :app:assembleDebug
 ```
 
 To pair, enter an HTTPS origin such as `https://companion.example`, account
