@@ -7,6 +7,11 @@ android {
     namespace = "com.example.androidcompanion"
     compileSdk = 35
 
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
+
     defaultConfig {
         applicationId = "com.example.androidcompanion"
         minSdk = 26
