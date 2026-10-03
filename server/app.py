@@ -1,13 +1,22 @@
 import os
+import json
 import sqlite3
 import time
+import asyncio
+import hashlib
+import secrets
+import uuid
 from datetime import datetime
-from fastapi import FastAPI, Request
+from typing import Literal
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel, Field
 
 app = FastAPI()
+_companion_connections: dict[str, WebSocket] = {}
+_companion_connections_lock = asyncio.Lock()
 
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -367,6 +376,411 @@ def _mobile_access_allowed(request: Request):
         allowed = _global_mobile_enabled(conn) and _user_mobile_allowed(conn, username)
         conn.commit()
         return allowed
+    finally:
+        conn.close()
+
+
+class CompanionPairRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+    password: str = Field(min_length=1, max_length=1024)
+    device_name: str = Field(min_length=1, max_length=80)
+
+
+class CompanionCommandRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+    password: str = Field(min_length=1, max_length=1024)
+    device_id: str = Field(min_length=1, max_length=64)
+    action: Literal["open_app"]
+    app: Literal["whatsapp", "youtube", "settings"]
+
+
+class CompanionRevokeRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+    password: str = Field(min_length=1, max_length=1024)
+    device_id: str = Field(min_length=1, max_length=64)
+
+
+class CompanionCommandResultRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+    password: str = Field(min_length=1, max_length=1024)
+    command_id: str = Field(min_length=1, max_length=64)
+
+
+def _ensure_companion_tables(conn):
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS companion_devices (
+            device_id TEXT PRIMARY KEY,
+            username TEXT NOT NULL,
+            device_name TEXT NOT NULL,
+            token_hash TEXT NOT NULL UNIQUE,
+            created_at REAL NOT NULL,
+            last_seen REAL,
+            revoked INTEGER NOT NULL DEFAULT 0
+        );
+        CREATE TABLE IF NOT EXISTS companion_commands (
+            command_id TEXT PRIMARY KEY,
+            device_id TEXT NOT NULL,
+            username TEXT NOT NULL,
+            status TEXT NOT NULL,
+            updated_at REAL NOT NULL
+        );
+    """)
+
+
+def _companion_rate_limited(conn, device_id):
+    now = time.time()
+    conn.execute(
+        "DELETE FROM companion_commands WHERE updated_at < ?",
+        (now - 7 * 86400,),
+    )
+    count = conn.execute(
+        "SELECT COUNT(*) FROM companion_commands WHERE device_id = ? AND updated_at > ?",
+        (device_id, now - 60),
+    ).fetchone()[0]
+    return count >= 10
+
+
+def _companion_account_error(username, password, require_mobile=True):
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT username, password, role, is_active FROM users "
+            "WHERE LOWER(TRIM(username)) = LOWER(TRIM(?))",
+            (username,),
+        ).fetchone()
+        if not row or not secrets.compare_digest(
+            str(row["password"]).encode("utf-8"),
+            password.encode("utf-8"),
+        ):
+            return JSONResponse(
+                {"status": "error", "message": "Invalid username or password."},
+                status_code=401,
+            ), None
+        if not row["is_active"]:
+            return JSONResponse(
+                {"status": "error", "message": "Account deactivated."},
+                status_code=403,
+            ), None
+        if require_mobile and row["role"] != "admin":
+            _ensure_mobile_permission_tables(conn)
+            if not _global_mobile_enabled(conn) or not _user_mobile_allowed(conn, row["username"]):
+                return JSONResponse(
+                    {"status": "error", "message": "Mobile companion access is not enabled for this account."},
+                    status_code=403,
+                ), None
+        return None, row["username"]
+    finally:
+        conn.close()
+
+
+@app.post("/api/companion/pair")
+async def pair_companion(payload: CompanionPairRequest):
+    account_error, username = _companion_account_error(payload.username, payload.password)
+    if account_error:
+        return account_error
+
+    device_id = str(uuid.uuid4())
+    access_token = secrets.token_urlsafe(32)
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        conn.execute(
+            "INSERT INTO companion_devices "
+            "(device_id, username, device_name, token_hash, created_at) VALUES (?, ?, ?, ?, ?)",
+            (
+                device_id,
+                username,
+                payload.device_name.strip(),
+                hashlib.sha256(access_token.encode("utf-8")).hexdigest(),
+                time.time(),
+            ),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+    return {
+        "status": "paired",
+        "device_id": device_id,
+        "access_token": access_token,
+    }
+
+
+@app.post("/api/companion/revoke")
+async def revoke_companion(payload: CompanionRevokeRequest):
+    account_error, username = _companion_account_error(
+        payload.username,
+        payload.password,
+        require_mobile=False,
+    )
+    if account_error:
+        return account_error
+
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        cursor = conn.execute(
+            "UPDATE companion_devices SET revoked = 1 "
+            "WHERE device_id = ? AND username = ? AND revoked = 0",
+            (payload.device_id, username),
+        )
+        conn.commit()
+        if cursor.rowcount == 0:
+            return JSONResponse(
+                {"status": "error", "message": "Paired device not found."},
+                status_code=404,
+            )
+    finally:
+        conn.close()
+
+    async with _companion_connections_lock:
+        websocket = _companion_connections.pop(payload.device_id, None)
+    if websocket:
+        await websocket.close(code=1008, reason="Device pairing revoked")
+    return {"status": "revoked", "device_id": payload.device_id}
+
+
+@app.websocket("/ws/companion")
+async def companion_socket(websocket: WebSocket):
+    authorization = websocket.headers.get("authorization", "")
+    scheme, _, access_token = authorization.partition(" ")
+    if scheme.lower() != "bearer" or not access_token:
+        await websocket.close(code=4401, reason="Bearer token required")
+        return
+
+    token_hash = hashlib.sha256(access_token.encode("utf-8")).hexdigest()
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        device = conn.execute(
+            "SELECT d.device_id, d.username, u.role FROM companion_devices d "
+            "JOIN users u ON u.username = d.username "
+            "WHERE d.token_hash = ? AND d.revoked = 0 AND u.is_active = 1",
+            (token_hash,),
+        ).fetchone()
+        if not device:
+            await websocket.close(code=4401, reason="Invalid or revoked pairing token")
+            return
+        _ensure_mobile_permission_tables(conn)
+        if device["role"] != "admin" and (
+            not _global_mobile_enabled(conn)
+            or not _user_mobile_allowed(conn, device["username"])
+        ):
+            await websocket.close(code=4403, reason="Mobile companion access disabled")
+            return
+    finally:
+        conn.close()
+
+    device_id = device["device_id"]
+    await websocket.accept()
+    async with _companion_connections_lock:
+        previous = _companion_connections.get(device_id)
+        _companion_connections[device_id] = websocket
+    if previous and previous is not websocket:
+        await previous.close(code=4001, reason="A newer connection replaced this one")
+
+    try:
+        while True:
+            raw_message = await websocket.receive_text()
+            if len(raw_message) > 4096:
+                await websocket.close(code=1009, reason="Message too large")
+                break
+            try:
+                message = json.loads(raw_message)
+            except json.JSONDecodeError:
+                await websocket.close(code=1003, reason="Invalid JSON")
+                break
+            if not isinstance(message, dict):
+                await websocket.close(code=1003, reason="JSON object required")
+                break
+
+            if message.get("type") == "request_command":
+                app_name = message.get("app")
+                if not isinstance(app_name, str) or app_name not in {"whatsapp", "youtube", "settings"}:
+                    await websocket.send_json({
+                        "type": "command_error",
+                        "message": "Only WhatsApp, YouTube, and Settings can be opened.",
+                    })
+                    continue
+
+                command_id = str(uuid.uuid4())
+                conn = get_db()
+                try:
+                    owner = conn.execute(
+                        "SELECT d.username, d.revoked, u.role, u.is_active "
+                        "FROM companion_devices d JOIN users u ON u.username = d.username "
+                        "WHERE d.device_id = ?",
+                        (device_id,),
+                    ).fetchone()
+                    if (
+                        not owner
+                        or owner["revoked"]
+                        or not owner["is_active"]
+                        or (
+                            owner["role"] != "admin"
+                            and (
+                                not _global_mobile_enabled(conn)
+                                or not _user_mobile_allowed(conn, owner["username"])
+                            )
+                        )
+                    ):
+                        await websocket.close(code=4403, reason="Mobile companion access disabled")
+                        break
+
+                    conn.execute(
+                        "UPDATE companion_devices SET last_seen = ? WHERE device_id = ?",
+                        (time.time(), device_id),
+                    )
+                    if _companion_rate_limited(conn, device_id):
+                        await websocket.send_json({
+                            "type": "command_error",
+                            "message": "Too many commands. Please wait before trying again.",
+                        })
+                        continue
+                    conn.execute(
+                        "INSERT INTO companion_commands "
+                        "(command_id, device_id, username, status, updated_at) "
+                        "VALUES (?, ?, ?, 'pending', ?)",
+                        (command_id, device_id, owner["username"], time.time()),
+                    )
+                    conn.commit()
+                finally:
+                    conn.close()
+                await websocket.send_json({
+                    "id": command_id,
+                    "action": "open_app",
+                    "app": app_name,
+                    "requires_confirmation": True,
+                })
+                continue
+
+            conn = get_db()
+            try:
+                conn.execute(
+                    "UPDATE companion_devices SET last_seen = ? "
+                    "WHERE device_id = ? AND revoked = 0",
+                    (time.time(), device_id),
+                )
+                if (
+                    message.get("type") == "command_result"
+                    and isinstance(message.get("status"), str)
+                    and message.get("status") in {"launched", "cancelled", "unavailable"}
+                    and isinstance(message.get("id"), str)
+                ):
+                    conn.execute(
+                        "UPDATE companion_commands SET status = ?, updated_at = ? "
+                        "WHERE command_id = ? AND device_id = ? AND status = 'pending'",
+                        (message["status"], time.time(), message["id"], device_id),
+                    )
+                conn.commit()
+            finally:
+                conn.close()
+    except WebSocketDisconnect:
+        pass
+    finally:
+        async with _companion_connections_lock:
+            if _companion_connections.get(device_id) is websocket:
+                _companion_connections.pop(device_id, None)
+
+
+@app.post("/api/companion/command")
+async def send_companion_command(payload: CompanionCommandRequest):
+    account_error, username = _companion_account_error(payload.username, payload.password)
+    if account_error:
+        return account_error
+
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        device = conn.execute(
+            "SELECT device_id FROM companion_devices "
+            "WHERE device_id = ? AND username = ? AND revoked = 0",
+            (payload.device_id, username),
+        ).fetchone()
+    finally:
+        conn.close()
+    if not device:
+        return JSONResponse(
+            {"status": "error", "message": "Paired device not found."},
+            status_code=404,
+        )
+
+    async with _companion_connections_lock:
+        websocket = _companion_connections.get(payload.device_id)
+    if not websocket:
+        return JSONResponse(
+            {"status": "error", "message": "The paired device is not connected."},
+            status_code=409,
+        )
+
+    command_id = str(uuid.uuid4())
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        if _companion_rate_limited(conn, payload.device_id):
+            conn.commit()
+            return JSONResponse(
+                {"status": "error", "message": "Too many commands. Please wait before trying again."},
+                status_code=429,
+            )
+        conn.execute(
+            "INSERT INTO companion_commands "
+            "(command_id, device_id, username, status, updated_at) "
+            "VALUES (?, ?, ?, 'pending', ?)",
+            (command_id, payload.device_id, username, time.time()),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    try:
+        await websocket.send_json({
+            "id": command_id,
+            "action": payload.action,
+            "app": payload.app,
+            "requires_confirmation": True,
+        })
+    except (WebSocketDisconnect, RuntimeError):
+        conn = get_db()
+        try:
+            conn.execute(
+                "UPDATE companion_commands SET status = 'delivery_failed', updated_at = ? "
+                "WHERE command_id = ? AND status = 'pending'",
+                (time.time(), command_id),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return JSONResponse(
+            {"status": "error", "message": "The paired device disconnected before delivery."},
+            status_code=409,
+        )
+    return {"status": "sent", "command_id": command_id}
+
+
+@app.post("/api/companion/command/result")
+async def get_companion_command_result(payload: CompanionCommandResultRequest):
+    account_error, username = _companion_account_error(payload.username, payload.password)
+    if account_error:
+        return account_error
+
+    conn = get_db()
+    try:
+        _ensure_companion_tables(conn)
+        result = conn.execute(
+            "SELECT status, updated_at FROM companion_commands "
+            "WHERE command_id = ? AND username = ?",
+            (payload.command_id, username),
+        ).fetchone()
+        if not result:
+            return JSONResponse(
+                {"status": "error", "message": "Command not found."},
+                status_code=404,
+            )
+        return {
+            "command_id": payload.command_id,
+            "status": result["status"],
+            "updated_at": result["updated_at"],
+        }
     finally:
         conn.close()
 
