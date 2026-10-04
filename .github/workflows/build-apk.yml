@@ -30,7 +30,7 @@ jobs:
         working-directory: ./android_companion
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --stacktrace -x lint -x test
+          ./gradlew assembleDebug --info --stacktrace -x lint -x test
 
       - name: Stage APK for the web server
         run: |
