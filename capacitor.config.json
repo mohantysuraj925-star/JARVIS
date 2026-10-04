@@ -1,0 +1,9 @@
+﻿{
+  "appId": "com.jarvis.companion",
+  "appName": "JARVIS",
+  "webDir": "www",
+  "server": {
+    "url": "https://jarvis-live-render-url.onrender.com",
+    "cleartext": true
+  }
+}

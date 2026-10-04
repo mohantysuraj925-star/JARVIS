@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#06020c">
+    <title>JARVIS PORTAL // MASTER CONSOLE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #06020c; color: #f3e8ff; min-height: 100vh; overflow-x: hidden; }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-purple {
+            background: rgba(20, 8, 36, 0.85);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+        .purple-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(126, 34, 206, 0.45));
+            border: 1px solid rgba(192, 132, 252, 0.55);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+            transition: all 0.2s ease;
+        }
+        .purple-btn:hover {
+            border-color: #c084fc;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
+            transform: translateY(-2px);
+        }
+        button, a { touch-action: manipulation; }
+        #globalToggleMasterBtn { min-height: 44px; padding-inline: 1rem; }
+        input[type="checkbox"] { width: 24px; height: 24px; accent-color: #22d3ee; }
+        @media (max-width: 640px) {
+            body { padding: 1rem .75rem max(1rem, env(safe-area-inset-bottom)); }
+            header { flex-wrap: wrap; }
+            header > div:last-child { width: 100%; flex-wrap: wrap; justify-content: space-between; }
+            header a { min-height: 44px; min-width: 44px; }
+            main > section { padding: 1rem; }
+            .table-wrap { -webkit-overflow-scrolling: touch; }
+        }
+    </style>
+
+</head>
+<body class="p-3 sm:p-5 md:p-8 flex flex-col gap-6 max-w-7xl mx-auto relative min-h-screen">
+    <canvas id="cosmicCanvas3D" class="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-80"></canvas>
+
+    <header class="relative z-10 glass-purple rounded-2xl p-4 px-6 flex justify-between items-center gap-3">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center text-purple-300">
+                <i data-lucide="shield" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="font-cyber font-bold text-lg text-purple-200">JARVIS PORTAL</h1>
+                <p class="text-[10px] font-mono text-purple-400">SUPER MASTER CONTROL // AUTHORIZED</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 font-mono">
+            <a href="/" class="purple-btn px-4 py-2 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
+                <i data-lucide="home" class="w-4 h-4 text-purple-300"></i>
+                <span>← Home Page</span>
+            </a>
+            <button id="globalToggleMasterBtn" type="button" onclick="toggleMasterGlobal()" class="px-3 py-2 rounded-xl text-xs font-bold text-white whitespace-nowrap" style="background:#67433d;">
+                All are Deactivate
+            </button>
+            <div class="hidden sm:block text-right">
+                <span class="text-[9px] text-purple-400 block">CREATOR ADMIN</span>
+                <span class="text-xs font-bold text-purple-200">{{ username }}</span>
+            </div>
+            <a href="/logout" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold hover:bg-rose-500/20">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10 flex flex-col gap-6">
+        <!-- Creator Package Download Section -->
+        <section class="glass-purple rounded-2xl p-5 flex flex-col gap-4">
+            <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+                <h3 class="font-cyber text-sm font-bold text-purple-200 flex items-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4 text-purple-400"></i> Creator Build Downloads (Admin Excluded from Counts)
+                </h3>
+                <span class="text-[10px] font-mono text-emerald-400">UNRESTRICTED ACCESS</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="/get-package/windows" class="purple-btn p-4 rounded-xl flex items-center justify-between group">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.051-1.899"/></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-purple-100 block">Download Windows Client</span>
+                            <span class="text-[10px] font-mono text-purple-400 font-semibold">.EXE STANDALONE</span>
+                        </div>
+                    </div>
+                    <i data-lucide="download" class="w-4 h-4 text-purple-400"></i>
+                </a>
+
+                <button type="button" onclick="openAdminDownloadConfirmation()" class="purple-btn p-4 rounded-xl flex items-center justify-between group text-left">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300">
+                            <svg class="w-5 h-5 fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-purple-100 block">Download Android Node</span>
+                            <span class="text-[10px] font-mono text-purple-400 font-semibold">.APK COMPANION</span>
+                        </div>
+                    </div>
+                    <i data-lucide="download" class="w-4 h-4 text-purple-400"></i>
+                </button>
+            </div>
+        </section>
+
+        {% if role == 'admin' and settings %}
+        <section class="glass-purple rounded-2xl p-5 flex flex-col gap-4">
+            <div class="border-b border-purple-900/60 pb-3">
+                <h2 class="font-cyber font-bold text-sm tracking-wide text-purple-200">Homepage Content Editor</h2>
+                <p class="mt-2 text-xs text-purple-300/70">Changes update the public homepage. The phone field is visible only to the administrator and is never shown publicly.</p>
+            </div>
+            <form id="homepageSettingsForm" onsubmit="return saveHomepageSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Creator name
+                    <input name="creator_name" value="{{ settings.creator_name }}" maxlength="100" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Contact email
+                    <input name="email" type="email" value="{{ settings.email }}" maxlength="254" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Phone (admin-only; not displayed publicly)
+                    <input name="phone" type="tel" value="{{ settings.phone }}" maxlength="64" autocomplete="off" class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Gemini API guide URL (HTTPS only)
+                    <input name="api_guide_link" type="url" value="{{ settings.api_guide_link }}" maxlength="2048" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="md:col-span-2 flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    About the creator / project journey
+                    <textarea name="journey_text" rows="4" maxlength="4000" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">{{ settings.journey_text }}</textarea>
+                </label>
+                <label class="md:col-span-2 flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Footer text
+                    <textarea name="footer_text" rows="3" maxlength="1000" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">{{ settings.footer_text }}</textarea>
+                </label>
+                <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center gap-3">
+                    <button type="submit" class="purple-btn min-h-11 rounded-xl px-5 py-3 text-xs font-bold text-purple-100">Save Changes</button>
+                    <p id="homepageSettingsFeedback" class="text-xs text-purple-300" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
+        <!-- Master Telemetry & Nodes -->
+        <section class="glass-purple rounded-2xl p-5 flex flex-col gap-4">
+            <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-purple-400"></i>
+                    <h2 class="font-cyber font-bold text-sm tracking-wide text-purple-200">Live Operator Telemetry</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="refreshMasterConsole()" class="flex items-center gap-1 bg-purple-900/40 border border-purple-600 text-purple-300 px-3 py-1 rounded-lg text-xs font-mono hover:bg-purple-900/60">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh Data
+                    </button>
+                    <button onclick="clearAllMetricsToZero()" class="flex items-center gap-1 bg-rose-950/40 border border-rose-600 text-rose-400 px-3 py-1 rounded-lg text-xs font-mono hover:bg-rose-900/40">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset Counts
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 font-mono">
+                <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
+                    <span class="text-[10px] tracking-wider text-purple-400/80 block mb-1">TOTAL OPERATORS</span>
+                    <h3 id="statTotalUsers" class="text-2xl font-bold text-purple-100">0</h3>
+                </div>
+                <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
+                    <span class="text-[10px] tracking-wider text-emerald-400 block mb-1">ACTIVE OPERATORS</span>
+                    <h3 id="statActiveUsers" class="text-2xl font-bold text-emerald-400">0</h3>
+                </div>
+                <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
+                    <span class="text-[10px] tracking-wider text-purple-300 block mb-1">WINDOWS DOWNLOADS</span>
+                    <h3 id="statWinDownloads" class="text-2xl font-bold text-purple-200">0</h3>
+                </div>
+                <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
+                    <span class="text-[10px] tracking-wider text-fuchsia-400 block mb-1">ANDROID DOWNLOADS</span>
+                    <h3 id="statApkDownloads" class="text-2xl font-bold text-fuchsia-300">0</h3>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3 mt-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="network" class="w-4 h-4 text-purple-400"></i> Managed Operator Nodes
+                    </span>
+                    <span id="nodeCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-900/40 border border-purple-700 text-purple-300">0 NODES</span>
+                </div>
+                <div id="masterNodesContainer" class="flex flex-col gap-3 max-h-[460px] overflow-y-auto pr-1"></div>
+                <div class="overflow-x-auto rounded-xl border border-purple-900/60">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead class="bg-purple-950/70 text-purple-300">
+                            <tr>
+                                <th class="p-3">Username</th>
+                                <th class="p-3">Subscription</th>
+                                <th class="p-3 text-center">Mobile App Access</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mobileAccessTableBody" class="divide-y divide-purple-900/50">
+                            <tr><td colspan="3" class="p-3 text-center text-purple-400">Loading user permissions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/admin_actions.js"></script>
+    <script>lucide.createIcons();</script>
+    
+    <script src="/static/cosmic-background.js"></script>
+
+
+<script>
+let isAllDeactivated = true;
+let adminServerOffset = 0;
+
+async function saveHomepageSettings(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const feedback = document.getElementById('homepageSettingsFeedback');
+    button.disabled = true;
+    feedback.textContent = '';
+
+    try {
+        const response = await fetch('/admin/update-settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || `Could not save homepage settings (${response.status}).`);
+        feedback.textContent = result.message;
+        feedback.className = 'text-xs text-emerald-300';
+    } catch (error) {
+        console.error('Could not save homepage settings.', error);
+        feedback.textContent = error.message || 'Could not save homepage settings.';
+        feedback.className = 'text-xs text-rose-400';
+    } finally {
+        button.disabled = false;
+    }
+    return false;
+}
+
+async function downloadAdminAndroid() {
+    try {
+        const response = await fetch('/get-package/android');
+        if (!response.ok) {
+            let message = 'PWA is ready to use. Android APK is building via GitHub Actions.';
+            try {
+                const result = await response.json();
+                if (response.status !== 503 && result.message) message = result.message;
+            } catch (error) {
+                console.error('Could not read the companion download response.', error);
+            }
+            showAdminMobileNotice(message);
+            return;
+        }
+        const downloadUrl = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'JARVIS_Node_Companion.apk';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+        fetch('/api/tracker/confirm-download', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ platform: 'android' })
+        }).then((trackingResponse) => {
+            if (!trackingResponse.ok) throw new Error(`Could not record the companion download (${trackingResponse.status}).`);
+        }).catch((error) => console.error('The companion download started, but its tracking update failed.', error));
+    } catch (error) {
+        console.error('The Android companion download failed.', error);
+        showAdminMobileNotice('The Android companion download could not start. The PWA dashboard is ready to use; please try again later.');
+    }
+}
+
+function openAdminDownloadConfirmation() {
+    const modal = document.getElementById('adminDownloadConfirmModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.getElementById('adminDownloadConfirmButton').focus();
+}
+
+function closeAdminDownloadConfirmation() {
+    const modal = document.getElementById('adminDownloadConfirmModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+async function confirmAdminAndroidDownload() {
+    closeAdminDownloadConfirmation();
+    await downloadAdminAndroid();
+}
+
+function showAdminMobileNotice(message) {
+    const modal = document.getElementById('adminMobileNoticeModal');
+    document.getElementById('adminMobileNoticeMessage').textContent = message;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.getElementById('adminMobileNoticeClose').focus();
+}
+
+function closeAdminMobileNotice() {
+    const modal = document.getElementById('adminMobileNoticeModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function refreshExpiryCountdowns() {
+    document.querySelectorAll('[data-expires-at]').forEach(cell => {
+        const expiresAt = Number(cell.dataset.expiresAt) * 1000;
+        const remaining = Math.max(0, Math.floor((expiresAt - (Date.now() + adminServerOffset)) / 1000));
+        const days = Math.floor(remaining / 86400);
+        const hours = Math.floor((remaining % 86400) / 3600);
+        const minutes = Math.floor((remaining % 3600) / 60);
+        const seconds = remaining % 60;
+        cell.textContent = remaining
+            ? `${days}d ${hours}h ${minutes}m ${seconds}s`
+            : 'EXPIRED';
+        cell.className = `p-3 font-bold ${remaining ? 'text-cyan-300' : 'text-rose-400'}`;
+    });
+}
+
+async function syncMobileAdminSystem() {
+    const tbody = document.getElementById('mobileAccessTableBody');
+    try {
+        const response = await fetch('/api/admin/get_mobile_states');
+        if (!response.ok) throw new Error(`Could not load mobile permissions (${response.status}).`);
+        const data = await response.json();
+        adminServerOffset = Number(data.server_time) * 1000 - Date.now();
+        isAllDeactivated = !data.global_mobile;
+
+        const masterBtn = document.getElementById('globalToggleMasterBtn');
+        masterBtn.textContent = isAllDeactivated ? 'All are Deactivate' : 'All Activate';
+        masterBtn.style.background = isAllDeactivated ? '#67433d' : '#536357';
+
+        const users = data.users || [];
+        if (tbody.querySelector('tr:not([data-username])')) tbody.innerHTML = '';
+        const existingRows = new Map(
+            Array.from(tbody.querySelectorAll('tr[data-username]'))
+                .map(row => [row.dataset.username, row])
+        );
+        users.forEach(user => {
+            let row = existingRows.get(user.username);
+            if (!row) {
+                row = document.createElement('tr');
+                row.dataset.username = user.username;
+
+                const nameCell = document.createElement('td');
+                nameCell.className = 'p-3 text-purple-100';
+                nameCell.textContent = user.username;
+                row.appendChild(nameCell);
+
+                const daysCell = document.createElement('td');
+                daysCell.className = 'p-3 font-bold';
+                row.appendChild(daysCell);
+
+                const accessCell = document.createElement('td');
+                accessCell.className = 'p-3 text-center';
+                const controls = document.createElement('div');
+                controls.className = 'inline-flex items-center justify-center gap-3';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.setAttribute('aria-label', `Allow mobile app access for ${user.username}`);
+                checkbox.addEventListener('change', () => { checkbox.dataset.dirty = 'true'; });
+                const submit = document.createElement('button');
+                submit.type = 'button';
+                submit.textContent = 'Submit';
+                submit.className = 'min-h-11 min-w-16 rounded bg-cyan-400 px-3 py-2 font-bold text-slate-950';
+                submit.addEventListener('click', () => submitUserAccess(user.username, checkbox, submit));
+                controls.append(checkbox, submit);
+                accessCell.appendChild(controls);
+                row.appendChild(accessCell);
+                tbody.appendChild(row);
+            }
+
+            const daysCell = row.children[1];
+            if (user.is_unlimited) {
+                daysCell.removeAttribute('data-expires-at');
+                daysCell.textContent = 'UNLIMITED';
+                daysCell.className = 'p-3 font-bold text-cyan-300';
+            } else {
+                daysCell.dataset.expiresAt = user.expires_at;
+            }
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox && !checkbox.dataset.dirty && document.activeElement !== checkbox) {
+                checkbox.checked = user.mobile_allowed;
+            }
+            existingRows.delete(user.username);
+        });
+        existingRows.forEach(row => row.remove());
+        if (!users.length) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-purple-400">No managed users found.</td></tr>';
+        }
+    } catch (error) {
+        console.error(error);
+        if (tbody && !tbody.querySelector('[data-username]')) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-rose-400">Unable to load mobile permissions.</td></tr>';
+        }
+    }
+}
+
+async function toggleMasterGlobal() {
+    try {
+        const response = await fetch(`/api/admin/toggle_all_mobile?enabled=${isAllDeactivated}`);
+        if (!response.ok) throw new Error(`Could not update global mobile access (${response.status}).`);
+        await syncMobileAdminSystem();
+    } catch (error) {
+        console.error(error);
+        alert('Could not update global mobile access. Please try again.');
+    }
+}
+
+async function submitUserAccess(username, checkbox, submitButton) {
+    if (submitButton.dataset.busy === 'true') return;
+    submitButton.dataset.busy = 'true';
+    submitButton.setAttribute('aria-busy', 'true');
+    try {
+        const response = await fetch(
+            `/api/admin/set_single_mobile?username=${encodeURIComponent(username)}&allow=${checkbox.checked}`
+        );
+        if (!response.ok) throw new Error(`Could not update mobile access for ${username} (${response.status}).`);
+        delete checkbox.dataset.dirty;
+        await syncMobileAdminSystem();
+    } catch (error) {
+        console.error(error);
+        alert(`Could not update mobile access for ${username}. Please try again.`);
+    } finally {
+        delete submitButton.dataset.busy;
+        submitButton.removeAttribute('aria-busy');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    syncMobileAdminSystem();
+    setInterval(syncMobileAdminSystem, 5000);
+    refreshExpiryCountdowns();
+    setInterval(refreshExpiryCountdowns, 1000);
+});
+</script>
+
+<div id="adminDownloadConfirmModal" class="fixed inset-0 z-[100001] hidden items-center justify-center bg-black/75 backdrop-blur-md p-4" role="alertdialog" aria-modal="true" aria-labelledby="adminDownloadConfirmTitle" aria-describedby="adminDownloadConfirmMessage">
+    <div class="glass-purple w-full max-w-md rounded-2xl border border-purple-500/50 p-6 text-center shadow-2xl">
+        <h2 id="adminDownloadConfirmTitle" class="font-cyber text-base font-bold text-purple-100">Confirm companion download</h2>
+        <p id="adminDownloadConfirmMessage" class="mt-3 text-sm leading-relaxed text-purple-200">Do you want to download the companion file?</p>
+        <div class="mt-6 grid grid-cols-2 gap-3">
+            <button type="button" onclick="closeAdminDownloadConfirmation()" class="min-h-11 rounded-xl border border-purple-800 bg-purple-950/70 px-4 py-3 text-sm font-bold text-purple-200">Cancel</button>
+            <button id="adminDownloadConfirmButton" type="button" onclick="confirmAdminAndroidDownload()" class="purple-btn min-h-11 rounded-xl px-4 py-3 text-sm font-bold text-purple-100">Download</button>
+        </div>
+    </div>
+</div>
+<div id="adminMobileNoticeModal" class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="alertdialog" aria-modal="true" aria-labelledby="adminMobileNoticeTitle" aria-describedby="adminMobileNoticeMessage">
+    <div class="glass-purple w-full max-w-md rounded-2xl border border-purple-500/50 p-6 text-center shadow-2xl">
+        <h2 id="adminMobileNoticeTitle" class="font-cyber text-base font-bold text-purple-100">Android APK</h2>
+        <p id="adminMobileNoticeMessage" class="mt-3 text-sm leading-relaxed text-purple-200">PWA is ready to use. Android APK is building via GitHub Actions.</p>
+        <button id="adminMobileNoticeClose" type="button" onclick="closeAdminMobileNotice()" class="purple-btn mt-6 min-h-11 w-full rounded-xl px-4 py-3 text-sm font-bold text-purple-100">Continue using dashboard</button>
+    </div>
+</div>
+
+</body>
+</html>

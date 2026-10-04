@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS PORTAL // OPERATOR CONSOLE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #06020c; color: #f3e8ff; min-height: 100vh; overflow-x: hidden; }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-purple {
+            background: rgba(22, 9, 38, 0.85);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+        }
+        .purple-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(126, 34, 206, 0.45));
+            border: 1px solid rgba(192, 132, 252, 0.55);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+            transition: all 0.25s ease;
+        }
+        .purple-btn:hover {
+            border-color: #c084fc;
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="p-3 sm:p-5 md:p-8 flex flex-col gap-6 max-w-6xl mx-auto min-h-screen relative">
+
+    <!-- Brand New 3D AI Cyber Synapse Canvas -->
+    <canvas id="aiSynapseCanvas" class="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-75"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="relative z-10 glass-purple rounded-2xl p-4 px-6 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-xl bg-purple-500/15 border border-purple-500/50 flex items-center justify-center text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                <i data-lucide="shield" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="font-cyber font-bold text-lg text-purple-200">JARVIS PORTAL</h1>
+                <p class="text-[10px] font-mono text-purple-400">OPERATOR CONSOLE // AI RUNTIME</p>
+            </div>
+        </div>
+
+        <!-- Center / Right Navigation Controls -->
+        <div class="flex items-center gap-3 font-mono">
+            <!-- Dedicated HOME PAGE BUTTON -->
+            <a href="/" class="purple-btn px-4 py-2 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
+                <i data-lucide="home" class="w-4 h-4 text-purple-300"></i>
+                <span>Go to Home Page</span>
+            </a>
+
+            <div class="hidden sm:flex flex-col text-right">
+                <span class="text-[9px] text-purple-400">AUTHENTICATED AS</span>
+                <span class="text-xs font-bold text-purple-200">{{ username }}</span>
+            </div>
+
+            <a href="/logout" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold hover:bg-rose-500/20 transition-all">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">Logout</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Status & Downloads -->
+        <section class="lg:col-span-7 flex flex-col gap-6">
+            <div class="glass-purple rounded-2xl p-6 flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-mono text-emerald-400 flex items-center gap-2 font-bold">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> AI LINK ESTABLISHED
+                    </span>
+                    <span class="px-3 py-1 rounded text-[11px] font-mono bg-purple-900/40 border border-purple-500 text-purple-200 font-bold">
+                        10 DAYS ACCESS
+                    </span>
+                </div>
+                <h2 class="font-cyber text-xl font-bold text-purple-100 flex items-center gap-2.5 mt-1">
+                    <i data-lucide="terminal" class="w-5 h-5 text-purple-400"></i> Welcome, Operator {{ username }}
+                </h2>
+                <p class="text-xs text-purple-300/80 leading-relaxed">
+                    Aapka node active hai. Background me 3D AI Neural Matrix chal raha hai—cursor ko screen ke right side le jane par <b>Zoom In</b> hoga, aur left side par <b>Zoom Out</b> hoga.
+                </p>
+            </div>
+
+            <!-- Downloads Section -->
+            <div class="glass-purple rounded-2xl p-6 flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+                    <h3 class="font-cyber text-sm font-bold text-purple-200">Verified Binary Downloads</h3>
+                    <span class="text-[10px] font-mono text-purple-400">CONFIRMED DISK SAVE</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <!-- Windows Client -->
+                    <button onclick="downloadWithConfirmation('windows', '/get-package/windows', 'JARVIS_Desktop_Setup.exe')" 
+                            class="purple-btn p-4 rounded-xl flex items-center justify-between group text-left w-full">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.051-1.899"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-purple-100 block">Windows Client</span>
+                                <span class="text-[10px] font-mono text-purple-400 font-semibold">.EXE STANDALONE</span>
+                            </div>
+                        </div>
+                        <i data-lucide="download" class="w-4 h-4 text-purple-400 group-hover:text-purple-200 transition-colors"></i>
+                    </button>
+
+                    <!-- Android Companion -->
+                    <button onclick="downloadWithConfirmation('android', '/get-package/android', 'JARVIS_Node_Companion.apk')" 
+                            class="purple-btn p-4 rounded-xl flex items-center justify-between group text-left w-full">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 fill-none stroke-current stroke-2 stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24">
+                                    <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+                                    <path d="M12 18h.01"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-purple-100 block">Android Node</span>
+                                <span class="text-[10px] font-mono text-purple-400 font-semibold">.APK COMPANION</span>
+                            </div>
+                        </div>
+                        <i data-lucide="download" class="w-4 h-4 text-purple-400 group-hover:text-purple-200 transition-colors"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: 3D AI Brain Holo Matrix -->
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            <div class="glass-purple rounded-2xl p-6 flex flex-col items-center text-center gap-4">
+                <div class="flex items-center justify-between w-full border-b border-purple-900/60 pb-3">
+                    <span class="text-xs font-cyber font-bold text-purple-200 flex items-center gap-2">
+                        <i data-lucide="activity" class="w-4 h-4 text-purple-400"></i> AI NEURAL CORE
+                    </span>
+                    <span class="text-[10px] font-mono text-purple-400 font-bold">LIVE MATRIX</span>
+                </div>
+
+                <div id="aiReactorView" class="w-full h-64 flex justify-center items-center relative"></div>
+
+                <div class="w-full text-left font-mono text-xs flex flex-col gap-2 pt-2 border-t border-purple-900/60">
+                    <div class="flex justify-between text-purple-300/80">
+                        <span>3D Depth Mode:</span>
+                        <span class="text-purple-200 font-bold">Interactive Zoom (Active)</span>
+                    </div>
+                    <div class="flex justify-between text-purple-300/80">
+                        <span>Status:</span>
+                        <span class="text-emerald-400 font-bold">SYNAPSE RUNNING</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        async function downloadWithConfirmation(platform, url, filename) {
+            try {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                await fetch('/api/tracker/confirm-download', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ platform: platform })
+                });
+            } catch(e) {}
+        }
+
+        // --- 1. FULLSCREEN 3D AI NEURAL WAVE WITH ZOOM IN / ZOOM OUT ---
+        (function() {
+            const canvas = document.getElementById('aiSynapseCanvas');
+            if (!canvas) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 280;
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Generate AI Neural Web Geometry
+            const count = 1400;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 1200;
+                pos[i+1] = (Math.random() - 0.5) * 1200;
+                pos[i+2] = (Math.random() - 0.5) * 1200;
+
+                colors[i] = 0.75 + Math.random() * 0.25;
+                colors[i+1] = 0.25 + Math.random() * 0.35;
+                colors[i+2] = 0.95;
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 2.6,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.85
+            });
+
+            const neuralCloud = new THREE.Points(geo, mat);
+            scene.add(neuralCloud);
+
+            // Dynamic Mouse Tracking for Zoom
+            let mouseNormX = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseNormX = (e.clientX / window.innerWidth) * 2 - 1;
+            });
+
+            let currentZ = 280;
+            function renderNeural() {
+                requestAnimationFrame(renderNeural);
+                neuralCloud.rotation.y += 0.001;
+                neuralCloud.rotation.x += 0.0005;
+
+                // Zoom logic
+                let targetZ = 280;
+                if (mouseNormX > 0.15) {
+                    targetZ = 120; // Smooth Zoom In
+                } else if (mouseNormX < -0.15) {
+                    targetZ = 460; // Smooth Zoom Out
+                }
+                currentZ += (targetZ - currentZ) * 0.06;
+                camera.position.z = currentZ;
+
+                renderer.render(scene, camera);
+            }
+            renderNeural();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        })();
+
+        // --- 2. RIGHT SIDE 3D AI REACTOR CORE ---
+        (function() {
+            const box = document.getElementById('aiReactorView');
+            if (!box) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, box.clientWidth / box.clientHeight, 0.1, 1000);
+            camera.position.z = 95;
+
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(box.clientWidth, box.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            box.appendChild(renderer.domElement);
+
+            // Outer Wireframe Gyro
+            const geo1 = new THREE.IcosahedronGeometry(34, 2);
+            const mat1 = new THREE.MeshBasicMaterial({ color: 0xc084fc, wireframe: true, transparent: true, opacity: 0.6 });
+            const mesh1 = new THREE.Mesh(geo1, mat1);
+            scene.add(mesh1);
+
+            // Core Energy Sphere
+            const geo2 = new THREE.DodecahedronGeometry(18, 1);
+            const mat2 = new THREE.MeshBasicMaterial({ color: 0xa855f7, wireframe: true, transparent: true, opacity: 0.95 });
+            const mesh2 = new THREE.Mesh(geo2, mat2);
+            scene.add(mesh2);
+
+            // Synaptic Torus Ring
+            const ringGeo = new THREE.TorusGeometry(44, 1.4, 12, 64);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0xf0abfc, transparent: true, opacity: 0.65 });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2.5;
+            scene.add(ring);
+
+            let clock = new THREE.Clock();
+            function animReactor() {
+                requestAnimationFrame(animReactor);
+                const t = clock.getElapsedTime();
+                mesh1.rotation.y = t * 0.5;
+                mesh1.rotation.x = t * 0.25;
+
+                mesh2.rotation.y = -t * 0.7;
+                const sc = 1 + Math.sin(t * 3.5) * 0.1;
+                mesh2.scale.set(sc, sc, sc);
+
+                ring.rotation.z = t * 0.6;
+                renderer.render(scene, camera);
+            }
+            animReactor();
+
+            window.addEventListener('resize', () => {
+                if (!box) return;
+                camera.aspect = box.clientWidth / box.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(box.clientWidth, box.clientHeight);
+            });
+        })();
+    </script>
+</body>
+</html>
