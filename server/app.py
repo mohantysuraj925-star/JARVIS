@@ -110,9 +110,9 @@ def _mobile_access_allowed(request: Request):
 
 def _companion_apk_path(minimum_size=1000):
     apk_candidates = (
+        os.path.join("downloads", "JARVIS_Companion.apk"),
         os.path.join("downloads", "app-debug.apk"),
         os.path.join("downloads", "JARVIS_Node_Companion.apk"),
-        os.path.join("downloads", "JARVIS_Companion.apk"),
     )
     return next(
         (

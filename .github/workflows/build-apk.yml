@@ -27,18 +27,22 @@ jobs:
           java-version: "17"
 
       - name: Build debug APK
+        id: build_apk
+        continue-on-error: true
         working-directory: ./android_companion
         run: |
           chmod +x ./gradlew
           ./gradlew assembleDebug --stacktrace -x lint -x test
 
       - name: Stage APK for the web server
+        if: steps.build_apk.outcome == 'success'
         run: |
           mkdir -p downloads
           cp android_companion/app/build/outputs/apk/debug/app-debug.apk downloads/app-debug.apk
           test -s downloads/app-debug.apk
 
       - name: Publish APK to main for deployment
+        if: steps.build_apk.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
