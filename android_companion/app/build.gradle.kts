@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.androidcompanion"
-    compileSdk = 35
+    compileSdk = 34
 
     lint {
         abortOnError = false
@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.example.androidcompanion"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
