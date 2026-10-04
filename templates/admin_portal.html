@@ -113,6 +113,45 @@
             </div>
         </section>
 
+        {% if role == 'admin' and settings %}
+        <section class="glass-purple rounded-2xl p-5 flex flex-col gap-4">
+            <div class="border-b border-purple-900/60 pb-3">
+                <h2 class="font-cyber font-bold text-sm tracking-wide text-purple-200">Homepage Content Editor</h2>
+                <p class="mt-2 text-xs text-purple-300/70">Changes update the public homepage. The phone field is visible only to the administrator and is never shown publicly.</p>
+            </div>
+            <form id="homepageSettingsForm" onsubmit="return saveHomepageSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Creator name
+                    <input name="creator_name" value="{{ settings.creator_name }}" maxlength="100" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Contact email
+                    <input name="email" type="email" value="{{ settings.email }}" maxlength="254" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Phone (admin-only; not displayed publicly)
+                    <input name="phone" type="tel" value="{{ settings.phone }}" maxlength="64" autocomplete="off" class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Gemini API guide URL (HTTPS only)
+                    <input name="api_guide_link" type="url" value="{{ settings.api_guide_link }}" maxlength="2048" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">
+                </label>
+                <label class="md:col-span-2 flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    About the creator / project journey
+                    <textarea name="journey_text" rows="4" maxlength="4000" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">{{ settings.journey_text }}</textarea>
+                </label>
+                <label class="md:col-span-2 flex flex-col gap-1.5 text-xs font-mono text-purple-300">
+                    Footer text
+                    <textarea name="footer_text" rows="3" maxlength="1000" required class="rounded-lg border border-purple-800/80 bg-purple-950/50 p-3 text-purple-100 focus:border-purple-400 focus:outline-none">{{ settings.footer_text }}</textarea>
+                </label>
+                <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center gap-3">
+                    <button type="submit" class="purple-btn min-h-11 rounded-xl px-5 py-3 text-xs font-bold text-purple-100">Save Changes</button>
+                    <p id="homepageSettingsFeedback" class="text-xs text-purple-300" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+        </section>
+        {% endif %}
+
         <!-- Master Telemetry & Nodes -->
         <section class="glass-purple rounded-2xl p-5 flex flex-col gap-4">
             <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
@@ -184,6 +223,34 @@
 <script>
 let isAllDeactivated = true;
 let adminServerOffset = 0;
+
+async function saveHomepageSettings(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const feedback = document.getElementById('homepageSettingsFeedback');
+    button.disabled = true;
+    feedback.textContent = '';
+
+    try {
+        const response = await fetch('/admin/update-settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || `Could not save homepage settings (${response.status}).`);
+        feedback.textContent = result.message;
+        feedback.className = 'text-xs text-emerald-300';
+    } catch (error) {
+        console.error('Could not save homepage settings.', error);
+        feedback.textContent = error.message || 'Could not save homepage settings.';
+        feedback.className = 'text-xs text-rose-400';
+    } finally {
+        button.disabled = false;
+    }
+    return false;
+}
 
 async function downloadAdminAndroid() {
     try {

@@ -4,8 +4,11 @@ import sqlite3
 import time
 import asyncio
 import hashlib
+import logging
 import secrets
+import tempfile
 import uuid
+from urllib.parse import urlparse
 from datetime import datetime, timedelta
 from typing import Literal
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
@@ -23,6 +26,66 @@ if os.path.exists("static"):
 
 templates = Jinja2Templates(directory="templates")
 MOBILE_OVERRIDE_ROLES = frozenset({"admin", "creator"})
+SITE_SETTINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "site_settings.json")
+DEFAULT_SITE_SETTINGS = {
+    "creator_name": "Suraj Kumar",
+    "journey_text": (
+        "Built completely from scratch over 7 months of dedicated research and development. "
+        "Inspired by Tony Stark's JARVIS and AI concepts, developed by deeply analyzing ideas "
+        "across multi-AI platforms (ChatGPT, Gemini, DeepSeek, Claude, VS Code AI) to build a "
+        "personalized, powerful AI companion ecosystem."
+    ),
+    "email": "mohantysuraj91@gmail.com",
+    "phone": "",
+    "api_guide_link": "https://aistudio.google.com/app/apikey",
+    "footer_text": (
+        "© 2026 JARVIS Project. Engineered & Developed by Suraj Kumar. All rights reserved."
+    ),
+}
+logger = logging.getLogger(__name__)
+
+
+def _load_site_settings():
+    try:
+        with open(SITE_SETTINGS_PATH, encoding="utf-8") as settings_file:
+            stored_settings = json.load(settings_file)
+    except FileNotFoundError:
+        return DEFAULT_SITE_SETTINGS.copy()
+
+    if not isinstance(stored_settings, dict):
+        raise ValueError("Homepage settings file must contain a JSON object.")
+
+    settings = DEFAULT_SITE_SETTINGS.copy()
+    for key in settings:
+        if key in stored_settings:
+            value = stored_settings[key]
+            if not isinstance(value, str):
+                raise ValueError(f"Homepage setting {key!r} must be a string.")
+            settings[key] = value
+    return settings
+
+
+def _save_site_settings(settings):
+    temporary_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=os.path.dirname(SITE_SETTINGS_PATH),
+            prefix=".site_settings_",
+            suffix=".tmp",
+            delete=False,
+        ) as settings_file:
+            temporary_path = settings_file.name
+            json.dump(settings, settings_file, ensure_ascii=False, indent=2)
+            settings_file.write("\n")
+            settings_file.flush()
+            os.fsync(settings_file.fileno())
+        os.replace(temporary_path, SITE_SETTINGS_PATH)
+        temporary_path = None
+    finally:
+        if temporary_path and os.path.exists(temporary_path):
+            os.remove(temporary_path)
 
 @app.get("/sw.js", include_in_schema=False)
 async def service_worker():
@@ -142,7 +205,17 @@ async def track_activity(request: Request, call_next):
 async def root(request: Request):
     uname = request.cookies.get("username")
     role = request.cookies.get("role")
-    return templates.TemplateResponse(request=request, name="landing.html", context={"username": uname, "role": role})
+    settings = _load_site_settings()
+    public_settings = {key: value for key, value in settings.items() if key != "phone"}
+    return templates.TemplateResponse(
+        request=request,
+        name="landing.html",
+        context={
+            "username": uname,
+            "role": role,
+            "settings": public_settings,
+        },
+    )
 
 @app.get("/dashboard")
 async def user_dashboard(request: Request):
@@ -178,7 +251,91 @@ async def admin_portal(request: Request):
         conn.close()
     if not account or not account["is_active"] or not _is_mobile_override_role(account["role"]):
         return RedirectResponse(url="/")
-    return templates.TemplateResponse(request=request, name="admin_portal.html", context={"username": uname, "role": account["role"]})
+    role = account["role"]
+    settings = _load_site_settings() if role == "admin" else None
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_portal.html",
+        context={"username": uname, "role": role, "settings": settings},
+    )
+
+
+@app.post("/admin/update-settings")
+async def update_site_settings(request: Request):
+    if _admin_only_access_denied(request):
+        return JSONResponse(
+            {"status": "error", "message": "Administrator access required."},
+            status_code=403,
+        )
+
+    if request.headers.get("content-type", "").split(";", 1)[0].strip().lower() != "application/json":
+        return JSONResponse(
+            {"status": "error", "message": "Settings must be submitted as JSON."},
+            status_code=415,
+        )
+    try:
+        payload = await request.json()
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JSONResponse(
+            {"status": "error", "message": "Invalid JSON request body."},
+            status_code=400,
+        )
+    if not isinstance(payload, dict) or set(payload) != set(DEFAULT_SITE_SETTINGS):
+        return JSONResponse(
+            {"status": "error", "message": "All homepage settings fields are required."},
+            status_code=400,
+        )
+
+    settings = {}
+    max_lengths = {
+        "creator_name": 100,
+        "journey_text": 4000,
+        "email": 254,
+        "phone": 64,
+        "api_guide_link": 2048,
+        "footer_text": 1000,
+    }
+    for key, max_length in max_lengths.items():
+        value = payload[key]
+        if not isinstance(value, str):
+            return JSONResponse(
+                {"status": "error", "message": f"{key} must be text."},
+                status_code=400,
+            )
+        value = value.strip()
+        if len(value) > max_length:
+            return JSONResponse(
+                {"status": "error", "message": f"{key} exceeds the maximum length."},
+                status_code=400,
+            )
+        settings[key] = value
+
+    if any(not settings[key] for key in ("creator_name", "journey_text", "email", "api_guide_link", "footer_text")):
+        return JSONResponse(
+            {"status": "error", "message": "Required homepage settings cannot be empty."},
+            status_code=400,
+        )
+    if "@" not in settings["email"] or any(char.isspace() for char in settings["email"]):
+        return JSONResponse(
+            {"status": "error", "message": "Enter a valid contact email address."},
+            status_code=400,
+        )
+    guide_url = urlparse(settings["api_guide_link"])
+    if guide_url.scheme != "https" or not guide_url.netloc:
+        return JSONResponse(
+            {"status": "error", "message": "The API guide link must be an HTTPS URL."},
+            status_code=400,
+        )
+
+    try:
+        _save_site_settings(settings)
+    except OSError:
+        logger.exception("Could not save homepage settings.")
+        return JSONResponse(
+            {"status": "error", "message": "Homepage settings could not be saved."},
+            status_code=500,
+        )
+    return {"status": "success", "message": "Homepage content saved."}
 
 @app.post("/api/auth/register")
 async def register(req: Request):
@@ -952,6 +1109,21 @@ def _admin_access_denied(request: Request):
             or not account["is_active"]
             or not _is_mobile_override_role(account["role"])
         )
+    finally:
+        conn.close()
+
+
+def _admin_only_access_denied(request: Request):
+    username = request.cookies.get("username")
+    if not username:
+        return True
+    conn = get_db()
+    try:
+        account = conn.execute(
+            "SELECT role, is_active FROM users WHERE username = ?",
+            (username,),
+        ).fetchone()
+        return not account or not account["is_active"] or account["role"] != "admin"
     finally:
         conn.close()
 
