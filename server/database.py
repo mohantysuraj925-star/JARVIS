@@ -80,4 +80,3 @@ def get_broadcast():
     with get_db() as conn:
         row = conn.execute("SELECT message FROM broadcasts WHERE is_active = 1 ORDER BY id DESC LIMIT 1").fetchone()
         return row["message"] if row else None
-

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -41,10 +41,10 @@
 
     <div class="btn-group">
       <button class="dl-btn" onclick="executeDownload('windows')">
-        <span>ðŸ’»</span> Download Windows Desktop Client (.exe)
+        <span>💻</span> Download Windows Desktop Client (.exe)
       </button>
       <button class="dl-btn" onclick="executeDownload('mobile')">
-        <span>ðŸ“±</span> Download Android Companion Node (.apk)
+        <span>📱</span> Download Android Companion Node (.apk)
       </button>
     </div>
 
@@ -66,7 +66,7 @@
 
   <div id="thankModal">
     <div class="modal-box">
-      <div style="font-size:48px; margin-bottom:10px;">ðŸ’ </div>
+      <div style="font-size:48px; margin-bottom:10px;">💠</div>
       <h2 style="color:#00f0ff; margin-bottom:10px; text-transform:uppercase;">Thank You, Operator!</h2>
       <p style="color:#94a3b8; font-size:13px; line-height:1.6; margin-bottom:20px;">Aapka binary handshake complete ho gaya hai. Setup run karke Face ID aur API authenticate karein.</p>
       <button onclick="document.getElementById('thankModal').style.display='none'" style="background:#00f0ff; border:none; color:#030712; font-weight:700; padding:10px 22px; border-radius:6px; cursor:pointer;">CONTINUE</button>
@@ -100,14 +100,14 @@
 
       fetch('/api/track-download', { method:'POST' }).then(() => loadStats());
 
-      setTimeout(() => { text.innerText = 'âœ” HANDSHAKE ESTABLISHED'; }, 500);
+      setTimeout(() => { text.innerText = '✔ HANDSHAKE ESTABLISHED'; }, 500);
 
       setTimeout(() => {
         overlay.style.display = 'none';
         const url = '/get-package/' + platform;
         const a = document.createElement('a');
         a.href = url;
-        a.download = platform === 'windows' ? 'JARVIS_Installer.exe' : 'JARVIS_Companion.apk';
+        a.download = platform === 'windows' ? 'JARVIS_Installer.exe' : 'JARVIS_Mobile.apk';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => a.remove(), 200);

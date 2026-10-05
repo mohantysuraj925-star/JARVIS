@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import sqlite3
 import time
@@ -39,7 +39,7 @@ DEFAULT_SITE_SETTINGS = {
     "phone": "",
     "api_guide_link": "https://aistudio.google.com/app/apikey",
     "footer_text": (
-        "Â© 2026 JARVIS Project. Engineered & Developed by Suraj Kumar. All rights reserved."
+        "© 2026 JARVIS Project. Engineered & Developed by Suraj Kumar. All rights reserved."
     ),
 }
 logger = logging.getLogger(__name__)
@@ -175,7 +175,7 @@ def _companion_apk_path(minimum_size=1000):
     apk_candidates = (
         os.path.join("downloads", "JARVIS_Companion.apk"),
         os.path.join("downloads", "app-debug.apk"),
-        os.path.join("downloads", "JARVIS_Companion.apk"),
+        os.path.join("downloads", "JARVIS_Node_Companion.apk"),
     )
     return next(
         (
@@ -547,7 +547,7 @@ async def get_package(platform_name: str, request: Request):
                 f.write(b"MZ\x90\x00" + b"\x00"*60 + b"JARVIS_DESKTOP")
     else:
         fpath = _companion_apk_path()
-        fname = "JARVIS_Companion.apk"
+        fname = "JARVIS_Node_Companion.apk"
         media = "application/vnd.android.package-archive"
         if not fpath:
             return JSONResponse(
@@ -559,7 +559,7 @@ async def get_package(platform_name: str, request: Request):
             )
         return FileResponse(
             path=fpath,
-            filename="JARVIS_Companion.apk",
+            filename="JARVIS_Node_Companion.apk",
             media_type="application/vnd.android.package-archive",
         )
 
@@ -1222,4 +1222,3 @@ async def set_single_mobile(request: Request, username: str, allow: bool):
     finally:
         conn.close()
     return {"status": "success", "username": username, "allowed": allow}
-
