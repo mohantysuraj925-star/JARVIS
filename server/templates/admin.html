@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#edf7f5">
-  <title>{% if login %}Admin sign in{% else %}Super Admin{% endif %} · JARVIS</title>
+  <title>{% if login %}Admin sign in{% else %}Super Admin{% endif %} Â· JARVIS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -103,7 +103,7 @@
   <main class="wrap">
     <header class="top">
       <div class="brand"><span class="brand-mark"><i data-lucide="command" aria-hidden="true"></i></span>
-        <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Master control · Signed in as admin123</div></div>
+        <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Master control Â· Signed in as admin123</div></div>
       </div>
       <form method="post" action="/admin/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button class="logout" type="submit"><i data-lucide="log-out" aria-hidden="true"></i>Sign out</button></form>
@@ -122,11 +122,11 @@
         {% for user in users %}
           <tr>
             <td class="username"><span class="muted">Not linked</span></td>
-            <td class="device"><span class="hwid">{{ user.hardware_id }}</span><span class="ip">Device IP · {{ user.ip_address }}</span></td>
+            <td class="device"><span class="hwid">{{ user.hardware_id }}</span><span class="ip">Device IP Â· {{ user.ip_address }}</span></td>
             <td><span class="badge {% if user.status != 'active' %}inactive{% elif user.category == 'lifetime' %}lifetime{% endif %}">
               <i data-lucide="{% if user.status != 'active' %}ban{% elif user.category == 'lifetime' %}infinity{% else %}circle-check{% endif %}" aria-hidden="true"></i>
-              {{ user.status|title }} · {{ user.category|title }}</span></td>
-            <td>{% if user.days_remaining is none %}Lifetime{% elif user.expires_at is defined and user.expires_at %}<span data-expires-at="{{ user.expires_at }}">Loading…</span>{% else %}{{ user.days_remaining }} days{% endif %}</td>
+              {{ user.status|title }} Â· {{ user.category|title }}</span></td>
+            <td>{% if user.days_remaining is none %}Lifetime{% elif user.expires_at is defined and user.expires_at %}<span data-expires-at="{{ user.expires_at }}">Loadingâ€¦</span>{% else %}{{ user.days_remaining }} days{% endif %}</td>
             <td><div class="actions">
               <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/extend">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="number" name="days" value="7" min="1" max="3650" aria-label="Days to extend">
@@ -169,3 +169,4 @@
   </script>
   </body>
   </html>
+

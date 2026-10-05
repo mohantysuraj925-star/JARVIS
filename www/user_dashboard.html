@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,7 +58,7 @@ window.installMobileApp = async function() {
         return;
     }
     if (!deferredInstallPrompt) {
-        showMobileNotice('To install JARVIS, open your browser menu and choose “Install app” or “Add to Home screen”. This option is available in Chrome, Edge, and many Android browsers.');
+        showMobileNotice('To install JARVIS, open your browser menu and choose â€œInstall appâ€ or â€œAdd to Home screenâ€. This option is available in Chrome, Edge, and many Android browsers.');
         return;
     }
 
@@ -70,7 +70,7 @@ window.installMobileApp = async function() {
         if (choice.outcome !== 'accepted') showMobileNotice('You can install JARVIS later from your browser menu.');
     } catch (error) {
         console.error('The browser install prompt failed.', error);
-        showMobileNotice('Open your browser menu and choose “Install app” or “Add to Home screen” to install JARVIS.');
+        showMobileNotice('Open your browser menu and choose â€œInstall appâ€ or â€œAdd to Home screenâ€ to install JARVIS.');
     }
 };
 
@@ -163,7 +163,7 @@ async function downloadCompanionApk() {
         const downloadUrl = URL.createObjectURL(await response.blob());
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = 'JARVIS_Node_Companion.apk';
+        link.download = 'JARVIS_Companion.apk';
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="flex items-center gap-3 font-mono">
             <a href="/" class="purple-btn px-4 py-2 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
                 <i data-lucide="home" class="w-4 h-4 text-purple-300"></i>
-                <span>← Home Page</span>
+                <span>â† Home Page</span>
             </a>
             <div class="hidden sm:block text-right">
                 <span class="text-[9px] text-purple-400 block">OPERATOR</span>
@@ -455,3 +455,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
