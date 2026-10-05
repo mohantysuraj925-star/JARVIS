@@ -107,7 +107,7 @@
         const url = '/get-package/' + platform;
         const a = document.createElement('a');
         a.href = url;
-        a.download = platform === 'windows' ? 'JARVIS_Installer.exe' : 'JARVIS_Mobile.apk';
+        a.download = platform === 'windows' ? 'JARVIS_Desktop_Setup.exe' : 'JARVIS_Mobile.apk';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => a.remove(), 200);
@@ -121,3 +121,4 @@
   </script>
 </body>
 </html>
+
