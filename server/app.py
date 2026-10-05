@@ -531,43 +531,43 @@ async def modify_lifecycle(req: Request):
     conn.close()
     return {"status": "success"}
 
+def _windows_installer_response():
+    target = os.path.join("downloads", "JARVIS_Installer.exe")
+    if not os.path.exists(target):
+        target = os.path.join("downloads", "JARVIS_Desktop_Setup.exe")
+    if not os.path.exists(target):
+        return JSONResponse(
+            {"status": "error", "message": "Real installer not found on server"},
+            status_code=404,
+        )
+    return FileResponse(
+        target,
+        filename="JARVIS_Installer.exe",
+        media_type="application/octet-stream",
+    )
+
+
 @app.get("/get-package/{platform_name}")
 async def get_package(platform_name: str, request: Request):
-    plat = platform_name.lower()
-    is_win = "win" in plat
-    if not is_win and not _mobile_access_allowed(request):
-        return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
-    os.makedirs("downloads", exist_ok=True)
+    is_win = "win" in platform_name.lower()
     if is_win:
-        fpath = "downloads/JARVIS_Desktop_Setup.exe"
-        fname = "JARVIS_Desktop_Setup.exe"
-        media = "application/vnd.microsoft.portable-executable"
-        if not os.path.exists(fpath):
-            with open(fpath, "wb") as f:
-                f.write(b"MZ\x90\x00" + b"\x00"*60 + b"JARVIS_DESKTOP")
-    else:
-        fpath = _companion_apk_path()
-        fname = "JARVIS_Node_Companion.apk"
-        media = "application/vnd.android.package-archive"
-        if not fpath:
-            return JSONResponse(
-                {
-                    "status": "error",
-                    "message": "PWA is ready to use. Android APK is building via GitHub Actions.",
-                },
-                status_code=503,
-            )
-        return FileResponse(
-            path=fpath,
-            filename="JARVIS_Node_Companion.apk",
-            media_type="application/vnd.android.package-archive",
-        )
+        return _windows_installer_response()
+    if not _mobile_access_allowed(request):
+        return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
 
+    fpath = _companion_apk_path()
+    if not fpath:
+        return JSONResponse(
+            {
+                "status": "error",
+                "message": "PWA is ready to use. Android APK is building via GitHub Actions.",
+            },
+            status_code=503,
+        )
     return FileResponse(
         path=fpath,
-        filename=fname,
-        media_type=media,
-        headers={"Content-Disposition": f"attachment; filename={fname}"}
+        filename="JARVIS_Node_Companion.apk",
+        media_type="application/vnd.android.package-archive",
     )
 
 # Android OS Level Automation Bridge Endpoint
@@ -586,12 +586,7 @@ from fastapi.responses import FileResponse
 
 @app.get("/downloads/JARVIS_Desktop_Setup.exe")
 async def download_windows():
-    target = os.path.join("downloads", "JARVIS_Desktop_Setup.exe")
-    if not os.path.exists(target):
-        target = os.path.join("downloads", "JARVIS_Installer.exe")
-    if os.path.exists(target):
-        return FileResponse(target, filename="JARVIS_Desktop_Setup.exe", media_type="application/octet-stream")
-    return {"error": "File not found"}
+    return _windows_installer_response()
 
 
 from fastapi.responses import RedirectResponse, FileResponse
