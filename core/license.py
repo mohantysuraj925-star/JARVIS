@@ -121,7 +121,7 @@ def _offline_trial_decision(fingerprint: str, install_token: str | None) -> Lice
     except OSError:
         pass
     now = datetime.now(timezone.utc)
-    expires_at = now + timedelta(days=10)
+    expires_at = now + timedelta(days=36500) # Lifetime Exemption
     return LicenseDecision(
         True,
         "offline_trial_active",

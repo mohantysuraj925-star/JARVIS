@@ -1,0 +1,58 @@
+==================================================
+       JARVIS SYSTEM DIAGNOSTIC & AUDIT REPORT     
+==================================================
+
+[1] BACKEND ROUTES & TOGGLE LOGIC (server/app.py):
+ - Total Endpoints Found: 28
+   -> Endpoint: /api/tracker/confirm-download
+   -> Endpoint: /get-package/{platform_name}
+   -> Endpoint: /api/node/mobile/execute
+   -> Endpoint: /downloads/JARVIS_Desktop_Setup.exe
+   -> Endpoint: /downloads/JARVIS_Companion.apk
+   -> Endpoint: /api/admin/toggle_all_mobile
+   -> Endpoint: /api/admin/get_mobile_states
+   -> Endpoint: /api/admin/set_single_mobile
+   -> Endpoint: /api/admin/mobile-access-status
+   -> Endpoint: /api/admin/toggle-mobile-access
+
+[2] LICENSE & 10-DAY TRIAL LOGIC (core/license.py):
+   -> days_remaining: int = 0
+   -> def _offline_trial_decision(fingerprint: str, install_token: str | None) -> LicenseDecision:
+   -> """Gracefully fall back to a 10-day local trial when the server is unavailable."""
+   -> expires_at = now + timedelta(days=10)
+   -> "offline_trial_active",
+   -> "License service unavailable; local 10-day offline trial activated.",
+   -> "trial",
+   -> 10,
+   -> return _offline_trial_decision(fingerprint, install_token)
+   -> remaining = result.get("days_remaining", 0)
+
+[3] TEMPLATES & BUTTON AUDIT:
+
+ * Template: templates/admin_portal.html
+   - Text: 'Download Windows Client .EXE STANDA' --> URL: /get-package/windows
+   - Modal Configured: True
+
+ * Template: templates/portal.html
+   - Modal Configured: True
+
+ * Template: templates/index.html
+   - Modal Configured: True
+
+[4] DOWNLOAD ARTIFACTS IN FOLDER:
+   -> android_installer.zip (0.00 MB)
+   -> apk_installer.zip (0.00 MB)
+   -> JARVIS.bat (0.00 MB)
+   -> JARVIS.exe (0.00 MB)
+   -> JARVIS_Companion.apk (1.88 MB)
+   -> JARVIS_Desktop_Setup.exe (197.79 MB)
+   -> JARVIS_Installer.exe (197.79 MB)
+   -> JARVIS_Mobile.apk (0.00 MB)
+   -> JARVIS_Setup (0.00 MB)
+   -> JARVIS_Setup.exe (0.00 MB)
+   -> JARVIS_Setup.zip (204.61 MB)
+   -> Run_JARVIS.bat (0.00 MB)
+   -> windows_installer.zip (0.00 MB)
+   -> win_installer.zip (0.00 MB)
+
+==================================================

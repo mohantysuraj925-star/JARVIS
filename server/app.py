@@ -145,31 +145,20 @@ def _is_mobile_override_role(role):
 
 
 def _mobile_access_allowed(request: Request):
-    username = request.cookies.get("username")
-    if not username:
+    account_session = _authenticated_account(request)
+    if not account_session:
         return False
+    if account_session.get("role") == "admin" or bool(account_session.get("is_unlimited")):
+        return True
     conn = get_db()
     try:
-        _ensure_mobile_permission_tables(conn)
-        account = conn.execute(
-            "SELECT role, is_active FROM users WHERE username = ?",
-            (username,),
-        ).fetchone()
-        if not account or not account["is_active"]:
-            conn.commit()
-            return False
-        if _is_mobile_override_role(account["role"]):
-            conn.commit()
-            return True
-        allowed = (
-            _global_mobile_enabled(conn)
-            and _user_mobile_allowed(conn, username)
-        )
-        conn.commit()
-        return allowed
+        conn.execute("CREATE TABLE IF NOT EXISTS system_settings (setting_key TEXT PRIMARY KEY, setting_value TEXT)")
+        row = conn.execute("SELECT setting_value FROM system_settings WHERE setting_key = 'mobile_access'").fetchone()
+        return bool(row and row[0] == "enabled")
+    except Exception:
+        return False
     finally:
         conn.close()
-
 
 def _companion_apk_path(minimum_size=1000):
     apk_candidates = (
@@ -1217,3 +1206,36 @@ async def set_single_mobile(request: Request, username: str, allow: bool):
     finally:
         conn.close()
     return {"status": "success", "username": username, "allowed": allow}
+
+# Mobile Download Master Toggle APIs
+@app.get("/api/admin/mobile-access-status")
+async def get_mobile_access_status(request: Request):
+    conn = get_db()
+    try:
+        conn.execute("CREATE TABLE IF NOT EXISTS system_settings (setting_key TEXT PRIMARY KEY, setting_value TEXT)")
+        conn.commit()
+        row = conn.execute("SELECT setting_value FROM system_settings WHERE setting_key = 'mobile_access'").fetchone()
+        status = row[0] if row else "disabled"
+        return {"status": "ok", "mobile_access": status}
+    finally:
+        conn.close()
+
+@app.post("/api/admin/toggle-mobile-access")
+async def toggle_mobile_access(request: Request):
+    account = _authenticated_account(request)
+    if not account or account.get("role") != "admin":
+        return JSONResponse({"status": "error", "message": "Unauthorized"}, status_code=403)
+    data = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    target_state = data.get("state")
+    conn = get_db()
+    try:
+        conn.execute("CREATE TABLE IF NOT EXISTS system_settings (setting_key TEXT PRIMARY KEY, setting_value TEXT)")
+        if not target_state:
+            curr = conn.execute("SELECT setting_value FROM system_settings WHERE setting_key = 'mobile_access'").fetchone()
+            target_state = "disabled" if (curr and curr[0] == "enabled") else "enabled"
+        conn.execute("INSERT OR REPLACE INTO system_settings (setting_key, setting_value) VALUES ('mobile_access', ?)", (target_state,))
+        conn.commit()
+        return {"status": "ok", "mobile_access": target_state}
+    finally:
+        conn.close()
+
