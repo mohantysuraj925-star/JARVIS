@@ -360,3 +360,46 @@ class JarvisMobileApp(App):
 
 if __name__ == "__main__":
     JarvisMobileApp().run()
+
+
+# Feedback Storage Endpoint
+@app.post("/api/feedback")
+async def save_operator_feedback(request: Request):
+    import sqlite3
+    data = await request.json()
+    u = data.get("username", "Operator")
+    r = data.get("rating", 5)
+    c = data.get("comment", "")
+    for db_name in ["database.db", "server/users.db", "users.db"]:
+        try:
+            conn = sqlite3.connect(db_name)
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE IF NOT EXISTS feedbacks (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, rating INTEGER, comment TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            cur.execute("INSERT INTO feedbacks (username, rating, comment) VALUES (?, ?, ?)", (u, r, c))
+            conn.commit()
+            conn.close()
+            break
+        except Exception:
+            pass
+    return {"status": "success", "message": "Feedback saved"}
+
+@app.get("/api/feedback")
+async def get_operator_feedback(user: str = ""):
+    import sqlite3
+    result = {"rating": 5, "comment": "No feedback yet."}
+    for db_name in ["database.db", "server/users.db", "users.db"]:
+        try:
+            conn = sqlite3.connect(db_name)
+            cur = conn.cursor()
+            if user:
+                cur.execute("SELECT rating, comment, created_at FROM feedbacks WHERE username = ? ORDER BY id DESC LIMIT 1", (user,))
+            else:
+                cur.execute("SELECT rating, comment, created_at FROM feedbacks ORDER BY id DESC LIMIT 1")
+            row = cur.fetchone()
+            if row:
+                result = {"rating": row[0], "comment": row[1], "date": row[2]}
+            conn.close()
+            break
+        except Exception:
+            pass
+    return result

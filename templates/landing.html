@@ -535,6 +535,118 @@ button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
 }
 </style>
 
+
+<style id="FEEDBACK_RAINBOW_TACTILE_ENGINE">
+/* 1. Curved Buttons & Lift Hover */
+button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+input[type="submit"], input[type="button"], #supportLauncherBtn {
+    border-radius: 9999px !important;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.22s ease,
+                border-color 0.22s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.4) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+    transform: translateY(2px) scale(0.96) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 2. Compact Proceed to Downloads Button Constraint */
+a:has(> span:contains("Proceed to Downloads")),
+a:contains("Proceed to Downloads") {
+    display: inline-flex !important;
+    width: auto !important;
+    max-width: 300px !important;
+    margin: 12px auto !important;
+    padding: 10px 28px !important;
+}
+
+/* 3. Enlarged Feedback Rating Stars & Rainbow FX */
+#starContainer, .star-rating-container, div:has(> span.star-btn) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 0 !important;
+}
+
+.star-btn, span[data-star], svg[data-star] {
+    font-size: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease !important;
+    display: inline-block !important;
+}
+
+.star-btn:hover, span[data-star]:hover {
+    transform: scale(1.25) rotate(-6deg) !important;
+}
+
+/* Rainbow Animated Gradient for Selected Stars */
+@keyframes rainbowFlow {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 0 12px #ff0055); }
+    50% { filter: hue-rotate(180deg) drop-shadow(0 0 16px #00f2fe); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 0 12px #ff0055); }
+}
+
+.star-active, .star-selected, .text-amber-400, .text-yellow-400 {
+    animation: rainbowFlow 2.5s infinite linear !important;
+    transform: scale(1.15) !important;
+}
+</style>
+
+<script id="AUTO_NAME_AND_STAR_FX">
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Auto Fill Logged-in Username into Feedback Input
+    const fillRegisteredName = () => {
+        let loggedUser = localStorage.getItem('currentUser') || 
+                         localStorage.getItem('username') || 
+                         localStorage.getItem('operator_id');
+        
+        if (!loggedUser) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    loggedUser = payload.sub || payload.username;
+                } catch(e) {}
+            }
+        }
+
+        const nameInput = document.querySelector('input[placeholder*="Name"], input[placeholder*="Call-sign"], #feedbackName');
+        if (nameInput && loggedUser) {
+            nameInput.value = loggedUser;
+            nameInput.setAttribute('readonly', 'true');
+            nameInput.style.opacity = '0.9';
+            nameInput.style.borderColor = '#38BDF8';
+        }
+    };
+
+    fillRegisteredName();
+
+    // 2. Star Click Ripple & Rainbow Particle Pulse
+    document.querySelectorAll('.star-btn, [data-star], span:contains("★")').forEach(star => {
+        star.addEventListener('click', function() {
+            this.style.transform = 'scale(1.4) rotate(15deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1.15) rotate(0deg)';
+            }, 200);
+        });
+    });
+});
+</script>
+
 </head>
 <body class="min-h-screen relative flex flex-col justify-between">
     
@@ -1140,6 +1252,274 @@ window.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
     }
 });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ULTRA STABLE VERIFIED FEEDBACK SYSTEM -->
+<div id="smartFeedbackModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:99999999; align-items:center; justify-content:center; padding:16px;">
+    <div id="feedbackCardContainer" style="position:relative !important; width:100%; max-width:470px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 25px 60px rgba(0,0,0,0.9); box-sizing:border-box;">
+        
+        <!-- Clean Fixed Close Button (Top-Right Only) -->
+        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important; margin:0 !important;">✕</button>
+
+        <!-- Header -->
+        <div style="padding-right:45px; margin-bottom:18px;">
+            <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Submit Operator Feedback</h3>
+            <p style="margin:0; font-size:12px; color:#64748B;">System verified review submission</p>
+        </div>
+
+        <!-- Authenticated Username -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:16px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR CALL-SIGN</span>
+            <span id="feedbackUserDisplay" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">Detecting...</span>
+        </div>
+
+        <!-- Dynamic Non-Emoji SVG Face Reaction -->
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px;">
+            <div id="svgReactionBox" style="width:52px; height:52px; display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+
+        <!-- 5 Large Interactive SVG Stars -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:8px;">
+            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+        <div id="starScoreDisplay" style="text-align:center; font-size:13px; font-weight:700; color:#38BDF8; margin-bottom:16px;">5 Stars - Exceptional</div>
+
+        <!-- Dynamic Context Options -->
+        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+
+        <!-- Other Custom Feedback Input -->
+        <div id="feedbackCustomInputWrap" style="display:none; margin-bottom:16px;">
+            <textarea id="feedbackCustomText" placeholder="Write your specific feedback or request..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
+        </div>
+
+        <!-- Curved Submit Button -->
+        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease;">Submit Verified Review</button>
+    </div>
+</div>
+
+<script id="FEEDBACK_CORE_SCRIPT">
+(function() {
+    let currentRating = 5;
+    let selectedOption = "";
+
+    const reactionSVGs = {
+        1: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M7 8l3 1"></path><path d="M17 8l-3 1"></path></svg>',
+        2: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        3: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        4: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        5: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M8 7.5c1-1 3-1 4 0"></path><path d="M12 7.5c1-1 3-1 4 0"></path></svg>'
+    };
+
+    const chipsData = {
+        5: ["Blazing Fast Performance", "Rock Solid Stability", "Intuitive Modern UI", "Flawless Node Sync", "Other..."],
+        4: ["Fast & Responsive", "Clean Dashboard", "Minor UI Polish Needed", "Good Companion App", "Other..."],
+        3: ["Average Latency", "UI Scaling Needs Work", "Setup Was Complex", "Frequent Reconnects", "Other..."],
+        2: ["High Latency / Lag", "Frequent Disconnections", "Confusing Navigation", "Other..."],
+        1: ["System Crashes", "Cannot Authorize Node", "Critical Audio Failure", "Other..."]
+    };
+
+    const scoreLabels = {
+        5: "5 Stars - Exceptional & Highly Responsive",
+        4: "4 Stars - Great Overall Performance",
+        3: "3 Stars - Moderate Experience",
+        2: "2 Stars - Encountered Usability Hurdles",
+        1: "1 Star - Critical System Issues"
+    };
+
+    function getAuthenticatedUser() {
+        let name = localStorage.getItem('username') || 
+                   localStorage.getItem('currentUser') || 
+                   sessionStorage.getItem('username');
+        
+        if (!name) {
+            // Check Cookies
+            const cookies = document.cookie.split(';');
+            for (let c of cookies) {
+                let [k, v] = c.trim().split('=');
+                if (k === 'username' || k === 'user') { name = decodeURIComponent(v); break; }
+            }
+        }
+
+        if (!name) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const pl = JSON.parse(atob(token.split('.')[1]));
+                    name = pl.sub || pl.username;
+                } catch(e) {}
+            }
+        }
+
+        if (!name) {
+            const domNode = document.querySelector('#currentUser, #username, .user-name, [data-username], #current-user');
+            if (domNode) name = domNode.innerText || domNode.value;
+        }
+
+        return (name || "Operator").trim();
+    }
+
+    function renderChips(rating) {
+        const area = document.getElementById('feedbackChipsArea');
+        const customWrap = document.getElementById('feedbackCustomInputWrap');
+        if (!area) return;
+        area.innerHTML = "";
+        customWrap.style.display = "none";
+        selectedOption = "";
+
+        const list = chipsData[rating] || chipsData[5];
+        list.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.innerText = opt;
+            btn.style.cssText = "padding:7px 15px; border-radius:9999px; background:#131E3A; border:1px solid #1E293B; color:#CBD5E1; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s ease;";
+            btn.onclick = () => {
+                area.querySelectorAll('button').forEach(b => {
+                    b.style.background = "#131E3A";
+                    b.style.borderColor = "#1E293B";
+                    b.style.color = "#CBD5E1";
+                });
+                btn.style.background = "#0284C7";
+                btn.style.borderColor = "#38BDF8";
+                btn.style.color = "#FFFFFF";
+                selectedOption = opt;
+
+                if (opt.toLowerCase().includes("other")) {
+                    customWrap.style.display = "block";
+                    document.getElementById('feedbackCustomText').focus();
+                } else {
+                    customWrap.style.display = "none";
+                }
+            };
+            area.appendChild(btn);
+        });
+    }
+
+    function setRating(val) {
+        currentRating = val;
+
+        // Solid Golden stars filling
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            const v = parseInt(star.getAttribute('data-val'));
+            if (v <= val) {
+                star.setAttribute('fill', '#FBBF24');
+                star.setAttribute('stroke', '#F59E0B');
+                star.style.transform = 'scale(1.08)';
+            } else {
+                star.setAttribute('fill', '#334155');
+                star.setAttribute('stroke', '#475569');
+                star.style.transform = 'scale(1)';
+            }
+        });
+
+        // Dynamic SVG Reaction
+        const faceBox = document.getElementById('svgReactionBox');
+        if (faceBox) faceBox.innerHTML = reactionSVGs[val] || reactionSVGs[5];
+
+        // Label
+        const lbl = document.getElementById('starScoreDisplay');
+        if (lbl) lbl.innerText = scoreLabels[val] || (val + " Stars");
+
+        renderChips(val);
+    }
+
+    function setup() {
+        const overlay = document.getElementById('smartFeedbackModalOverlay');
+        const closeBtn = document.getElementById('closeFeedbackModalBtn');
+
+        if (closeBtn) closeBtn.onclick = () => { overlay.style.display = 'none'; };
+        if (overlay) overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+
+        // Star click listeners
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            star.onclick = () => setRating(parseInt(star.getAttribute('data-val')));
+        });
+
+        // Feedback Open Triggers
+        document.querySelectorAll('button, a').forEach(el => {
+            const t = (el.innerText || '').toLowerCase();
+            if (t.includes('feedback') || t.includes('rating') || t.includes('review')) {
+                if (el.id !== 'submitFeedbackBtn' && !el.classList.contains('admin-inspect-btn')) {
+                    el.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        document.getElementById('feedbackUserDisplay').innerText = getAuthenticatedUser();
+                        setRating(5);
+                        overlay.style.display = 'flex';
+                    };
+                }
+            }
+        });
+
+        // Submit API
+        const submitBtn = document.getElementById('submitFeedbackBtn');
+        if (submitBtn) {
+            submitBtn.onclick = async () => {
+                const u = document.getElementById('feedbackUserDisplay').innerText;
+                const txt = document.getElementById('feedbackCustomText').value;
+                const comment = selectedOption.toLowerCase().includes("other") ? txt : (selectedOption || "Standard Verified Review");
+
+                if (!comment.trim()) {
+                    alert("Please select an option or provide feedback details.");
+                    return;
+                }
+
+                submitBtn.innerText = "Submitting...";
+                submitBtn.disabled = true;
+
+                try {
+                    await fetch('/api/feedback', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            username: u,
+                            rating: currentRating,
+                            comment: comment
+                        })
+                    });
+                } catch(err) {}
+
+                submitBtn.innerText = "Verified & Saved!";
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    submitBtn.innerText = "Submit Verified Review";
+                    submitBtn.disabled = false;
+                }, 700);
+            };
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', setup);
+    setTimeout(setup, 500);
+})();
 </script>
 
 </body>
