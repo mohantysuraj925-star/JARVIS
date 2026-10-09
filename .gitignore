@@ -55,3 +55,6 @@ downloads/
 screenshots/
 
 config/api_keys.json
+
+node_modules/
+.venv/

@@ -1239,3 +1239,202 @@ async def toggle_mobile_access(request: Request):
     finally:
         conn.close()
 
+
+
+# ========================================================
+# REAL SUPPORT & TELEMETRY REST APIs
+# ========================================================
+import sqlite3
+from pydantic import BaseModel
+
+class SupportSendModel(BaseModel):
+    user_id: str
+    username: str
+    query: str
+
+class SupportReplyModel(BaseModel):
+    ticket_id: int
+    reply: str
+
+class FeedbackSendModel(BaseModel):
+    user_id: str
+    username: str
+    rating: int
+    comment: str
+
+@app.post("/api/support/send")
+async def send_user_support_ticket(data: SupportSendModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO support_messages (user_id, username, query) VALUES (?, ?, ?)",
+                (data.user_id, data.username, data.query))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.get("/api/support/user/{user_id}")
+async def get_single_user_support(user_id: str):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT id, query, reply, status, created_at FROM support_messages WHERE user_id = ? ORDER BY id ASC", (user_id,))
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "query": r[1], "reply": r[2], "status": r[3], "created_at": r[4]} for r in rows]
+
+@app.get("/api/support/admin/inbox")
+async def get_admin_live_inbox():
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT id, user_id, username, query, reply, status, created_at FROM support_messages ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "user_id": r[1], "username": r[2], "query": r[3], "reply": r[4], "status": r[5], "created_at": r[6]} for r in rows]
+
+@app.post("/api/support/admin/reply")
+async def send_admin_live_reply(data: SupportReplyModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("UPDATE support_messages SET reply = ?, status = 'resolved' WHERE id = ?", (data.reply, data.ticket_id))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.post("/api/feedback/submit")
+async def post_live_feedback(data: FeedbackSendModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO feedback_ratings (user_id, username, rating, comment) VALUES (?, ?, ?, ?)",
+                (data.user_id, data.username, data.rating, data.comment))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.get("/api/feedback/stats")
+async def get_live_feedback_metrics():
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT rating, COUNT(*) FROM feedback_ratings GROUP BY rating")
+    counts = dict(cur.fetchall())
+    cur.execute("SELECT AVG(rating), COUNT(*) FROM feedback_ratings")
+    avg_res = cur.fetchone()
+    conn.close()
+    avg_score = round(avg_res[0] or 5.0, 1)
+    total_reviews = avg_res[1] or 0
+    return {
+        "avg": avg_score,
+        "total": total_reviews,
+        "counts": {str(i): counts.get(i, 0) for i in range(1, 6)}
+    }
+
+
+# ========================================================
+# REAL APIs: TOGGLE ALL, SUPPORT DESK & DYNAMIC FEEDBACK
+# ========================================================
+import sqlite3
+from pydantic import BaseModel
+
+class ToggleAllModel(BaseModel):
+    action: str  # 'activate' or 'deactivate'
+
+class SupportSendModel(BaseModel):
+    user_id: str
+    username: str
+    query: str
+
+class SupportReplyModel(BaseModel):
+    ticket_id: int
+    reply: str
+
+class FeedbackSendModel(BaseModel):
+    user_id: str
+    username: str
+    rating: int
+    comment: str
+
+@app.post("/api/services/toggle-all")
+async def toggle_all_services(data: ToggleAllModel):
+    is_active = 1 if data.action == "activate" else 0
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    # If services table exists, update it
+    try:
+        cur.execute("UPDATE services SET status = ?", (is_active,))
+        conn.commit()
+    except Exception:
+        pass
+    conn.close()
+    return {"status": "success", "action": data.action}
+
+@app.post("/api/support/send")
+async def send_user_support_ticket(data: SupportSendModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO support_messages (user_id, username, query) VALUES (?, ?, ?)",
+                (data.user_id, data.username, data.query))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.get("/api/support/user/{user_id}")
+async def get_single_user_support(user_id: str):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT id, query, reply, status, created_at FROM support_messages WHERE user_id = ? ORDER BY id ASC", (user_id,))
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "query": r[1], "reply": r[2], "status": r[3], "created_at": r[4]} for r in rows]
+
+@app.get("/api/support/admin/inbox")
+async def get_admin_live_inbox():
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT id, user_id, username, query, reply, status, created_at FROM support_messages ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "user_id": r[1], "username": r[2], "query": r[3], "reply": r[4], "status": r[5], "created_at": r[6]} for r in rows]
+
+@app.post("/api/support/admin/reply")
+async def send_admin_live_reply(data: SupportReplyModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("UPDATE support_messages SET reply = ?, status = 'resolved' WHERE id = ?", (data.reply, data.ticket_id))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.post("/api/feedback/submit")
+async def post_live_feedback(data: FeedbackSendModel):
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO feedback_ratings (user_id, username, rating, comment) VALUES (?, ?, ?, ?)",
+                (data.user_id, data.username, data.rating, data.comment))
+    conn.commit()
+    conn.close()
+    return {"status": "success"}
+
+@app.get("/api/feedback/stats")
+async def get_live_feedback_metrics():
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT rating, COUNT(*) FROM feedback_ratings GROUP BY rating")
+    counts = dict(cur.fetchall())
+    cur.execute("SELECT AVG(rating), COUNT(*) FROM feedback_ratings")
+    avg_res = cur.fetchone()
+    conn.close()
+    avg_score = round(avg_res[0] or 5.0, 1)
+    total_reviews = avg_res[1] or 0
+    return {
+        "avg": avg_score,
+        "total": total_reviews,
+        "counts": {str(i): counts.get(i, 0) for i in range(1, 6)}
+    }
+
+
+@app.get("/api/feedback/admin/all")
+async def get_all_feedbacks_for_admin():
+    conn = sqlite3.connect("portal_data.db")
+    cur = conn.cursor()
+    cur.execute("SELECT id, user_id, username, rating, comment, created_at FROM feedback_ratings ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
+    return [{"id": r[0], "user_id": r[1], "username": r[2], "rating": r[3], "comment": r[4], "created_at": r[5]} for r in rows]

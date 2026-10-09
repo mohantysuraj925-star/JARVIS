@@ -77,6 +77,513 @@
       .admin-badge { font-size:.67rem; } }
     @media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none!important; } }
   </style>
+
+
+
+
+<style id="REAL_INTERACTIVE_GLASS_ENGINE">
+/* Background 3D Canvas Mount */
+#real3DCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body {
+    background: #060913 !important;
+    color: #F8FAFC !important;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Surface with Click-Reaction */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+    background: rgba(13, 20, 36, 0.72) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s !important;
+    position: relative;
+    z-index: 1;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+.jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+    transform: scale(0.995);
+}
+
+/* Interactive Glowing Action Buttons */
+button, .jarvis-btn-primary, .purple-btn {
+    font-family: inherit !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 10px !important;
+    padding: 9px 18px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    position: relative;
+    z-index: 2;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+    color: #38BDF8 !important;
+}
+
+button:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+
+/* Headings Visibility */
+h1, h2, h3, h4 {
+    color: #F8FAFC !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="COSMIC_MIDNIGHT_THEME">
+:root {
+    --bg-gradient: radial-gradient(circle at 50% 10%, #1E293B 0%, #0F172A 50%, #0B132B 100%);
+    --card-bg: rgba(30, 41, 59, 0.65);
+    --card-border: rgba(148, 163, 184, 0.2);
+    --card-hover: rgba(51, 65, 85, 0.75);
+    --accent-cyan: #38BDF8;
+    --accent-blue: #3B82F6;
+    --accent-indigo: #6366F1;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* 1. Remove Flat Black - Replace with Rich Cosmic Navy */
+html, body {
+    background: var(--bg-gradient) !important;
+    background-color: #0F172A !important;
+    background-attachment: fixed !important;
+    color: var(--text-primary) !important;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* 2. Organized Glass Containers & Cards */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+.bg-slate-900, .bg-slate-900\/80, div[class*="bg-black"], div[class*="bg-slate"] {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
+    background: var(--card-hover) !important;
+    border-color: var(--accent-cyan) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* 3. High-Contrast Organized Typography */
+h1, h2, h3, h4 {
+    color: var(--text-primary) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+}
+
+p, span, label, td {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* 4. Elegant Interactive Buttons with Glow & Tactile Lift */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 100%) !important;
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45), 0 0 15px rgba(56, 189, 248, 0.3) !important;
+}
+
+button:active {
+    transform: translateY(1px) scale(0.97) !important;
+}
+
+/* 5. Clean Table Layout */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+th {
+    color: var(--text-muted) !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+tr {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-radius: 10px !important;
+    transition: background 0.2s ease, transform 0.2s ease !important;
+}
+
+tr:hover {
+    background: rgba(51, 65, 85, 0.7) !important;
+    transform: translateY(-1px) !important;
+}
+
+td {
+    padding: 14px 16px !important;
+    border: none !important;
+}
+
+/* 6. Form Inputs & Selects */
+input[type="text"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent-cyan) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+</style>
+
+
+<style id="BUTTON_ICON_SYNC_THEME">
+/* Uniform Button & Icon Styling */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3) !important;
+    color: #38BDF8 !important;
+}
+
+/* Match all button SVGs/Icons to Theme */
+button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    transition: transform 0.2s ease, stroke 0.2s ease !important;
+}
+
+button:hover svg {
+    stroke: #7DD3FC !important;
+    transform: scale(1.1) !important;
+}
+</style>
+
+
+
+
+<!-- LUCIDE ICONS OFFICIAL ENGINE -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+
+<style id="ENTERPRISE_MICRO_INTERACTIONS">
+/* 1. Global Crisp Typography */
+h1, h2, h3, h4, .font-cyber {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #F8FAFC !important;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
+}
+
+p, span, td, th, label {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* 2. Glassmorphic Tables & Hover Elevate */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+thead tr th {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(14px) !important;
+    color: #94A3B8 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+tbody tr {
+    background: rgba(15, 23, 42, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+tbody tr td {
+    padding: 14px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #F8FAFC !important;
+}
+
+tbody tr td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px 0 0 12px !important;
+}
+
+tbody tr td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0 12px 12px 0 !important;
+}
+
+tbody tr:hover {
+    background: rgba(22, 33, 58, 0.85) !important;
+    transform: translateY(-2px) scale(1.005) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(56, 189, 248, 0.12) !important;
+}
+
+/* 3. Lucide Vector Icon Glass Pods */
+svg.lucide, .lucide, [data-lucide] {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 2px !important;
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    transition: transform 0.22s ease, stroke 0.22s ease, filter 0.22s ease !important;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.35)) !important;
+}
+
+button:hover svg.lucide, button:hover [data-lucide] {
+    transform: scale(1.15) rotate(4deg) !important;
+    stroke: #7DD3FC !important;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8)) !important;
+}
+
+/* 4. Tactile Buttons & Click Wave Ripple */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    position: relative !important;
+    overflow: hidden !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 11px !important;
+    color: #F8FAFC !important;
+    font-weight: 700 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active {
+    transform: translateY(1px) scale(0.96) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 5. Ripple Shockwave Injection */
+.click-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleEffect 0.55s ease-out;
+    background: rgba(56, 189, 248, 0.35);
+    pointer-events: none;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+    if (!btn) return;
+    
+    var circle = document.createElement('span');
+    var diameter = Math.max(btn.clientWidth, btn.clientHeight);
+    var radius = diameter / 2;
+    var rect = btn.getBoundingClientRect();
+    
+    circle.style.width = circle.style.height = diameter + 'px';
+    circle.style.left = (e.clientX - rect.left - radius) + 'px';
+    circle.style.top = (e.clientY - rect.top - radius) + 'px';
+    circle.classList.add('click-ripple');
+    
+    var prev = btn.getElementsByClassName('click-ripple')[0];
+    if (prev) prev.remove();
+    btn.appendChild(circle);
+});
+</script>
+
+
+<style id="TOTAL_CYBER_OBSIDIAN_ALIGN">
+/* 1. Eliminate all purple backgrounds and borders */
+[class*="purple"], [class*="bg-purple"], [class*="border-purple"], [class*="text-purple"] {
+    background-color: transparent !important;
+}
+
+/* 2. Glassmorphic Input Fields & Textareas */
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: 10px !important;
+    color: #F8FAFC !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #38BDF8 !important;
+    outline: none !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* 3. All Cards, Nodes & Telemetry Blocks */
+.jarvis-card, [class*="rounded-"], div[style*="background"] {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Specific Admin Managed Nodes & Metric Cards */
+div[class*="bg-"][class*="border"] {
+    background: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+}
+
+/* 4. Action Buttons (+5D, -5D, Del, Save Changes, Refresh, Reset) */
+button, input[type="submit"], a.purple-btn, .purple-btn {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    color: #F8FAFC !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    text-decoration: none !important;
+}
+
+button:hover, a.purple-btn:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
+}
+
+button:active, a.purple-btn:active {
+    transform: scale(0.96) !important;
+}
+
+/* Del Button Specific Warning Accent */
+button:has(svg.lucide-trash), button:contains("Del") {
+    border-color: rgba(239, 68, 68, 0.4) !important;
+}
+button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
+    border-color: #EF4444 !important;
+    color: #EF4444 !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* 5. Clean Modern Android Button Replacement */
+.android-clean-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
+}
+</style>
+
 </head>
 <body>
 {% if login %}
@@ -167,7 +674,297 @@
   refreshExpiryCountdowns();
   setInterval(refreshExpiryCountdowns, 1000);
   </script>
-  </body>
+  
+<!-- DEVELOPER LIVE INBOX DESK -->
+<div id="ADMIN_LIVE_DESK" style="width:94%; max-width:1150px; margin:30px auto; padding:20px; background:rgba(15,23,42,0.9); border:1px solid #334155; border-radius:16px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1E293B; padding-bottom:10px; margin-bottom:14px;">
+        <h3 style="margin:0; font-size:16px; color:#38BDF8; font-weight:800;">Developer Support Inbox</h3>
+        <button onclick="fetchAdminInbox()" style="background:#0284C7; color:#FFF; border:none; padding:6px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Refresh</button>
+    </div>
+    <div id="adminInboxCards" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:10px;">
+        <div style="color:#64748B;">Checking database for tickets...</div>
+    </div>
+</div>
+
+<script>
+async function fetchAdminInbox() {
+    var box = document.getElementById('adminInboxCards');
+    if(!box) return;
+    try {
+        var res = await fetch('/api/support/admin/inbox');
+        var data = await res.json();
+        if(!data.length) {
+            box.innerHTML = '<div style="color:#64748B; padding:15px;">No active support tickets.</div>';
+            return;
+        }
+        var html = '';
+        data.forEach(function(i) {
+            var isResolved = i.status === 'resolved';
+            html += '<div style="background:#0B1120; border:1px solid ' + (isResolved ? '#1E293B' : '#6366F1') + '; border-radius:10px; padding:10px;">' +
+                '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;"><span style="color:#38BDF8; font-weight:bold;">' + i.username + '</span><span style="color:' + (isResolved ? '#10B981' : '#F59E0B') + ';">' + i.status.toUpperCase() + '</span></div>' +
+                '<div style="font-size:12px; color:#F8FAFC; margin-bottom:6px;">' + i.query + '</div>';
+            if(i.reply) {
+                html += '<div style="font-size:11px; color:#94A3B8; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:4px;"><b>Replied:</b> ' + i.reply + '</div>';
+            } else {
+                html += '<div style="display:flex; gap:4px;"><input id="adm_rep_' + i.id + '" type="text" placeholder="Reply..." style="flex:1; background:#1E293B; border:1px solid #334155; border-radius:4px; padding:4px 8px; font-size:11px; color:#FFF;" /><button onclick="sendAdminReply(' + i.id + ')" style="background:#4F46E5; border:none; border-radius:4px; color:#FFF; font-size:11px; padding:4px 10px; cursor:pointer;">Send</button></div>';
+            }
+            html += '</div>';
+        });
+        box.innerHTML = html;
+    } catch(e){}
+}
+async function sendAdminReply(id) {
+    var inp = document.getElementById('adm_rep_' + id);
+    if(!inp || !inp.value.trim()) return;
+    await fetch('/api/support/admin/reply', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ ticket_id: id, reply: inp.value.trim() })
+    });
+    fetchAdminInbox();
+}
+window.addEventListener('DOMContentLoaded', fetchAdminInbox);
+</script>
+
+
+<script>
+async function toggleAllServices(actionType) {
+    try {
+        var res = await fetch('/api/services/toggle-all', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ action: actionType })
+        });
+        if(res.ok) {
+            var checks = document.querySelectorAll('input[type="checkbox"]');
+            checks.forEach(function(c) {
+                c.checked = (actionType === 'activate');
+            });
+            alert('All services successfully ' + actionType + 'd!');
+        }
+    } catch(e) {
+        alert('Action failed');
+    }
+}
+</script>
+
+
+<!-- 3D AI NEURAL WAVE GRID -->
+<canvas id="real3DCanvas"></canvas>
+<script>
+(function() {
+    var c = document.getElementById('real3DCanvas');
+    if (!c) {
+        c = document.createElement('canvas');
+        c.id = 'real3DCanvas';
+        document.body.prepend(c);
+    }
+    var ctx = c.getContext('2d');
+    var w, h;
+    var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    var t = 0;
+
+    function resize() {
+        w = c.width = window.innerWidth;
+        h = c.height = window.innerHeight;
+        mouse.tx = w / 2;
+        mouse.ty = h / 2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', function(e) {
+        mouse.tx = e.clientX;
+        mouse.ty = e.clientY;
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        t += 0.015;
+
+        mouse.x += (mouse.tx - mouse.x) * 0.04;
+        mouse.y += (mouse.ty - mouse.y) * 0.04;
+
+        var cols = 32;
+        var rows = 16;
+        var cellW = w / (cols - 1);
+        var cellH = (h * 0.6) / (rows - 1);
+        var horizonY = h * 0.40;
+
+        var tiltX = (mouse.x - w / 2) * 0.0003;
+        var tiltY = (mouse.y - h / 2) * 0.0003;
+
+        ctx.lineWidth = 0.8;
+        for (var r = 0; r < rows; r++) {
+            ctx.beginPath();
+            var depth = (r + 1) / rows;
+            ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.03 + depth * 0.14) + ')';
+
+            for (var col = 0; col < cols; col++) {
+                var wave = Math.sin(t + col * 0.28 + r * 0.35) * (15 * depth);
+                var x = col * cellW + (col - cols / 2) * tiltX * (r * 10);
+                var y = horizonY + r * cellH + wave + (r * 5) * tiltY;
+
+                if (col === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+</script>
+
+
+<!-- THREE.JS & 3D HOLOGRAPHIC ROBOT CORE -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<div id="hologramRobotContainer" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.85;"></div>
+<script>
+(function() {
+    var container = document.getElementById('hologramRobotContainer');
+    if (!container || typeof THREE === 'undefined') return;
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 24;
+
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    var robotGroup = new THREE.Group();
+    scene.add(robotGroup);
+
+    // Holographic Core Cranium
+    var headGeo = new THREE.IcosahedronGeometry(5.2, 2);
+    var holoMat = new THREE.MeshBasicMaterial({
+        color: 0x38BDF8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35
+    });
+    var headMesh = new THREE.Mesh(headGeo, holoMat);
+    robotGroup.add(headMesh);
+
+    // Inner Quantum Core
+    var coreGeo = new THREE.OctahedronGeometry(2.8, 1);
+    var coreMat = new THREE.MeshBasicMaterial({
+        color: 0x6366F1,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.65
+    });
+    var coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    robotGroup.add(coreMesh);
+
+    // Orbiting Data Rings
+    var ringGeo = new THREE.TorusGeometry(7.2, 0.06, 16, 100);
+    var ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.4 });
+    var ring1 = new THREE.Mesh(ringGeo, ringMat);
+    ring1.rotation.x = Math.PI / 3;
+    robotGroup.add(ring1);
+
+    var ring2 = new THREE.Mesh(ringGeo, ringMat);
+    ring2.rotation.y = Math.PI / 4;
+    robotGroup.add(ring2);
+
+    robotGroup.position.set(0, 1.5, 0);
+
+    var mouseX = 0, mouseY = 0;
+    var targetX = 0, targetY = 0;
+
+    window.addEventListener('mousemove', function(e) {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+    });
+
+    window.addEventListener('resize', function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        // 360 Continuous Smooth Hologram Rotation
+        robotGroup.rotation.y += 0.009;
+        robotGroup.rotation.x = targetY * 0.6;
+        robotGroup.rotation.z = targetX * 0.4;
+
+        coreMesh.rotation.y -= 0.02;
+        coreMesh.rotation.x += 0.01;
+
+        ring1.rotation.z += 0.012;
+        ring2.rotation.x -= 0.015;
+
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+
+
+<!-- REAL USER FEEDBACK AUDIT DESK FOR ADMIN -->
+<div id="ADMIN_FEEDBACK_DESK" style="width:94%; max-width:1150px; margin:25px auto; padding:22px; background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.12); border-radius:16px; position:relative; z-index:1;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; margin-bottom:16px;">
+        <div>
+            <h3 style="margin:0; font-size:16px; color:#F59E0B; font-weight:800;">Real User Feedbacks & Ratings Audit</h3>
+            <p style="margin:4px 0 0 0; font-size:12px; color:#94A3B8;">Inspect ratings and comments submitted by users to the database.</p>
+        </div>
+        <button onclick="loadAdminFeedbackList()" style="background:#D97706; color:#FFF; border:none; padding:7px 14px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">Refresh Feedbacks</button>
+    </div>
+    
+    <div id="adminFeedbackContainer" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
+        <div style="color:#64748B;">Loading verified feedbacks from SQLite...</div>
+    </div>
+</div>
+
+<script>
+async function loadAdminFeedbackList() {
+    var box = document.getElementById('adminFeedbackContainer');
+    if (!box) return;
+    try {
+        var r = await fetch('/api/feedback/admin/all');
+        var list = await r.json();
+        if (!list.length) {
+            box.innerHTML = '<div style="color:#64748B; grid-column:1/-1; padding:20px; text-align:center;">No feedback reviews logged in database yet.</div>';
+            return;
+        }
+        var html = '';
+        list.forEach(function(item) {
+            var stars = '';
+            for (var s = 0; s < 5; s++) stars += (s < item.rating ? '★' : '☆');
+            html += '<div style="background:rgba(10,15,28,0.8); border:1px solid rgba(245,158,11,0.25); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">' +
+                '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+                    '<span style="font-weight:bold; color:#F8FAFC; font-size:13px;">' + item.username + '</span>' +
+                    '<span style="color:#F59E0B; font-size:13px; font-weight:bold;">' + stars + ' (' + item.rating + '/5)</span>' +
+                '</div>' +
+                '<div style="font-size:12px; color:#CBD5E1; background:rgba(15,23,42,0.9); padding:8px; border-radius:6px; min-height:36px;">' + (item.comment || '<i style="color:#64748B;">No written comment</i>') + '</div>' +
+                '<div style="font-size:10px; color:#64748B; text-align:right;">' + item.created_at + '</div>' +
+            '</div>';
+        });
+        box.innerHTML = html;
+    } catch(e) {}
+}
+window.addEventListener('DOMContentLoaded', loadAdminFeedbackList);
+</script>
+
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
+</script>
+
+</body>
   </html>
 
 
