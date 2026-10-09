@@ -1378,18 +1378,7 @@ async function toggleAllServices(actionType) {
 
 
 <!-- REAL USER FEEDBACK AUDIT DESK FOR ADMIN -->
-<div id="ADMIN_FEEDBACK_DESK" style="width:94%; max-width:1150px; margin:25px auto; padding:22px; background:rgba(15,23,42,0.85); border:1px solid rgba(255,255,255,0.12); border-radius:16px; position:relative; z-index:1;">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; margin-bottom:16px;">
-        <div>
-            <h3 style="margin:0; font-size:16px; color:#F59E0B; font-weight:800;">Real User Feedbacks & Ratings Audit</h3>
-            <p style="margin:4px 0 0 0; font-size:12px; color:#94A3B8;">Inspect ratings and comments submitted by users to the database.</p>
-        </div>
-        <button onclick="loadAdminFeedbackList()" style="background:#D97706; color:#FFF; border:none; padding:7px 14px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">Refresh Feedbacks</button>
-    </div>
-    
-    <div id="adminFeedbackContainer" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px;">
-        <div style="color:#64748B;">Loading verified feedbacks from SQLite...</div>
-    </div>
+
 </div>
 
 <script>
@@ -1696,6 +1685,179 @@ window.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('DOMContentLoaded', setup);
     setTimeout(setup, 500);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- REAL OPERATOR FEEDBACK MODAL -->
+<div id="realFeedbackInspectModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999999999; align-items:center; justify-content:center; padding:16px;">
+    <div style="position:relative !important; width:100%; max-width:440px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 30px 80px rgba(0,0,0,0.95); box-sizing:border-box;">
+        
+        <!-- Clean Close Cross -->
+        <button id="closeRealInspectCross" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important;">✕</button>
+
+        <h3 style="margin:0 0 4px 0; font-size:19px; font-weight:800; color:#F8FAFC;">Operator Feedback</h3>
+        <p style="margin:0 0 16px 0; font-size:12px; color:#64748B;">Direct database record</p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR</span>
+            <span id="realModalOpName" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">-</span>
+        </div>
+
+        <div id="realRatingSection" style="display:none; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">RATING</span>
+            <span id="realModalStarCount" style="font-size:20px; color:#FBBF24;">★★★★★</span>
+        </div>
+
+        <div style="background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:6px;">COMMENT</span>
+            <p id="realModalFeedbackText" style="margin:0; font-size:13px; color:#E2E8F0; line-height:1.6; word-break:break-word;">Checking database...</p>
+            <span id="realModalTimestamp" style="display:none; margin-top:8px; font-size:10px; color:#64748B;"></span>
+        </div>
+
+        <button id="closeRealInspectBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<style id="FEEDBACK_ORIGINAL_PILL_STYLE">
+.see-feedback-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px 10px !important;
+    margin-left: 8px !important;
+    border-radius: 6px !important;
+    background: #1E293B !important;
+    border: 1px solid #38BDF8 !important;
+    color: #38BDF8 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    font-family: monospace !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.see-feedback-pill:hover {
+    background: #0284C7 !important;
+    color: #FFFFFF !important;
+}
+</style>
+
+<script id="REAL_FEEDBACK_RUNTIME">
+(function() {
+    async function loadFeedback(opName) {
+        const modal = document.getElementById('realFeedbackInspectModal');
+        const nameEl = document.getElementById('realModalOpName');
+        const ratingBox = document.getElementById('realRatingSection');
+        const starsEl = document.getElementById('realModalStarCount');
+        const commentEl = document.getElementById('realModalFeedbackText');
+        const dateEl = document.getElementById('realModalTimestamp');
+
+        nameEl.innerText = opName;
+        ratingBox.style.display = 'none';
+        dateEl.style.display = 'none';
+        commentEl.innerText = "Connecting to database...";
+        modal.style.display = 'flex';
+
+        try {
+            const clean = opName.split('(')[0].trim();
+            const res = await fetch(`/api/feedback/operator?name=${encodeURIComponent(clean)}`);
+            const data = await res.json();
+            if (data && data.found) {
+                const r = parseInt(data.rating) || 5;
+                starsEl.innerText = "★".repeat(r) + "☆".repeat(5 - r);
+                ratingBox.style.display = 'flex';
+                commentEl.innerText = data.comment;
+                if (data.date) {
+                    dateEl.innerText = "Date: " + data.date;
+                    dateEl.style.display = 'block';
+                }
+            } else {
+                commentEl.innerText = "No feedback";
+            }
+        } catch(err) {
+            commentEl.innerText = "No feedback";
+        }
+    }
+
+    function attachOnce() {
+        const container = document.getElementById('masterNodesContainer');
+        if (!container) return;
+
+        const cards = container.children;
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            if (card.getAttribute('data-pill-added') === 'true') continue;
+
+            let opTitle = "";
+            const lines = (card.innerText || '').split('\n');
+            for (let l of lines) {
+                l = l.trim();
+                if (l.includes('(#') || (l.length > 0 && !l.includes('Allocation') && !l.includes('STANDBY') && !l.includes('+5D') && !l.includes('-5D') && !l.includes('DELETE'))) {
+                    opTitle = l;
+                    break;
+                }
+            }
+
+            if (!opTitle) {
+                const titleTag = card.querySelector('h3, h4, span, div');
+                if (titleTag) opTitle = titleTag.innerText.trim();
+            }
+
+            if (opTitle) {
+                card.setAttribute('data-pill-added', 'true');
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.className = 'see-feedback-pill';
+                pill.innerText = 'See Feedback';
+
+                pill.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadFeedback(opTitle);
+                };
+
+                const targetRow = card.querySelector('div, p, span');
+                if (targetRow) {
+                    targetRow.appendChild(pill);
+                } else {
+                    card.appendChild(pill);
+                }
+            }
+        }
+    }
+
+    function init() {
+        const modal = document.getElementById('realFeedbackInspectModal');
+        const cross = document.getElementById('closeRealInspectCross');
+        const btn = document.getElementById('closeRealInspectBtn');
+
+        if (cross) cross.onclick = () => { modal.style.display = 'none'; };
+        if (btn) btn.onclick = () => { modal.style.display = 'none'; };
+        if (modal) modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+        attachOnce();
+
+        const observer = new MutationObserver(() => {
+            attachOnce();
+        });
+        const container = document.getElementById('masterNodesContainer');
+        if (container) {
+            observer.observe(container, { childList: true, subtree: false });
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    setTimeout(init, 500);
 })();
 </script>
 

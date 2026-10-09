@@ -1438,3 +1438,68 @@ async def get_all_feedbacks_for_admin():
     rows = cur.fetchall()
     conn.close()
     return [{"id": r[0], "user_id": r[1], "username": r[2], "rating": r[3], "comment": r[4], "created_at": r[5]} for r in rows]
+
+
+from pydantic import BaseModel
+
+class FeedbackModel(BaseModel):
+    username: str
+    rating: int
+    comment: str
+
+@app.post("/api/feedback")
+async def save_feedback_entry(fb: FeedbackModel):
+    import sqlite3
+    saved = False
+    for db_path in ["database.db", "server/users.db", "users.db"]:
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE IF NOT EXISTS feedbacks (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, rating INTEGER, comment TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            cur.execute("INSERT INTO feedbacks (username, rating, comment) VALUES (?, ?, ?)", (fb.username.strip(), fb.rating, fb.comment.strip()))
+            conn.commit()
+            conn.close()
+            saved = True
+            break
+        except Exception:
+            pass
+    return {"status": "success", "saved": saved}
+
+@app.get("/api/feedback/count")
+async def get_feedback_count():
+    import sqlite3
+    total = 0
+    for db_path in ["database.db", "server/users.db", "users.db"]:
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM feedbacks")
+            row = cur.fetchone()
+            if row and row[0] is not None:
+                total = row[0]
+            conn.close()
+            break
+        except Exception:
+            pass
+    return {"count": total}
+
+@app.get("/api/feedback/operator")
+async def get_operator_feedback(name: str = ""):
+    import sqlite3
+    result = {"found": False, "rating": 5, "comment": "No feedback submitted yet.", "date": "-"}
+    for db_path in ["database.db", "server/users.db", "users.db"]:
+        try:
+            conn = sqlite3.connect(db_path)
+            cur = conn.cursor()
+            if name:
+                cur.execute("SELECT rating, comment, created_at FROM feedbacks WHERE LOWER(TRIM(username)) = LOWER(TRIM(?)) ORDER BY id DESC LIMIT 1", (name,))
+            else:
+                cur.execute("SELECT rating, comment, created_at FROM feedbacks ORDER BY id DESC LIMIT 1")
+            row = cur.fetchone()
+            if row:
+                result = {"found": True, "rating": row[0], "comment": row[1], "date": str(row[2])}
+            conn.close()
+            break
+        except Exception:
+            pass
+    return result

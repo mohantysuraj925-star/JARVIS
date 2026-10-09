@@ -1410,12 +1410,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+
+
+
+
+
+
+
+
+
 <!-- ULTRA STABLE VERIFIED FEEDBACK SYSTEM -->
 <div id="smartFeedbackModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:99999999; align-items:center; justify-content:center; padding:16px;">
     <div id="feedbackCardContainer" style="position:relative !important; width:100%; max-width:470px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 25px 60px rgba(0,0,0,0.9); box-sizing:border-box;">
         
-        <!-- Clean Fixed Close Button (Top-Right Only) -->
-        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important; margin:0 !important;">✕</button>
+        <!-- Close Button -->
+        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:100 !important;">✕</button>
 
         <!-- Header -->
         <div style="padding-right:45px; margin-bottom:18px;">
@@ -1429,38 +1438,71 @@ window.addEventListener('DOMContentLoaded', () => {
             <span id="feedbackUserDisplay" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">Detecting...</span>
         </div>
 
-        <!-- Dynamic Non-Emoji SVG Face Reaction -->
-        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px;">
+        <!-- SVG Face Reaction -->
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px; pointer-events:none;">
             <div id="svgReactionBox" style="width:52px; height:52px; display:flex; align-items:center; justify-content:center;"></div>
         </div>
 
         <!-- 5 Large Interactive SVG Stars -->
         <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:8px;">
-            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
         </div>
         <div id="starScoreDisplay" style="text-align:center; font-size:13px; font-weight:700; color:#38BDF8; margin-bottom:16px;">5 Stars - Exceptional</div>
 
-        <!-- Dynamic Context Options -->
-        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+        <!-- Dedicated Multi-Select Chips Wrapper -->
+        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; position:relative; z-index:50;"></div>
 
-        <!-- Other Custom Feedback Input -->
+        <!-- Custom Feedback Text Input -->
         <div id="feedbackCustomInputWrap" style="display:none; margin-bottom:16px;">
-            <textarea id="feedbackCustomText" placeholder="Write your specific feedback or request..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
+            <textarea id="feedbackCustomText" placeholder="Apna feedback ya sujhav yahan likhein..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
         </div>
 
-        <!-- Curved Submit Button -->
-        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease;">Submit Verified Review</button>
+        <!-- Submit Button -->
+        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease; position:relative; z-index:50;">Submit Verified Review</button>
     </div>
 </div>
+
+<style id="CHIPS_SELECTION_CSS">
+.smart-feedback-pill {
+    padding: 8px 16px !important;
+    border-radius: 9999px !important;
+    background: #131E3A !important;
+    border: 1px solid #1E293B !important;
+    color: #CBD5E1 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.15s ease !important;
+}
+
+.smart-feedback-pill:hover {
+    border-color: #38BDF8 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+}
+
+.smart-feedback-pill.chip-selected {
+    background: #0284C7 !important;
+    border-color: #38BDF8 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.45) !important;
+    transform: scale(1.03) !important;
+}
+</style>
 
 <script id="FEEDBACK_CORE_SCRIPT">
 (function() {
     let currentRating = 5;
-    let selectedOption = "";
+    let selectedChipsSet = new Set();
 
     const reactionSVGs = {
         1: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M7 8l3 1"></path><path d="M17 8l-3 1"></path></svg>',
@@ -1490,16 +1532,13 @@ window.addEventListener('DOMContentLoaded', () => {
         let name = localStorage.getItem('username') || 
                    localStorage.getItem('currentUser') || 
                    sessionStorage.getItem('username');
-        
         if (!name) {
-            // Check Cookies
             const cookies = document.cookie.split(';');
             for (let c of cookies) {
                 let [k, v] = c.trim().split('=');
                 if (k === 'username' || k === 'user') { name = decodeURIComponent(v); break; }
             }
         }
-
         if (!name) {
             const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
             if (token) {
@@ -1509,12 +1548,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 } catch(e) {}
             }
         }
-
         if (!name) {
             const domNode = document.querySelector('#currentUser, #username, .user-name, [data-username], #current-user');
             if (domNode) name = domNode.innerText || domNode.value;
         }
-
         return (name || "Operator").trim();
     }
 
@@ -1524,40 +1561,46 @@ window.addEventListener('DOMContentLoaded', () => {
         if (!area) return;
         area.innerHTML = "";
         customWrap.style.display = "none";
-        selectedOption = "";
+        selectedChipsSet.clear();
 
         const list = chipsData[rating] || chipsData[5];
         list.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.innerText = opt;
-            btn.style.cssText = "padding:7px 15px; border-radius:9999px; background:#131E3A; border:1px solid #1E293B; color:#CBD5E1; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s ease;";
-            btn.onclick = () => {
-                area.querySelectorAll('button').forEach(b => {
-                    b.style.background = "#131E3A";
-                    b.style.borderColor = "#1E293B";
-                    b.style.color = "#CBD5E1";
-                });
-                btn.style.background = "#0284C7";
-                btn.style.borderColor = "#38BDF8";
-                btn.style.color = "#FFFFFF";
-                selectedOption = opt;
+            const chip = document.createElement('div');
+            chip.className = 'smart-feedback-pill';
+            chip.setAttribute('data-label', opt);
+            chip.innerText = opt;
+            
+            // Pointer event to guarantee instant click response
+            chip.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-                if (opt.toLowerCase().includes("other")) {
-                    customWrap.style.display = "block";
-                    document.getElementById('feedbackCustomText').focus();
+                const isOther = opt.toLowerCase().includes("other");
+
+                if (selectedChipsSet.has(opt)) {
+                    selectedChipsSet.delete(opt);
+                    chip.classList.remove('chip-selected');
+                    if (isOther) {
+                        customWrap.style.display = "none";
+                    }
                 } else {
-                    customWrap.style.display = "none";
+                    selectedChipsSet.add(opt);
+                    chip.classList.add('chip-selected');
+                    if (isOther) {
+                        customWrap.style.display = "block";
+                        const txt = document.getElementById('feedbackCustomText');
+                        if (txt) txt.focus();
+                    }
                 }
-            };
-            area.appendChild(btn);
+            });
+
+            area.appendChild(chip);
         });
     }
 
     function setRating(val) {
         currentRating = val;
 
-        // Solid Golden stars filling
         document.querySelectorAll('.star-rating-item').forEach(star => {
             const v = parseInt(star.getAttribute('data-val'));
             if (v <= val) {
@@ -1571,11 +1614,9 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Dynamic SVG Reaction
         const faceBox = document.getElementById('svgReactionBox');
         if (faceBox) faceBox.innerHTML = reactionSVGs[val] || reactionSVGs[5];
 
-        // Label
         const lbl = document.getElementById('starScoreDisplay');
         if (lbl) lbl.innerText = scoreLabels[val] || (val + " Stars");
 
@@ -1589,12 +1630,11 @@ window.addEventListener('DOMContentLoaded', () => {
         if (closeBtn) closeBtn.onclick = () => { overlay.style.display = 'none'; };
         if (overlay) overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
 
-        // Star click listeners
         document.querySelectorAll('.star-rating-item').forEach(star => {
             star.onclick = () => setRating(parseInt(star.getAttribute('data-val')));
         });
 
-        // Feedback Open Triggers
+        // Trigger open
         document.querySelectorAll('button, a').forEach(el => {
             const t = (el.innerText || '').toLowerCase();
             if (t.includes('feedback') || t.includes('rating') || t.includes('review')) {
@@ -1610,20 +1650,19 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Submit API
+        // Submit to API
         const submitBtn = document.getElementById('submitFeedbackBtn');
         if (submitBtn) {
             submitBtn.onclick = async () => {
                 const u = document.getElementById('feedbackUserDisplay').innerText;
-                const txt = document.getElementById('feedbackCustomText').value;
-                const comment = selectedOption.toLowerCase().includes("other") ? txt : (selectedOption || "Standard Verified Review");
+                const customTxt = document.getElementById('feedbackCustomText').value.trim();
 
-                if (!comment.trim()) {
-                    alert("Please select an option or provide feedback details.");
-                    return;
-                }
+                let combined = [...Array.from(selectedChipsSet).filter(c => !c.toLowerCase().includes("other"))];
+                if (customTxt) combined.push(customTxt);
 
-                submitBtn.innerText = "Submitting...";
+                const finalPayloadComment = combined.length > 0 ? combined.join(" | ") : "Verified Review";
+
+                submitBtn.innerText = "Saving to Database...";
                 submitBtn.disabled = true;
 
                 try {
@@ -1633,23 +1672,178 @@ window.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify({
                             username: u,
                             rating: currentRating,
-                            comment: comment
+                            comment: finalPayloadComment
                         })
                     });
-                } catch(err) {}
+                } catch(err) {
+                    console.error("Submission error:", err);
+                }
 
-                submitBtn.innerText = "Verified & Saved!";
+                submitBtn.innerText = "Feedback Saved!";
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     submitBtn.innerText = "Submit Verified Review";
                     submitBtn.disabled = false;
-                }, 700);
+                }, 750);
             };
         }
     }
 
     window.addEventListener('DOMContentLoaded', setup);
-    setTimeout(setup, 500);
+    setTimeout(setup, 300);
+})();
+</script>
+
+
+
+
+
+<!-- OPERATOR NODE FEEDBACK INSPECTION SYSTEM -->
+<div id="operatorNodeFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.88); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999999999; align-items:center; justify-content:center; padding:16px;">
+    <div style="position:relative !important; width:100%; max-width:460px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 30px 80px rgba(0,0,0,0.95); box-sizing:border-box;">
+        
+        <!-- Clean Close Button Top-Right -->
+        <button id="closeNodeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important;">✕</button>
+
+        <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Operator Feedback Profile</h3>
+        <p style="margin:0 0 16px 0; font-size:12px; color:#64748B;">Telemetry verified feedback log</p>
+
+        <!-- Operator Name Display -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR IDENTITY</span>
+            <span id="nodeInspectOpName" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">-</span>
+        </div>
+
+        <!-- Rating & Dynamic Reaction -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
+            <div>
+                <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">RATING</span>
+                <span id="nodeInspectOpStars" style="font-size:20px; color:#FBBF24;">★★★★★</span>
+            </div>
+            <div id="nodeInspectReactionFace" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+
+        <!-- Feedback Content Details -->
+        <div style="background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:14px 16px; margin-bottom:18px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:6px;">FEEDBACK DETAILS</span>
+            <p id="nodeInspectOpComment" style="margin:0; font-size:13px; color:#E2E8F0; line-height:1.6; word-break:break-word;">Loading feedback details...</p>
+            <span id="nodeInspectOpDate" style="display:block; margin-top:8px; font-size:10px; color:#64748B;">-</span>
+        </div>
+
+        <button id="dismissNodeFeedbackModalBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3);">Close Panel</button>
+    </div>
+</div>
+
+<script id="NODE_FEEDBACK_INSPECTION_SCRIPT">
+(function() {
+    const reactionSVGs = {
+        1: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        2: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path></svg>',
+        3: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line></svg>',
+        4: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>',
+        5: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path></svg>'
+    };
+
+    async function fetchAndShowFeedback(rawName) {
+        // Strip out (#id) tags (e.g. 'Mom 6 (#8)' -> 'Mom 6')
+        const cleanName = rawName.replace(/\(#[0-9]+\)/g, '').trim();
+
+        const modal = document.getElementById('operatorNodeFeedbackModal');
+        const nameEl = document.getElementById('nodeInspectOpName');
+        const starsEl = document.getElementById('nodeInspectOpStars');
+        const faceEl = document.getElementById('nodeInspectReactionFace');
+        const commentEl = document.getElementById('nodeInspectOpComment');
+        const dateEl = document.getElementById('nodeInspectOpDate');
+
+        nameEl.innerText = rawName;
+        starsEl.innerText = "★★★★★";
+        faceEl.innerHTML = reactionSVGs[5];
+        commentEl.innerText = "Fetching feedback from database...";
+        dateEl.innerText = "";
+        modal.style.display = 'flex';
+
+        try {
+            const res = await fetch(`/api/feedback/operator?name=${encodeURIComponent(cleanName)}`);
+            const data = await res.json();
+            if (data.found) {
+                const r = parseInt(data.rating) || 5;
+                starsEl.innerText = "★".repeat(r) + "☆".repeat(5 - r);
+                faceEl.innerHTML = reactionSVGs[r] || reactionSVGs[5];
+                commentEl.innerText = data.comment;
+                dateEl.innerText = "Submitted: " + (data.date || "Recently");
+            } else {
+                commentEl.innerText = "No feedback submitted by this operator yet.";
+            }
+        } catch (e) {
+            commentEl.innerText = "No feedback record found in database.";
+        }
+    }
+
+    function bindManagedOperatorBoxes() {
+        // Find all operator node boxes under MANAGED OPERATOR NODES
+        const boxes = document.querySelectorAll('div[class*="border"], div[class*="rounded"]');
+        boxes.forEach(box => {
+            // Must have action buttons (+5D, -5D, Del) and Allocation info
+            const hasButtons = box.querySelector('button');
+            const hasAllocation = box.innerText && (box.innerText.includes('Allocation:') || box.innerText.includes('STANDBY') || box.innerText.includes('Role:'));
+
+            if (hasButtons && hasAllocation) {
+                // Find node title (e.g., Mom 6 (#8))
+                const titleEl = box.querySelector('h3, h4, span, div');
+                let operatorTitle = "";
+                if (titleEl) {
+                    const lines = box.innerText.split('\n');
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (line.includes('(#') || (line.length > 0 && !line.includes('Allocation') && !line.includes('STANDBY') && !line.includes('Role:') && !line.includes('+5D'))) {
+                            operatorTitle = line;
+                            break;
+                        }
+                    }
+                }
+
+                if (operatorTitle && !box.hasAttribute('data-node-bound')) {
+                    box.setAttribute('data-node-bound', 'true');
+                    box.style.cursor = 'pointer';
+                    box.style.transition = 'all 0.2s ease';
+
+                    // Hover styling
+                    box.addEventListener('mouseenter', () => {
+                        box.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                    });
+                    box.addEventListener('mouseleave', () => {
+                        box.style.borderColor = '';
+                    });
+
+                    // Click anywhere inside box EXCEPT buttons
+                    box.addEventListener('click', function(e) {
+                        if (e.target.closest('button, a, input, select')) {
+                            return; // Let +5D, -5D, Del buttons work as usual
+                        }
+                        e.preventDefault();
+                        e.stopPropagation();
+                        fetchAndShowFeedback(operatorTitle);
+                    });
+                }
+            }
+        });
+    }
+
+    function init() {
+        const modal = document.getElementById('operatorNodeFeedbackModal');
+        const closeBtn = document.getElementById('closeNodeFeedbackModalBtn');
+        const dismissBtn = document.getElementById('dismissNodeFeedbackModalBtn');
+
+        if (closeBtn) closeBtn.onclick = () => { modal.style.display = 'none'; };
+        if (dismissBtn) dismissBtn.onclick = () => { modal.style.display = 'none'; };
+        if (modal) modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+        bindManagedOperatorBoxes();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    setTimeout(init, 500);
+    setTimeout(bindManagedOperatorBoxes, 1500);
 })();
 </script>
 
