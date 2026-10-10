@@ -1946,5 +1946,50 @@ window.addEventListener("DOMContentLoaded", async function() {
 });
 </script>
 
+
+<script id="mobile-only-coming-soon-lock">
+(function() {
+    async function checkMobileOnlyStatus() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            const isActive = Boolean(data.active || data.enabled);
+
+            // Sirf Android / APK download elements target honge (Windows untouch rahega)
+            const mobileElems = document.querySelectorAll('a[href*=".apk"], a[download*=".apk"], #mobileDownloadBtn, [data-platform="android"]');
+
+            mobileElems.forEach(el => {
+                if (!isActive) {
+                    if (!el.dataset.origHtml) {
+                        el.dataset.origHtml = el.innerHTML;
+                        el.dataset.origHref = el.getAttribute('href') || '#';
+                    }
+                    el.innerHTML = '🔥 Coming Soon';
+                    el.removeAttribute('href');
+                    el.style.cursor = 'not-allowed';
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    };
+                } else {
+                    if (el.dataset.origHtml) {
+                        el.innerHTML = el.dataset.origHtml;
+                        el.setAttribute('href', el.dataset.origHref);
+                    }
+                    el.style.cursor = '';
+                    el.onclick = null;
+                }
+            });
+        } catch(e) {
+            console.warn("Mobile check:", e);
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", checkMobileOnlyStatus);
+    checkMobileOnlyStatus();
+})();
+</script>
+
 </body>
 </html>

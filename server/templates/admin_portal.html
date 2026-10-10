@@ -1903,16 +1903,16 @@ window.addEventListener("DOMContentLoaded", async function() {
 </script>
 
 
+
+
+
 <script id="master-toggle-fixed-logic">
 (function() {
     let isMasterActive = false;
 
-    function applyBtnStyle(btn, active) {
+    function applyBtnText(btn, active) {
         if (!btn) return;
         btn.textContent = active ? "All are Activate" : "All are Deactivate";
-        btn.style.setProperty("background-color", active ? "#10b981" : "#67433d", "important");
-        btn.style.setProperty("background", active ? "#10b981" : "#67433d", "important");
-        btn.style.color = "#ffffff";
     }
 
     async function syncStatusFromServer() {
@@ -1921,7 +1921,7 @@ window.addEventListener("DOMContentLoaded", async function() {
             const data = await res.json();
             isMasterActive = Boolean(data.active || data.enabled);
             const btn = document.getElementById("globalToggleMasterBtn");
-            applyBtnStyle(btn, isMasterActive);
+            applyBtnText(btn, isMasterActive);
         } catch(e) {
             console.error("Status fetch error:", e);
         }
@@ -1931,9 +1931,8 @@ window.addEventListener("DOMContentLoaded", async function() {
         if (e && e.preventDefault) e.preventDefault();
         const btn = document.getElementById("globalToggleMasterBtn");
         
-        // Optimistic UI update
         isMasterActive = !isMasterActive;
-        applyBtnStyle(btn, isMasterActive);
+        applyBtnText(btn, isMasterActive);
 
         try {
             const res = await fetch('/api/admin/toggle_all_mobile', {
@@ -1945,22 +1944,14 @@ window.addEventListener("DOMContentLoaded", async function() {
             if (typeof data.active === 'boolean') {
                 isMasterActive = data.active;
             }
-            applyBtnStyle(btn, isMasterActive);
+            applyBtnText(btn, isMasterActive);
         } catch(err) {
             console.error("Toggle error:", err);
-            // Revert on real failure
             await syncStatusFromServer();
         }
     };
 
-    // Prevent mouseleave / blur from overriding state
     window.addEventListener("DOMContentLoaded", function() {
-        const btn = document.getElementById("globalToggleMasterBtn");
-        if (btn) {
-            btn.addEventListener("mouseleave", () => applyBtnStyle(btn, isMasterActive));
-            btn.addEventListener("blur", () => applyBtnStyle(btn, isMasterActive));
-            btn.addEventListener("mouseout", () => applyBtnStyle(btn, isMasterActive));
-        }
         syncStatusFromServer();
     });
 })();
