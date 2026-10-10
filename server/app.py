@@ -1584,3 +1584,46 @@ def toggle_mobile_status_clean():
         return {"active": (next_state == 'true'), "enabled": (next_state == 'true')}
     except Exception as e:
         return {"active": False, "enabled": False, "error": str(e)}
+
+
+# === MASTER TOGGLE PERSISTENT DATABASE LOGIC ===
+import sqlite3
+
+def _sync_master_db():
+    c = sqlite3.connect("portal_data.db")
+    c.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
+    return c
+
+@app.get("/api/admin/mobile_status")
+@app.get("/api/system/mobile-status")
+def api_get_mobile_status():
+    try:
+        conn = _sync_master_db()
+        cur = conn.cursor()
+        cur.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
+        row = cur.fetchone()
+        conn.close()
+        val = (row[0].strip().lower() == 'true') if row else False
+        return {"active": val, "enabled": val}
+    except Exception as e:
+        return {"active": False, "enabled": False, "error": str(e)}
+
+@app.post("/api/admin/toggle_all_mobile")
+@app.post("/api/system/mobile-toggle")
+def api_toggle_mobile_status(payload: dict = None):
+    try:
+        conn = _sync_master_db()
+        cur = conn.cursor()
+        if payload and "active" in payload:
+            target = "true" if payload["active"] else "false"
+        else:
+            cur.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
+            row = cur.fetchone()
+            curr = (row[0].strip().lower() == 'true') if row else False
+            target = "false" if curr else "true"
+        cur.execute("INSERT OR REPLACE INTO system_config (key, value) VALUES ('mobile_download_active', ?)", (target,))
+        conn.commit()
+        conn.close()
+        return {"active": (target == 'true'), "enabled": (target == 'true')}
+    except Exception as e:
+        return {"active": False, "enabled": False, "error": str(e)}
