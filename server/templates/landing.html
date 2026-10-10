@@ -1788,6 +1788,100 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
+<style id="jarvis-coming-soon-lock-style">
+.btn-coming-soon-lock {
+    background: #0f172a !important;
+    color: #f97316 !important;
+    border: 2px solid #ea580c !important;
+    cursor: not-allowed !important;
+    opacity: 0.9 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    user-select: none !important;
+    transition: all 0.25s ease !important;
+}
+.btn-coming-soon-lock:hover {
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.45), inset 0 0 10px rgba(234, 88, 12, 0.25) !important;
+    transform: scale(1.02) !important;
+    color: #ffedd5 !important;
+    border-color: #fb923c !important;
+}
+</style>
+<script id="jarvis-mobile-state-manager">
+(function() {
+    async function syncMobileDownloadState() {
+        try {
+            const res = await fetch('/api/system/mobile-status');
+            const data = await res.json();
+            const isActive = data.active;
+
+            // Har download link/button ko dhoondo
+            const downloadElems = document.querySelectorAll('a[download], a[href*=".apk"], [data-action="download"], #mobileDownloadBtn, .download-btn');
+            
+            downloadElems.forEach(el => {
+                if (!isActive) {
+                    // Lock state - Coming Soon with Fire Icon 🔥
+                    if (!el.dataset.origHtml) {
+                        el.dataset.origHtml = el.innerHTML;
+                        el.dataset.origHref = el.getAttribute('href') || '#';
+                    }
+                    el.innerHTML = '🔥 Coming Soon';
+                    el.removeAttribute('href');
+                    el.classList.add('btn-coming-soon-lock');
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    };
+                } else {
+                    // Active state - Restore original download
+                    if (el.dataset.origHtml) {
+                        el.innerHTML = el.dataset.origHtml;
+                        el.setAttribute('href', el.dataset.origHref);
+                    }
+                    el.classList.remove('btn-coming-soon-lock');
+                    el.onclick = null;
+                }
+            });
+
+            // Admin Toggle Button text sync
+            const adminToggles = document.querySelectorAll('#btnToggleMasterGlobal, #toggleAllServicesBtn, [data-toggle="all-services"]');
+            adminToggles.forEach(btn => {
+                if (isActive) {
+                    btn.classList.add('active-state');
+                } else {
+                    btn.classList.remove('active-state');
+                }
+            });
+        } catch (e) {
+            console.warn("Mobile status sync:", e);
+        }
+    }
+
+    window.toggleGlobalActivation = async function(explicitState) {
+        try {
+            const body = typeof explicitState === 'boolean' ? JSON.stringify({ active: explicitState }) : null;
+            await fetch('/api/system/mobile-toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            });
+            syncMobileDownloadState();
+        } catch (err) {
+            console.error("Toggle error:", err);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', syncMobileDownloadState);
+    window.addEventListener('load', syncMobileDownloadState);
+    syncMobileDownloadState();
+})();
+</script>
+
 </body>
 </html>
 

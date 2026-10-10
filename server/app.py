@@ -1503,3 +1503,44 @@ async def get_operator_feedback(name: str = ""):
         except Exception:
             pass
     return result
+
+
+# --- PERSISTENT MOBILE STATUS API ---
+import sqlite3
+
+@app.get("/api/system/mobile-status")
+def get_mobile_system_status():
+    try:
+        conn = sqlite3.connect("portal_data.db")
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
+        c.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
+        row = c.fetchone()
+        conn.close()
+        is_active = (row[0].lower() == 'true') if row else True
+        return {"active": is_active, "status": "active" if is_active else "deactive"}
+    except Exception as e:
+        return {"active": True, "status": "active", "error": str(e)}
+
+@app.post("/api/system/mobile-toggle")
+def toggle_mobile_system_status(payload: dict = None):
+    try:
+        conn = sqlite3.connect("portal_data.db")
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
+        
+        target = None
+        if payload and "active" in payload:
+            target = "true" if payload["active"] else "false"
+        else:
+            c.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
+            row = c.fetchone()
+            curr = (row[0].lower() == 'true') if row else True
+            target = "false" if curr else "true"
+
+        c.execute("INSERT OR REPLACE INTO system_config (key, value) VALUES ('mobile_download_active', ?)", (target,))
+        conn.commit()
+        conn.close()
+        return {"success": True, "active": (target == "true")}
+    except Exception as e:
+        return {"success": False, "error": str(e)}

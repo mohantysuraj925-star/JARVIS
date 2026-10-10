@@ -782,55 +782,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <!-- REAL DYNAMIC FEEDBACK SECTION WITH INTERACTIVE STARS -->
-<div id="REAL_FEEDBACK_SECTION" style="width:92%; max-width:1150px; margin:45px auto; padding:26px; position:relative; z-index:1;">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; margin-bottom:18px;">
-        <div>
-            <span style="background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">
-                VERIFIED TELEMETRY INDEX
-            </span>
-            <h3 style="margin:6px 0 0 0; font-size:18px; color:#F8FAFC; font-weight:800;">Community Trust & Stability Score</h3>
+<div id="REAL_FEEDBACK_SECTION" class="w-full max-w-5xl mx-auto px-4 sm:px-6 mb-10 mt-16">
+    <div class="glass-purple p-6 rounded-2xl">
+        <div class="flex justify-between items-center border-b border-purple-900/60 pb-3 mb-6">
+            <div>
+                <span class="bg-purple-900/40 text-purple-300 border border-purple-500/40 px-3 py-1 rounded-full text-[10px] font-mono font-bold">
+                    VERIFIED TELEMETRY INDEX
+                </span>
+                <h3 class="mt-2 font-cyber text-sm font-bold text-purple-200">Community Trust & Stability Score</h3>
+            </div>
+            <button onclick="document.getElementById('realFeedbackModal').style.display='flex'" class="purple-btn text-xs px-4 py-2 rounded-xl">Rate & Review</button>
         </div>
-        <button onclick="document.getElementById('realFeedbackModal').style.display='flex'">Rate & Review</button>
-    </div>
-    
-    <div style="display:flex; align-items:center; justify-content:space-around; gap:20px; flex-wrap:wrap; background:rgba(7,11,20,0.6); border-radius:14px; padding:22px; border:1px solid rgba(255,255,255,0.06);">
-        <div style="text-align:center; min-width:140px;">
-            <div id="fb_avg" style="font-size:48px; font-weight:900; color:#F59E0B; line-height:1;">--</div>
-            <div id="fb_stars" style="color:#F59E0B; font-size:16px; margin:6px 0;">☆☆☆☆☆</div>
-            <div id="fb_total" style="font-size:12px; color:#38BDF8; font-weight:bold;">Querying real database...</div>
-        </div>
-        <div style="flex:1; max-width:440px; display:flex; flex-direction:column; gap:6px; font-size:11px;">
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">5 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_5" style="width:0%; height:100%; background:#10B981; transition:width 0.4s;"></div></div><span id="pct_5" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">4 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_4" style="width:0%; height:100%; background:#38BDF8; transition:width 0.4s;"></div></div><span id="pct_4" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">3 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_3" style="width:0%; height:100%; background:#F59E0B; transition:width 0.4s;"></div></div><span id="pct_3" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">2 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_2" style="width:0%; height:100%; background:#F97316; transition:width 0.4s;"></div></div><span id="pct_2" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">1 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_1" style="width:0%; height:100%; background:#EF4444; transition:width 0.4s;"></div></div><span id="pct_1" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-purple-950/20 border border-purple-500/20 rounded-xl p-6">
+            <div class="text-center">
+                <div id="fb_avg" class="text-6xl font-black text-amber-400 leading-none">--</div>
+                <div id="fb_stars" class="text-amber-400 text-2xl my-3">☆☆☆☆☆</div>
+                <div id="fb_total" class="text-[11px] font-mono text-purple-400 font-bold uppercase tracking-wider">Querying real database...</div>
+            </div>
+            <div class="flex flex-col gap-3 font-mono">
+                <div class="flex items-center gap-3"><span class="text-amber-400 w-8 text-xs font-bold">5 ★</span><div class="flex-1 h-2 bg-purple-900/40 rounded-full overflow-hidden border border-purple-500/20"><div id="bar_5" class="w-0 h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-700"></div></div><span id="pct_5" class="text-purple-400 w-10 text-[10px] text-right">0%</span></div>
+                <div class="flex items-center gap-3"><span class="text-amber-400 w-8 text-xs font-bold">4 ★</span><div class="flex-1 h-2 bg-purple-900/40 rounded-full overflow-hidden border border-purple-500/20"><div id="bar_4" class="w-0 h-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-700"></div></div><span id="pct_4" class="text-purple-400 w-10 text-[10px] text-right">0%</span></div>
+                <div class="flex items-center gap-3"><span class="text-amber-400 w-8 text-xs font-bold">3 ★</span><div class="flex-1 h-2 bg-purple-900/40 rounded-full overflow-hidden border border-purple-500/20"><div id="bar_3" class="w-0 h-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)] transition-all duration-700"></div></div><span id="pct_3" class="text-purple-400 w-10 text-[10px] text-right">0%</span></div>
+                <div class="flex items-center gap-3"><span class="text-amber-400 w-8 text-xs font-bold">2 ★</span><div class="flex-1 h-2 bg-purple-900/40 rounded-full overflow-hidden border border-purple-500/20"><div id="bar_2" class="w-0 h-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)] transition-all duration-700"></div></div><span id="pct_2" class="text-purple-400 w-10 text-[10px] text-right">0%</span></div>
+                <div class="flex items-center gap-3"><span class="text-amber-400 w-8 text-xs font-bold">1 ★</span><div class="flex-1 h-2 bg-purple-900/40 rounded-full overflow-hidden border border-purple-500/20"><div id="bar_1" class="w-0 h-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)] transition-all duration-700"></div></div><span id="pct_1" class="text-purple-400 w-10 text-[10px] text-right">0%</span></div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- INTERACTIVE STAR REVIEW MODAL -->
-<div id="realFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:999999; justify-content:center; align-items:center;">
-    <div style="background:#0F172A; border:1px solid rgba(255,255,255,0.14); border-radius:18px; padding:24px; width:90%; max-width:400px; box-shadow:0 25px 60px rgba(0,0,0,0.9);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="margin:0; color:#38BDF8; font-weight:800; font-size:16px;">Leave Your Rating</h4>
-            <span onclick="document.getElementById('realFeedbackModal').style.display='none'" style="cursor:pointer; color:#94A3B8; font-size:18px;">✕</span>
+<div id="realFeedbackModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+    <div class="glass-purple rounded-2xl p-6 max-w-sm w-full font-mono flex flex-col gap-4 shadow-2xl relative border border-purple-500/40">
+        <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-purple-300">Leave Your Rating</h4>
+            <span onclick="document.getElementById('realFeedbackModal').style.display='none'" class="cursor-pointer text-purple-400 hover:text-white">✕</span>
         </div>
         
-        <!-- Big Interactive Star Selector -->
-        <div style="display:flex; justify-content:center; gap:10px; margin:10px 0 15px 0;">
-            <span class="interactive-star" onclick="setSelectRating(1)" onmouseover="previewRating(1)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(2)" onmouseover="previewRating(2)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(3)" onmouseover="previewRating(3)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(4)" onmouseover="previewRating(4)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(5)" onmouseover="previewRating(5)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
+        <div class="flex justify-center gap-3 my-4">
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(1)" onmouseover="previewRating(1)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(2)" onmouseover="previewRating(2)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(3)" onmouseover="previewRating(3)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(4)" onmouseover="previewRating(4)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(5)" onmouseover="previewRating(5)" onmouseout="resetPreview()">★</span>
         </div>
-        <div id="starRatingLabel" style="text-align:center; font-size:12px; color:#F59E0B; font-weight:700; margin-bottom:12px;">Select Stars</div>
+        <div id="starRatingLabel" class="text-center text-[11px] text-amber-400 font-bold uppercase mb-2">Select Stars</div>
 
-        <div style="display:flex; flex-direction:column; gap:10px;">
-            <input id="rt_user" type="text" placeholder="Your Name or Call-sign" style="background:#1E293B; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#FFF; font-size:12px;" />
-            <textarea id="rt_comment" placeholder="Write your genuine feedback / experience..." style="background:#1E293B; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#FFF; font-size:12px; height:75px;"></textarea>
-            <button onclick="submitRealFeedback()" style="background:#4F46E5; color:#FFF; border:none; border-radius:8px; padding:10px; font-weight:bold; cursor:pointer;">Submit Verified Review</button>
+        <div class="flex flex-col gap-3">
+            <input id="rt_user" type="text" placeholder="Your Name or Call-sign" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400" />
+            <textarea id="rt_comment" placeholder="Write your genuine feedback / experience..." class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400 h-24 resize-none"></textarea>
+            <button onclick="submitRealFeedback()" class="purple-btn py-3 rounded-xl text-xs font-bold text-purple-100">Submit Verified Review</button>
         </div>
     </div>
 </div>
@@ -840,7 +841,13 @@ var chosenRating = 5;
 function updateStarVisuals(val) {
     var stars = document.querySelectorAll('.interactive-star');
     stars.forEach(function(s, idx) {
-        s.style.color = (idx < val) ? '#F59E0B' : '#334155';
+        if (idx < val) {
+            s.classList.add('text-amber-400');
+            s.classList.remove('text-purple-900');
+        } else {
+            s.classList.remove('text-amber-400');
+            s.classList.add('text-purple-900');
+        }
     });
 }
 function setSelectRating(val) {
@@ -1713,6 +1720,100 @@ window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('DOMContentLoaded', init);
     setTimeout(init, 500);
     setTimeout(bindManagedOperatorBoxes, 1500);
+})();
+</script>
+
+
+<!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
+<style id="jarvis-coming-soon-lock-style">
+.btn-coming-soon-lock {
+    background: #0f172a !important;
+    color: #f97316 !important;
+    border: 2px solid #ea580c !important;
+    cursor: not-allowed !important;
+    opacity: 0.9 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    user-select: none !important;
+    transition: all 0.25s ease !important;
+}
+.btn-coming-soon-lock:hover {
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.45), inset 0 0 10px rgba(234, 88, 12, 0.25) !important;
+    transform: scale(1.02) !important;
+    color: #ffedd5 !important;
+    border-color: #fb923c !important;
+}
+</style>
+<script id="jarvis-mobile-state-manager">
+(function() {
+    async function syncMobileDownloadState() {
+        try {
+            const res = await fetch('/api/system/mobile-status');
+            const data = await res.json();
+            const isActive = data.active;
+
+            // Har download link/button ko dhoondo
+            const downloadElems = document.querySelectorAll('a[download], a[href*=".apk"], [data-action="download"], #mobileDownloadBtn, .download-btn');
+            
+            downloadElems.forEach(el => {
+                if (!isActive) {
+                    // Lock state - Coming Soon with Fire Icon 🔥
+                    if (!el.dataset.origHtml) {
+                        el.dataset.origHtml = el.innerHTML;
+                        el.dataset.origHref = el.getAttribute('href') || '#';
+                    }
+                    el.innerHTML = '🔥 Coming Soon';
+                    el.removeAttribute('href');
+                    el.classList.add('btn-coming-soon-lock');
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    };
+                } else {
+                    // Active state - Restore original download
+                    if (el.dataset.origHtml) {
+                        el.innerHTML = el.dataset.origHtml;
+                        el.setAttribute('href', el.dataset.origHref);
+                    }
+                    el.classList.remove('btn-coming-soon-lock');
+                    el.onclick = null;
+                }
+            });
+
+            // Admin Toggle Button text sync
+            const adminToggles = document.querySelectorAll('#btnToggleMasterGlobal, #toggleAllServicesBtn, [data-toggle="all-services"]');
+            adminToggles.forEach(btn => {
+                if (isActive) {
+                    btn.classList.add('active-state');
+                } else {
+                    btn.classList.remove('active-state');
+                }
+            });
+        } catch (e) {
+            console.warn("Mobile status sync:", e);
+        }
+    }
+
+    window.toggleGlobalActivation = async function(explicitState) {
+        try {
+            const body = typeof explicitState === 'boolean' ? JSON.stringify({ active: explicitState }) : null;
+            await fetch('/api/system/mobile-toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            });
+            syncMobileDownloadState();
+        } catch (err) {
+            console.error("Toggle error:", err);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', syncMobileDownloadState);
+    window.addEventListener('load', syncMobileDownloadState);
+    syncMobileDownloadState();
 })();
 </script>
 
