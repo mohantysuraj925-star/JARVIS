@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fillRegisteredName();
 
     // 2. Star Click Ripple & Rainbow Particle Pulse
-    document.querySelectorAll('.star-btn, [data-star], span:contains("★")').forEach(star => {
+    document.querySelectorAll('.star-btn, [data-star]').forEach(star => {
         star.addEventListener('click', function() {
             this.style.transform = 'scale(1.4) rotate(15deg)';
             setTimeout(() => {
