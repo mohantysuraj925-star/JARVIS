@@ -4,7 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS PORTAL // MASTER CONSOLE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+async function toggleMasterGlobal() {
+    const btn = document.getElementById("globalToggleMasterBtn");
+    try {
+        const res = await fetch('/api/admin/toggle_all_mobile', { method: 'POST' });
+        const data = await res.json();
+        const isAct = data.enabled || data.active;
+        if (btn) {
+            btn.textContent = isAct ? "All are Activate" : "All are Deactivate";
+            btn.style.background = isAct ? "#10b981" : "#67433d";
+        }
+    } catch (err) {
+        console.error("Master toggle error:", err);
+    }
+}
+
+async function checkMasterGlobalStatus() {
+    try {
+        const res = await fetch('/api/admin/mobile_status');
+        const data = await res.json();
+        const btn = document.getElementById("globalToggleMasterBtn");
+        const isAct = data.enabled || data.active;
+        if (btn) {
+            btn.textContent = isAct ? "All are Activate" : "All are Deactivate";
+            btn.style.background = isAct ? "#10b981" : "#67433d";
+        }
+    } catch (e) {}
+}
+window.addEventListener('DOMContentLoaded', checkMasterGlobalStatus);
+
+</script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -1001,16 +1031,7 @@ async function syncMobileAdminSystem() {
     }
 }
 
-async function toggleMasterGlobal() {
-    try {
-        const response = await fetch(`/api/admin/toggle_all_mobile?enabled=${isAllDeactivated}`);
-        if (!response.ok) throw new Error(`Could not update global mobile access (${response.status}).`);
-        await syncMobileAdminSystem();
-    } catch (error) {
-        console.error(error);
-        alert('Could not update global mobile access. Please try again.');
-    }
-}
+
 
 async function submitUserAccess(username, checkbox, submitButton) {
     submitButton.disabled = true;
