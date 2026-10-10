@@ -697,9 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="home" class="w-4 h-4 text-purple-300"></i>
                 <span>â† Home Page</span>
             </a>
-            <button id="globalToggleMasterBtn" type="button" onclick="toggleMasterGlobal()" class="px-3 py-2 rounded-xl text-xs font-bold text-white whitespace-nowrap" style="background:#ef4444;">
-                All are Deactivate
-            </button>
+            <button id="globalToggleMasterBtn" type="button" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white transition-all shadow-sm active:scale-95" style="background: #67433d;">All are Deactivate</button>
             <div class="hidden sm:block text-right">
                 <span class="text-[9px] text-purple-400 block">CREATOR ADMIN</span>
                 <span class="text-xs font-bold text-purple-200">{{ username }}</span>
@@ -1955,6 +1953,40 @@ window.addEventListener("DOMContentLoaded", async function() {
         syncStatusFromServer();
     });
 })();
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const orig = document.getElementById("globalToggleMasterBtn");
+    if (!orig) return;
+
+    // Purane conflicting mouseleave/hover handlers hata kar clean clone
+    const btn = orig.cloneNode(true);
+    btn.removeAttribute("onclick");
+    btn.removeAttribute("onmouseleave");
+    btn.removeAttribute("onmouseout");
+    orig.parentNode.replaceChild(btn, orig);
+
+    // Initial load from backend
+    fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' })
+        .then(r => r.json())
+        .then(d => {
+            btn.textContent = (d.active || d.enabled) ? "All are Activate" : "All are Deactivate";
+        }).catch(() => {});
+
+    // Click toggle
+    btn.onclick = async function(e) {
+        e.preventDefault();
+        try {
+            const res = await fetch('/api/admin/toggle_all_mobile', { method: 'POST' });
+            const d = await res.json();
+            btn.textContent = (d.active || d.enabled) ? "All are Activate" : "All are Deactivate";
+        } catch(err) {
+            console.error("Toggle error:", err);
+        }
+    };
+});
 </script>
 
 </body>
