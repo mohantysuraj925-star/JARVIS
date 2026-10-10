@@ -1866,6 +1866,42 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<script>
+async function updateAdminToggleUI(active) {
+    const btn = document.getElementById("globalToggleMasterBtn");
+    if (!btn) return;
+    btn.textContent = active ? "All are Activate" : "All are Deactivate";
+    btn.style.backgroundColor = active ? "#10b981" : "#67433d";
+}
+
+window.toggleMasterGlobal = async function() {
+    const btn = document.getElementById("globalToggleMasterBtn");
+    if (btn) btn.disabled = true;
+    try {
+        const res = await fetch('/api/admin/toggle_all_mobile', { method: 'POST' });
+        const data = await res.json();
+        const active = Boolean(data.active || data.enabled);
+        await updateAdminToggleUI(active);
+    } catch (err) {
+        console.error("Toggle error:", err);
+    } finally {
+        if (btn) btn.disabled = false;
+    }
+};
+
+window.addEventListener("DOMContentLoaded", async function() {
+    try {
+        const res = await fetch('/api/admin/mobile_status');
+        const data = await res.json();
+        const active = Boolean(data.active || data.enabled);
+        await updateAdminToggleUI(active);
+    } catch (err) {
+        console.error("Status load error:", err);
+    }
+});
+</script>
+
 </body>
 </html>
 

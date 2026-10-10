@@ -985,6 +985,38 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<script>
+window.addEventListener("DOMContentLoaded", async function() {
+    try {
+        const res = await fetch('/api/admin/mobile_status');
+        const data = await res.json();
+        const active = Boolean(data.active || data.enabled);
+
+        const targets = document.querySelectorAll('#mobileDownloadBtn, a[href*=".apk"], [data-action="download"]');
+        targets.forEach(el => {
+            if (!active) {
+                if (!el.dataset.origHref) el.dataset.origHref = el.getAttribute('href') || '#';
+                el.removeAttribute('href');
+                el.innerHTML = '🔥 Coming Soon';
+                el.style.backgroundColor = '#67433d';
+                el.style.cursor = 'not-allowed';
+                el.style.pointerEvents = 'auto';
+                el.onclick = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
+            } else {
+                if (el.dataset.origHref) el.setAttribute('href', el.dataset.origHref);
+                el.innerHTML = '⬇ Download APK';
+                el.style.backgroundColor = '#10b981';
+                el.style.cursor = 'pointer';
+                el.onclick = null;
+            }
+        });
+    } catch (e) {
+        console.warn("User status error:", e);
+    }
+});
+</script>
+
 </body>
 </html>
 
