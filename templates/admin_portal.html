@@ -2165,5 +2165,39 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const orig = document.getElementById("globalToggleMasterBtn");
+    if (!orig) return;
+
+    // Purane conflicting mouseleave/hover handlers hata kar clean clone
+    const btn = orig.cloneNode(true);
+    btn.removeAttribute("onclick");
+    btn.removeAttribute("onmouseleave");
+    btn.removeAttribute("onmouseout");
+    orig.parentNode.replaceChild(btn, orig);
+
+    // Initial load from backend
+    fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' })
+        .then(r => r.json())
+        .then(d => {
+            btn.textContent = (d.active || d.enabled) ? "All are Activate" : "All are Deactivate";
+        }).catch(() => {});
+
+    // Click toggle
+    btn.onclick = async function(e) {
+        e.preventDefault();
+        try {
+            const res = await fetch('/api/admin/toggle_all_mobile', { method: 'POST' });
+            const d = await res.json();
+            btn.textContent = (d.active || d.enabled) ? "All are Activate" : "All are Deactivate";
+        } catch(err) {
+            console.error("Toggle error:", err);
+        }
+    };
+});
+</script>
+
 </body>
 </html>
