@@ -1125,6 +1125,74 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
+
+<script>
+(function() {
+    let currentLockedState = false;
+
+    // Button ko DOM freeze/safe controller dete hain
+    function syncButtonState(active) {
+        currentLockedState = active;
+        const btn = document.getElementById("globalToggleMasterBtn");
+        if (btn) {
+            btn.textContent = active ? "All are Activate" : "All are Deactivate";
+        }
+    }
+
+    // Backend se direct fetch karo
+    async function fetchRealState() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            syncButtonState(Boolean(data.active || data.enabled));
+        } catch(e) {}
+    }
+
+    // Page load hone par aur polling ke override ko block karne ke liye
+    window.addEventListener("DOMContentLoaded", function() {
+        const btn = document.getElementById("globalToggleMasterBtn");
+        if (!btn) return;
+
+        // Clone karke purane sabhi setInterval/event listeners cut off karo
+        const clean = btn.cloneNode(true);
+        clean.removeAttribute("onclick");
+        clean.removeAttribute("onmouseleave");
+        clean.removeAttribute("onmouseout");
+        btn.parentNode.replaceChild(clean, btn);
+
+        // Click handler
+        clean.onclick = async function(e) {
+            if (e) e.preventDefault();
+            const nextState = !currentLockedState;
+            syncButtonState(nextState); // Immediate lock
+
+            try {
+                const res = await fetch('/api/admin/toggle_all_mobile', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ active: nextState })
+                });
+                const d = await res.json();
+                syncButtonState(Boolean(d.active || d.enabled));
+            } catch(err) {
+                syncButtonState(!nextState);
+            }
+        };
+
+        fetchRealState();
+
+        // Agar background ka koi purana loop chal raha ho, toh use button ka text wapas badalne mat do:
+        const observer = new MutationObserver(function() {
+            const expectedText = currentLockedState ? "All are Activate" : "All are Deactivate";
+            if (clean.textContent !== expectedText) {
+                clean.textContent = expectedText;
+            }
+        });
+        observer.observe(clean, { childList: true, characterData: true, subtree: true });
+    });
+})();
+</script>
+
 </body>
 </html>
 

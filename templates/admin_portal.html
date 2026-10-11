@@ -1242,18 +1242,73 @@ async function fetchAdminInbox() {
     try {
         var res = await fetch('/api/support/admin/inbox');
         var data = await res.json();
-        if(!data.length) {
-            box.innerHTML = '<div style="color:#64748B; padding:15px;">No active support tickets.</div>';
-            return;
-        }
-        var html = '';
-        data.forEach(function(i) {
-            var isResolved = i.status === 'resolved';
-            html += '<div style="background:#0B1120; border:1px solid ' + (isResolved ? '#1E293B' : '#6366F1') + '; border-radius:10px; padding:10px;">' +
-                '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;"><span style="color:#38BDF8; font-weight:bold;">' + i.username + '</span><span style="color:' + (isResolved ? '#10B981' : '#F59E0B') + ';">' + i.status.toUpperCase() + '</span></div>' +
-                '<div style="font-size:12px; color:#F8FAFC; margin-bottom:6px;">' + i.query + '</div>';
-            if(i.reply) {
-                html += '<div style="font-size:11px; color:#94A3B8; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:4px;"><b>Replied:</b> ' + i.reply + '</div>';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        html += '<div style="font-size:11px; color:#94A3B8; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:4px;"><b>Replied:</b> ' + i.reply + '</div>';
             } else {
                 html += '<div style="display:flex; gap:4px;"><input id="adm_rep_' + i.id + '" type="text" placeholder="Reply..." style="flex:1; background:#1E293B; border:1px solid #334155; border-radius:4px; padding:4px 8px; font-size:11px; color:#FFF;" /><button onclick="sendAdminReply(' + i.id + ')" style="background:#4F46E5; border:none; border-radius:4px; color:#FFF; font-size:11px; padding:4px 10px; cursor:pointer;">Send</button></div>';
             }
@@ -2197,6 +2252,74 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 });
+</script>
+
+
+<script>
+(function() {
+    let currentLockedState = false;
+
+    // Button ko DOM freeze/safe controller dete hain
+    function syncButtonState(active) {
+        currentLockedState = active;
+        const btn = document.getElementById("globalToggleMasterBtn");
+        if (btn) {
+            btn.textContent = active ? "All are Activate" : "All are Deactivate";
+        }
+    }
+
+    // Backend se direct fetch karo
+    async function fetchRealState() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            syncButtonState(Boolean(data.active || data.enabled));
+        } catch(e) {}
+    }
+
+    // Page load hone par aur polling ke override ko block karne ke liye
+    window.addEventListener("DOMContentLoaded", function() {
+        const btn = document.getElementById("globalToggleMasterBtn");
+        if (!btn) return;
+
+        // Clone karke purane sabhi setInterval/event listeners cut off karo
+        const clean = btn.cloneNode(true);
+        clean.removeAttribute("onclick");
+        clean.removeAttribute("onmouseleave");
+        clean.removeAttribute("onmouseout");
+        btn.parentNode.replaceChild(clean, btn);
+
+        // Click handler
+        clean.onclick = async function(e) {
+            if (e) e.preventDefault();
+            const nextState = !currentLockedState;
+            syncButtonState(nextState); // Immediate lock
+
+            try {
+                const res = await fetch('/api/admin/toggle_all_mobile', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ active: nextState })
+                });
+                const d = await res.json();
+                syncButtonState(Boolean(d.active || d.enabled));
+            } catch(err) {
+                syncButtonState(!nextState);
+            }
+        };
+
+        fetchRealState();
+
+        // Agar background ka koi purana loop chal raha ho, toh use button ka text wapas badalne mat do:
+        const observer = new MutationObserver(function() {
+            const expectedText = currentLockedState ? "All are Activate" : "All are Deactivate";
+            if (clean.textContent !== expectedText) {
+                clean.textContent = expectedText;
+            }
+        });
+        observer.observe(clean, { childList: true, characterData: true, subtree: true });
+    });
+})();
 </script>
 
 </body>
