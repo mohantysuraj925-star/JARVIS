@@ -1668,6 +1668,68 @@ window.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+<script id="mobile-coming-soon-enforcer">
+(function() {
+    async function enforceMobileState() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            const isActive = (data.active === true || data.enabled === true || data.status === 'active');
+
+            // Find all Android / Mobile / APK links and buttons
+            const candidates = document.querySelectorAll('a, button');
+            candidates.forEach(el => {
+                const href = (el.getAttribute('href') || '').toLowerCase();
+                const text = (el.innerText || el.textContent || '').toLowerCase();
+                const id = (el.id || '').toLowerCase();
+                const cl = (el.className || '').toLowerCase();
+
+                // Target strictly Android / APK / Mobile downloads
+                const isMobileBtn = href.includes('.apk') || 
+                                    text.includes('android') || 
+                                    text.includes('mobile download') || 
+                                    text.includes('download apk') || 
+                                    id.includes('mobile') || 
+                                    id.includes('android') || 
+                                    cl.includes('mobile-download');
+
+                // Leave Windows / PC strictly untouched
+                const isWindows = href.includes('.exe') || href.includes('.zip') || text.includes('windows') || text.includes('pc');
+                if (isWindows) return;
+
+                if (isMobileBtn) {
+                    if (!isActive) {
+                        if (!el.dataset.originalContent) {
+                            el.dataset.originalContent = el.innerHTML;
+                            el.dataset.originalHref = el.getAttribute('href') || '#';
+                        }
+                        el.innerHTML = '<span class="inline-flex items-center gap-1.5 font-bold">🔥 Coming Soon</span>';
+                        el.removeAttribute('href');
+                        el.style.pointerEvents = 'none';
+                        el.style.opacity = '0.75';
+                        el.style.cursor = 'not-allowed';
+                    } else {
+                        if (el.dataset.originalContent) {
+                            el.innerHTML = el.dataset.originalContent;
+                            el.setAttribute('href', el.dataset.originalHref);
+                        }
+                        el.style.pointerEvents = 'auto';
+                        el.style.opacity = '1';
+                        el.style.cursor = 'pointer';
+                    }
+                }
+            });
+        } catch(err) {
+            console.error("Master mobile enforcement error:", err);
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", enforceMobileState);
+    setInterval(enforceMobileState, 2000);
+})();
+</script>
+
 </body>
 </html>
 
