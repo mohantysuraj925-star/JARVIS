@@ -741,7 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="font-cyber text-sm font-bold text-purple-200 flex items-center gap-2">
                     <i data-lucide="download" class="w-4 h-4 text-purple-400"></i> Creator Build Downloads (Admin Excluded from Counts)
                 </h3>
-                <span class="text-[10px] font-mono text-emerald-400">UNRESTRICTED ACCESS</span>
+                <span class="text-[10px] font-mono text-zinc-200">UNRESTRICTED ACCESS</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -843,8 +843,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 id="statTotalUsers" class="text-2xl font-bold text-purple-100">0</h3>
                 </div>
                 <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
-                    <span class="text-[10px] tracking-wider text-emerald-400 block mb-1">ACTIVE OPERATORS</span>
-                    <h3 id="statActiveUsers" class="text-2xl font-bold text-emerald-400">0</h3>
+                    <span class="text-[10px] tracking-wider text-zinc-200 block mb-1">ACTIVE OPERATORS</span>
+                    <h3 id="statActiveUsers" class="text-2xl font-bold text-zinc-200">0</h3>
                 </div>
                 <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
                     <span class="text-[10px] tracking-wider text-purple-300 block mb-1">WINDOWS DOWNLOADS</span>
@@ -909,7 +909,7 @@ async function saveHomepageSettings(event) {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || `Could not save homepage settings (${response.status}).`);
         feedback.textContent = result.message;
-        feedback.className = 'text-xs text-emerald-300';
+        feedback.className = 'text-xs text-zinc-200';
     } catch (error) {
         console.error('Could not save homepage settings.', error);
         feedback.textContent = error.message || 'Could not save homepage settings.';
@@ -1123,7 +1123,7 @@ async function loadAdminInbox() {
         data.forEach(ticket => {
             const card = document.createElement('div');
             card.className = "bg-purple-950/40 border border-purple-900/60 rounded-xl p-3 flex flex-col gap-2";
-            const statusColor = ticket.status === 'resolved' ? 'text-emerald-400' : 'text-amber-400';
+            const statusColor = ticket.status === 'resolved' ? 'text-zinc-200' : 'text-amber-400';
             
             card.innerHTML = `
                 <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
@@ -1134,7 +1134,7 @@ async function loadAdminInbox() {
                     <span class="text-[9px] font-mono ${statusColor} uppercase font-bold">${ticket.status}</span>
                 </div>
                 <div class="text-xs text-purple-200 py-1 font-mono">${ticket.query}</div>
-                ${ticket.reply ? `<div class="text-[11px] bg-emerald-500/10 border border-emerald-500/20 p-2 rounded text-emerald-300 font-mono"><span class="font-bold">REPLY:</span> ${ticket.reply}</div>` : ''}
+                ${ticket.reply ? `<div class="text-[11px] bg-zinc-800/10 border border-zinc-700/20 p-2 rounded text-zinc-200 font-mono"><span class="font-bold">REPLY:</span> ${ticket.reply}</div>` : ''}
                 <div class="flex gap-2 pt-2">
                     <input id="reply_inp_${ticket.id}" type="text" placeholder="Write reply..." class="flex-1 bg-black/40 border border-purple-900/80 rounded px-2 py-1 text-[11px] text-purple-100 outline-none focus:border-purple-500" />
                     <button onclick="submitAdminReply(${ticket.id})" class="bg-purple-900/60 border border-purple-500 text-purple-200 px-3 py-1 rounded text-[11px] font-bold hover:bg-purple-800">Reply</button>

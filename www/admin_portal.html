@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="font-cyber text-sm font-bold text-purple-200 flex items-center gap-2">
                     <i data-lucide="download" class="w-4 h-4 text-purple-400"></i> Creator Build Downloads (Admin Excluded from Counts)
                 </h3>
-                <span class="text-[10px] font-mono text-emerald-400">UNRESTRICTED ACCESS</span>
+                <span class="text-[10px] font-mono text-zinc-200">UNRESTRICTED ACCESS</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -315,8 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 id="statTotalUsers" class="text-2xl font-bold text-purple-100">0</h3>
                 </div>
                 <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
-                    <span class="text-[10px] tracking-wider text-emerald-400 block mb-1">ACTIVE OPERATORS</span>
-                    <h3 id="statActiveUsers" class="text-2xl font-bold text-emerald-400">0</h3>
+                    <span class="text-[10px] tracking-wider text-zinc-200 block mb-1">ACTIVE OPERATORS</span>
+                    <h3 id="statActiveUsers" class="text-2xl font-bold text-zinc-200">0</h3>
                 </div>
                 <div class="bg-purple-950/40 border border-purple-900/60 p-4 rounded-xl">
                     <span class="text-[10px] tracking-wider text-purple-300 block mb-1">WINDOWS DOWNLOADS</span>
@@ -381,7 +381,7 @@ async function saveHomepageSettings(event) {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || `Could not save homepage settings (${response.status}).`);
         feedback.textContent = result.message;
-        feedback.className = 'text-xs text-emerald-300';
+        feedback.className = 'text-xs text-zinc-200';
     } catch (error) {
         console.error('Could not save homepage settings.', error);
         feedback.textContent = error.message || 'Could not save homepage settings.';
