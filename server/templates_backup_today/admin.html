@@ -1,0 +1,2209 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf7f5">
+  <title>{% if login %}Admin sign in{% else %}Super Admin{% endif %} Â· JARVIS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <style>
+    :root { color-scheme:light; --ink:#203b3e; --muted:#718889; --teal:#277d78; --line:#d9e9e5; }
+    * { box-sizing:border-box; }
+    body { min-height:100vh; margin:0; padding:26px; color:var(--ink); font:14px/1.5 "DM Sans",sans-serif;
+      background:radial-gradient(ellipse at 8% 3%,#d8f0e5 0,transparent 35%),
+        radial-gradient(ellipse at 94% 85%,#fde8db 0,transparent 32%),#eff7f5; }
+    button,input { font:inherit; }
+    .wrap { width:min(1240px,100%); margin:auto; }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; }
+    .brand { display:flex; align-items:center; gap:11px; }
+    .brand-mark { width:40px; height:40px; display:grid; place-items:center; border-radius:13px; color:#fff; background:#277d78; }
+    .brand-mark svg { width:20px; height:20px; }
+    h1 { margin:0; font:800 1.1rem Manrope,sans-serif; }
+    .brand-sub { margin-top:2px; color:var(--muted); font-size:.78rem; }
+    .admin-badge { padding:6px 10px; border:1px solid #d4e9df; border-radius:999px; color:#39765a; background:#f0f8ef; font-size:.73rem; font-weight:700; }
+    .glass { border:1px solid rgba(255,255,255,.9); border-radius:15px; background:rgba(255,255,255,.7);
+      backdrop-filter:blur(16px); box-shadow:0 8px 32px rgba(31,38,135,.08); }
+    .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:13px; margin-bottom:18px; }
+    .metric-card { min-height:116px; padding:17px 19px; }
+    .metric-head { display:flex; align-items:center; justify-content:space-between; gap:10px; color:var(--muted); font-size:.8rem; font-weight:600; }
+    .metric-icon { width:34px; height:34px; display:grid; place-items:center; border-radius:10px; color:#287d76; background:#e5f3ed; }
+    .metric-icon svg { width:17px; height:17px; }
+    .metric-card:nth-child(2) .metric-icon { color:#bd7457; background:#fbede5; }
+    .metric-card:nth-child(3) .metric-icon { color:#618249; background:#eff5e7; }
+    .metric-card:nth-child(4) .metric-icon { color:#b26d5a; background:#fbefea; }
+    .value { display:block; margin-top:8px; font:800 1.7rem/1 Manrope,sans-serif; }
+    .table-card { overflow:hidden; }
+    .table-heading { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:19px 20px; border-bottom:1px solid #e7efec; }
+    h2 { margin:0; font:700 1rem Manrope,sans-serif; }
+    .muted { color:var(--muted); font-size:.82rem; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; min-width:1000px; border-collapse:collapse; }
+    th { color:#728989; text-align:left; font-size:.71rem; font-weight:700; text-transform:uppercase; }
+    th,td { padding:13px 14px; border-bottom:1px solid #e9f0ed; vertical-align:middle; }
+    tbody tr:last-child td { border-bottom:0; }
+    .username { min-width:115px; font-weight:700; }
+    .device { max-width:220px; }
+    .hwid { display:block; overflow-wrap:anywhere; color:#557c79; font:11px/1.5 ui-monospace,monospace; }
+    .ip { display:block; margin-top:3px; color:#869796; font-size:.74rem; }
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:5px 8px; border:1px solid #d8e9dc; border-radius:999px;
+      color:#467452; background:#f0f8ef; font-size:.73rem; font-weight:700; white-space:nowrap; }
+    .badge svg { width:13px; height:13px; }
+    .inactive { border-color:#f0d8d1; color:#a35b49; background:#fff3ef; }
+    .lifetime { border-color:#e8e1c8; color:#85723c; background:#fbf7e9; }
+    .actions { display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-width:375px; }
+    .action-form { display:flex; align-items:center; gap:4px; }
+    input[type="number"] { width:57px; height:34px; padding:0 6px; border:1px solid #dce8e4; border-radius:8px; color:var(--ink); background:#fff; }
+    .action-button,.logout,.submit { min-height:34px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 9px;
+      border:1px solid #d9e7e3; border-radius:8px; color:#4d6f6e; background:rgba(255,255,255,.8); cursor:pointer; font-size:.77rem; font-weight:700; }
+    .action-button:hover,.logout:hover { border-color:#9fc8bd; color:var(--teal); }
+    .action-button svg,.logout svg,.submit svg { width:15px; height:15px; }
+    .danger { border-color:#efd8d2; color:#a45849; background:#fff8f5; }
+    .lifetime-button { border-color:#e8e1c8; color:#836c35; background:#fbf8ef; }
+    .login { width:min(440px,100%); margin:12vh auto 0; padding:clamp(24px,6vw,38px); }
+    .login-copy { margin:10px 0 22px; color:var(--muted); }
+    .field { display:grid; gap:7px; margin:14px 0; color:#466263; font-weight:700; }
+    .field input { height:45px; padding:0 12px; border:1px solid #d8e5e2; border-radius:9px; outline:none; color:var(--ink); background:#fff; }
+    .field input:focus { border-color:#69aaa0; box-shadow:0 0 0 3px #69aaa01c; }
+    .submit { min-height:43px; margin-top:5px; padding:0 14px; border:0; color:white; background:#277d78; }
+    .error { padding:10px 12px; border:1px solid #f1c7bc; border-radius:9px; color:#934c3e; background:#fff3ef; }
+    .error:empty { display:none; }
+    @media(max-width:850px) { .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:560px) { body { padding:17px 13px; } .top { align-items:flex-start; }
+      .metrics { gap:9px; }.metric-card { min-height:105px; padding:13px; }.metric-head { font-size:.72rem; }
+      .metric-icon { width:30px; height:30px; }.value { font-size:1.5rem; }.table-heading { align-items:flex-start; flex-direction:column; }
+      .admin-badge { font-size:.67rem; } }
+    @media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none!important; } }
+  </style>
+
+
+
+
+<style id="REAL_INTERACTIVE_GLASS_ENGINE">
+/* Background 3D Canvas Mount */
+#real3DCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body {
+    background: #060913 !important;
+    color: #F8FAFC !important;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Surface with Click-Reaction */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+    background: rgba(13, 20, 36, 0.72) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s !important;
+    position: relative;
+    z-index: 1;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+.jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+    transform: scale(0.995);
+}
+
+/* Interactive Glowing Action Buttons */
+button, .jarvis-btn-primary, .purple-btn {
+    font-family: inherit !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 10px !important;
+    padding: 9px 18px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    position: relative;
+    z-index: 2;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+    color: #38BDF8 !important;
+}
+
+button:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+
+/* Headings Visibility */
+h1, h2, h3, h4 {
+    color: #F8FAFC !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="COSMIC_MIDNIGHT_THEME">
+:root {
+    --bg-gradient: radial-gradient(circle at 50% 10%, #1E293B 0%, #0F172A 50%, #0B132B 100%);
+    --card-bg: rgba(30, 41, 59, 0.65);
+    --card-border: rgba(148, 163, 184, 0.2);
+    --card-hover: rgba(51, 65, 85, 0.75);
+    --accent-cyan: #38BDF8;
+    --accent-blue: #3B82F6;
+    --accent-indigo: #6366F1;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* 1. Remove Flat Black - Replace with Rich Cosmic Navy */
+html, body {
+    background: var(--bg-gradient) !important;
+    background-color: #0F172A !important;
+    background-attachment: fixed !important;
+    color: var(--text-primary) !important;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* 2. Organized Glass Containers & Cards */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+.bg-slate-900, .bg-slate-900\/80, div[class*="bg-black"], div[class*="bg-slate"] {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
+    background: var(--card-hover) !important;
+    border-color: var(--accent-cyan) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* 3. High-Contrast Organized Typography */
+h1, h2, h3, h4 {
+    color: var(--text-primary) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+}
+
+p, span, label, td {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* 4. Elegant Interactive Buttons with Glow & Tactile Lift */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 100%) !important;
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45), 0 0 15px rgba(56, 189, 248, 0.3) !important;
+}
+
+button:active {
+    transform: translateY(1px) scale(0.97) !important;
+}
+
+/* 5. Clean Table Layout */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+th {
+    color: var(--text-muted) !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+tr {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-radius: 10px !important;
+    transition: background 0.2s ease, transform 0.2s ease !important;
+}
+
+tr:hover {
+    background: rgba(51, 65, 85, 0.7) !important;
+    transform: translateY(-1px) !important;
+}
+
+td {
+    padding: 14px 16px !important;
+    border: none !important;
+}
+
+/* 6. Form Inputs & Selects */
+input[type="text"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent-cyan) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+</style>
+
+
+<style id="BUTTON_ICON_SYNC_THEME">
+/* Uniform Button & Icon Styling */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3) !important;
+    color: #38BDF8 !important;
+}
+
+/* Match all button SVGs/Icons to Theme */
+button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    transition: transform 0.2s ease, stroke 0.2s ease !important;
+}
+
+button:hover svg {
+    stroke: #7DD3FC !important;
+    transform: scale(1.1) !important;
+}
+</style>
+
+
+
+
+<!-- LUCIDE ICONS OFFICIAL ENGINE -->
+<script src="https://unpkg.com/lucide@latest" defer></script>
+
+
+<style id="ENTERPRISE_MICRO_INTERACTIONS">
+/* 1. Global Crisp Typography */
+h1, h2, h3, h4, .font-cyber {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #F8FAFC !important;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
+}
+
+p, span, td, th, label {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* 2. Glassmorphic Tables & Hover Elevate */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+thead tr th {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(14px) !important;
+    color: #94A3B8 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+tbody tr {
+    background: rgba(15, 23, 42, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+tbody tr td {
+    padding: 14px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #F8FAFC !important;
+}
+
+tbody tr td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px 0 0 12px !important;
+}
+
+tbody tr td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0 12px 12px 0 !important;
+}
+
+tbody tr:hover {
+    background: rgba(22, 33, 58, 0.85) !important;
+    transform: translateY(-2px) scale(1.005) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(56, 189, 248, 0.12) !important;
+}
+
+/* 3. Lucide Vector Icon Glass Pods */
+svg.lucide, .lucide, [data-lucide] {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 2px !important;
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    transition: transform 0.22s ease, stroke 0.22s ease, filter 0.22s ease !important;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.35)) !important;
+}
+
+button:hover svg.lucide, button:hover [data-lucide] {
+    transform: scale(1.15) rotate(4deg) !important;
+    stroke: #7DD3FC !important;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8)) !important;
+}
+
+/* 4. Tactile Buttons & Click Wave Ripple */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    position: relative !important;
+    overflow: hidden !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 11px !important;
+    color: #F8FAFC !important;
+    font-weight: 700 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active {
+    transform: translateY(1px) scale(0.96) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 5. Ripple Shockwave Injection */
+.click-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleEffect 0.55s ease-out;
+    background: rgba(56, 189, 248, 0.35);
+    pointer-events: none;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+    if (!btn) return;
+    
+    var circle = document.createElement('span');
+    var diameter = Math.max(btn.clientWidth, btn.clientHeight);
+    var radius = diameter / 2;
+    var rect = btn.getBoundingClientRect();
+    
+    circle.style.width = circle.style.height = diameter + 'px';
+    circle.style.left = (e.clientX - rect.left - radius) + 'px';
+    circle.style.top = (e.clientY - rect.top - radius) + 'px';
+    circle.classList.add('click-ripple');
+    
+    var prev = btn.getElementsByClassName('click-ripple')[0];
+    if (prev) prev.remove();
+    btn.appendChild(circle);
+});
+</script>
+
+
+<style id="TOTAL_CYBER_OBSIDIAN_ALIGN">
+/* 1. Eliminate all purple backgrounds and borders */
+[class*="purple"], [class*="bg-purple"], [class*="border-purple"], [class*="text-purple"] {
+    background-color: transparent !important;
+}
+
+/* 2. Glassmorphic Input Fields & Textareas */
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: 10px !important;
+    color: #F8FAFC !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #38BDF8 !important;
+    outline: none !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* 3. All Cards, Nodes & Telemetry Blocks */
+.jarvis-card, [class*="rounded-"], div[style*="background"] {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Specific Admin Managed Nodes & Metric Cards */
+div[class*="bg-"][class*="border"] {
+    background: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+}
+
+/* 4. Action Buttons (+5D, -5D, Del, Save Changes, Refresh, Reset) */
+button, input[type="submit"], a.purple-btn, .purple-btn {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    color: #F8FAFC !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    text-decoration: none !important;
+}
+
+button:hover, a.purple-btn:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
+}
+
+button:active, a.purple-btn:active {
+    transform: scale(0.96) !important;
+}
+
+/* Del Button Specific Warning Accent */
+button:has(svg.lucide-trash), button:contains("Del") {
+    border-color: rgba(239, 68, 68, 0.4) !important;
+}
+button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
+    border-color: #EF4444 !important;
+    color: #EF4444 !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* 5. Clean Modern Android Button Replacement */
+.android-clean-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
+}
+</style>
+
+
+<style id="FEEDBACK_RAINBOW_TACTILE_ENGINE">
+/* 1. Curved Buttons & Lift Hover */
+button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+input[type="submit"], input[type="button"], #supportLauncherBtn {
+    border-radius: 9999px !important;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.22s ease,
+                border-color 0.22s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.4) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+    transform: translateY(2px) scale(0.96) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 2. Compact Proceed to Downloads Button Constraint */
+a:has(> span:contains("Proceed to Downloads")),
+a:contains("Proceed to Downloads") {
+    display: inline-flex !important;
+    width: auto !important;
+    max-width: 300px !important;
+    margin: 12px auto !important;
+    padding: 10px 28px !important;
+}
+
+/* 3. Enlarged Feedback Rating Stars & Rainbow FX */
+#starContainer, .star-rating-container, div:has(> span.star-btn) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 0 !important;
+}
+
+.star-btn, span[data-star], svg[data-star] {
+    font-size: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease !important;
+    display: inline-block !important;
+}
+
+.star-btn:hover, span[data-star]:hover {
+    transform: scale(1.25) rotate(-6deg) !important;
+}
+
+/* Rainbow Animated Gradient for Selected Stars */
+@keyframes rainbowFlow {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 0 12px #ff0055); }
+    50% { filter: hue-rotate(180deg) drop-shadow(0 0 16px #00f2fe); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 0 12px #ff0055); }
+}
+
+.star-active, .star-selected, .text-amber-400, .text-yellow-400 {
+    animation: rainbowFlow 2.5s infinite linear !important;
+    transform: scale(1.15) !important;
+}
+</style>
+
+<script id="AUTO_NAME_AND_STAR_FX">
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Auto Fill Logged-in Username into Feedback Input
+    const fillRegisteredName = () => {
+        let loggedUser = localStorage.getItem('currentUser') || 
+                         localStorage.getItem('username') || 
+                         localStorage.getItem('operator_id');
+        
+        if (!loggedUser) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    loggedUser = payload.sub || payload.username;
+                } catch(e) {}
+            }
+        }
+
+        const nameInput = document.querySelector('input[placeholder*="Name"], input[placeholder*="Call-sign"], #feedbackName');
+        if (nameInput && loggedUser) {
+            nameInput.value = loggedUser;
+            nameInput.setAttribute('readonly', 'true');
+            nameInput.style.opacity = '0.9';
+            nameInput.style.borderColor = '#38BDF8';
+        }
+    };
+
+    fillRegisteredName();
+
+    // 2. Star Click Ripple & Rainbow Particle Pulse
+    document.querySelectorAll('.star-btn, [data-star]').forEach(star => {
+        star.addEventListener('click', function() {
+            this.style.transform = 'scale(1.4) rotate(15deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1.15) rotate(0deg)';
+            }, 200);
+        });
+    });
+});
+</script>
+
+</head>
+<body>
+<div role="region" aria-label="Main content">
+{% if login %}
+  <main class="glass login">
+    <header class="brand"><span class="brand-mark"><i data-lucide="shield-check" aria-hidden="true"></i></span>
+      <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Super admin control</div></div><span class="admin-badge">ADMIN</span>
+    </header>
+    <p class="login-copy">Sign in to manage registered devices and licenses.</p>
+    <div class="error" role="alert">{{ error or '' }}</div>
+    <form method="post" action="/admin/login">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label class="field">Username<input name="username" autocomplete="username" required></label>
+      <label class="field">Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="submit" type="submit"><i data-lucide="log-in" aria-hidden="true"></i>Sign in</button>
+    </form>
+  
+{% else %}
+  {% set active_trial_count = namespace(value=0) %}
+  {% set expired_account_count = namespace(value=0) %}
+  {% for user in users %}
+    {% if user.category == 'trial' and user.status == 'active' and user.days_remaining > 0 %}{% set active_trial_count.value = active_trial_count.value + 1 %}{% endif %}
+    {% if user.category == 'trial' and user.days_remaining == 0 %}{% set expired_account_count.value = expired_account_count.value + 1 %}{% endif %}
+  {% endfor %}
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><span class="brand-mark"><i data-lucide="command" aria-hidden="true"></i></span>
+        <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Master control Â· Signed in as admin123</div></div>
+      </div>
+      <form method="post" action="/admin/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="logout" type="submit"><i data-lucide="log-out" aria-hidden="true"></i>Sign out</button></form>
+    </header>
+    <section class="metrics" aria-label="License statistics">
+      <article class="glass metric-card"><div class="metric-head"><span>Total registered</span><span class="metric-icon"><i data-lucide="users-round"></i></span></div><strong class="value">{{ users|length }}</strong></article>
+      <article class="glass metric-card"><div class="metric-head"><span>Total downloads</span><span class="metric-icon"><i data-lucide="download"></i></span></div><strong class="value">{{ total_downloads }}</strong></article>
+      <article class="glass metric-card"><div class="metric-head"><span>Active trials</span><span class="metric-icon"><i data-lucide="clock-3"></i></span></div><strong class="value">{{ active_trial_count.value }}</strong></article>
+      <article class="glass metric-card"><div class="metric-head"><span>Expired accounts</span><span class="metric-icon"><i data-lucide="circle-alert"></i></span></div><strong class="value">{{ expired_account_count.value }}</strong></article>
+    </section>
+    <section class="glass table-card" aria-labelledby="users-heading">
+      <div class="table-heading"><div><h2 id="users-heading">User management</h2><span class="muted">Device-bound license records</span></div><span class="admin-badge">{{ users|length }} registered</span></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Username</th><th>Hardware ID / Device</th><th>Status</th><th>Days left</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td class="username"><span class="muted">Not linked</span></td>
+            <td class="device"><span class="hwid">{{ user.hardware_id }}</span><span class="ip">Device IP Â· {{ user.ip_address }}</span></td>
+            <td><span class="badge {% if user.status != 'active' %}inactive{% elif user.category == 'lifetime' %}lifetime{% endif %}">
+              <i data-lucide="{% if user.status != 'active' %}ban{% elif user.category == 'lifetime' %}infinity{% else %}circle-check{% endif %}" aria-hidden="true"></i>
+              {{ user.status|title }} Â· {{ user.category|title }}</span></td>
+            <td>{% if user.days_remaining is none %}Lifetime{% elif user.expires_at is defined and user.expires_at %}<span data-expires-at="{{ user.expires_at }}">Loadingâ€¦</span>{% else %}{{ user.days_remaining }} days{% endif %}</td>
+            <td><div class="actions">
+              <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/extend">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="number" name="days" value="7" min="1" max="3650" aria-label="Days to extend">
+                <button class="action-button" title="Extend trial" aria-label="Extend trial"><i data-lucide="calendar-plus" aria-hidden="true"></i>Extend</button>
+              </form>
+              <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/reduce">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="number" name="days" value="1" min="1" max="3650" aria-label="Days to reduce">
+                <button class="action-button" title="Reduce trial" aria-label="Reduce trial"><i data-lucide="calendar-minus" aria-hidden="true"></i>Reduce</button>
+              </form>
+              <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/deactivate">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="action-button danger" title="Deactivate or block" aria-label="Deactivate or block"><i data-lucide="ban" aria-hidden="true"></i>Block</button>
+              </form>
+              <form class="action-form" method="post" action="/admin/users/{{ user.hardware_id }}/lifetime">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="action-button lifetime-button" title="Set lifetime access" aria-label="Set lifetime access"><i data-lucide="infinity" aria-hidden="true"></i>Lifetime</button>
+              </form>
+            </div></td>
+          </tr>
+        {% else %}<tr><td colspan="5" class="muted">No installations registered yet.</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+  
+{% endif %}
+<script>lucide.createIcons();</script>
+  <script>
+  function refreshExpiryCountdowns() {
+    document.querySelectorAll('[data-expires-at]').forEach(badge => {
+      const expiryValue = Number(badge.dataset.expiresAt);
+      const expiry = Number.isFinite(expiryValue) ? expiryValue * 1000 : Date.parse(badge.dataset.expiresAt);
+      const remaining = Math.max(0, Math.floor((expiry - Date.now()) / 1000));
+      const days = Math.floor(remaining / 86400);
+      const hours = Math.floor((remaining % 86400) / 3600);
+      const minutes = Math.floor((remaining % 3600) / 60);
+      const seconds = remaining % 60;
+      badge.textContent = remaining ? `${days}d ${hours}h ${minutes}m ${seconds}s` : 'Expired';
+    });
+  }
+  refreshExpiryCountdowns();
+  setInterval(refreshExpiryCountdowns, 1000);
+  </script>
+  
+<!-- DEVELOPER LIVE INBOX DESK -->
+
+</div>
+
+<script>
+async function fetchAdminInbox() {
+    var box = document.getElementById('adminInboxCards');
+    if(!box) return;
+    try {
+        var res = await fetch('/api/support/admin/inbox');
+        var data = await res.json();
+        if(!data.length) {
+            box.innerHTML = '<div style="color:#64748B; padding:15px;">No active support tickets.</div>';
+            return;
+        }
+        var html = '';
+        data.forEach(function(i) {
+            var isResolved = i.status === 'resolved';
+            html += '<div style="background:#0B1120; border:1px solid ' + (isResolved ? '#1E293B' : '#6366F1') + '; border-radius:10px; padding:10px;">' +
+                '<div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;"><span style="color:#38BDF8; font-weight:bold;">' + i.username + '</span><span style="color:' + (isResolved ? '#10B981' : '#F59E0B') + ';">' + i.status.toUpperCase() + '</span></div>' +
+                '<div style="font-size:12px; color:#F8FAFC; margin-bottom:6px;">' + i.query + '</div>';
+            if(i.reply) {
+                html += '<div style="font-size:11px; color:#94A3B8; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:4px;"><b>Replied:</b> ' + i.reply + '</div>';
+            } else {
+                html += '<div style="display:flex; gap:4px;"><input id="adm_rep_' + i.id + '" type="text" placeholder="Reply..." style="flex:1; background:#1E293B; border:1px solid #334155; border-radius:4px; padding:4px 8px; font-size:11px; color:#FFF;" /><button onclick="sendAdminReply(' + i.id + ')" style="background:#4F46E5; border:none; border-radius:4px; color:#FFF; font-size:11px; padding:4px 10px; cursor:pointer;">Send</button></div>';
+            }
+            html += '</div>';
+        });
+        box.innerHTML = html;
+    } catch(e){}
+}
+async function sendAdminReply(id) {
+    var inp = document.getElementById('adm_rep_' + id);
+    if(!inp || !inp.value.trim()) return;
+    await fetch('/api/support/admin/reply', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ ticket_id: id, reply: inp.value.trim() })
+    });
+    fetchAdminInbox();
+}
+window.addEventListener('DOMContentLoaded', fetchAdminInbox);
+</script>
+
+
+<script>
+async function toggleAllServices(actionType) {
+    try {
+        var res = await fetch('/api/services/toggle-all', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ action: actionType })
+        });
+        if(res.ok) {
+            var checks = document.querySelectorAll('input[type="checkbox"]');
+            checks.forEach(function(c) {
+                c.checked = (actionType === 'activate');
+            });
+            alert('All services successfully ' + actionType + 'd!');
+        }
+    } catch(e) {
+        alert('Action failed');
+    }
+}
+</script>
+
+
+<!-- 3D AI NEURAL WAVE GRID -->
+<canvas id="real3DCanvas"></canvas>
+<script>
+(function() {
+    var c = document.getElementById('real3DCanvas');
+    if (!c) {
+        c = document.createElement('canvas');
+        c.id = 'real3DCanvas';
+        document.body.prepend(c);
+    }
+    var ctx = c.getContext('2d');
+    var w, h;
+    var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    var t = 0;
+
+    function resize() {
+        w = c.width = window.innerWidth;
+        h = c.height = window.innerHeight;
+        mouse.tx = w / 2;
+        mouse.ty = h / 2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', function(e) {
+        mouse.tx = e.clientX;
+        mouse.ty = e.clientY;
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        t += 0.015;
+
+        mouse.x += (mouse.tx - mouse.x) * 0.04;
+        mouse.y += (mouse.ty - mouse.y) * 0.04;
+
+        var cols = 32;
+        var rows = 16;
+        var cellW = w / (cols - 1);
+        var cellH = (h * 0.6) / (rows - 1);
+        var horizonY = h * 0.40;
+
+        var tiltX = (mouse.x - w / 2) * 0.0003;
+        var tiltY = (mouse.y - h / 2) * 0.0003;
+
+        ctx.lineWidth = 0.8;
+        for (var r = 0; r < rows; r++) {
+            ctx.beginPath();
+            var depth = (r + 1) / rows;
+            ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.03 + depth * 0.14) + ')';
+
+            for (var col = 0; col < cols; col++) {
+                var wave = Math.sin(t + col * 0.28 + r * 0.35) * (15 * depth);
+                var x = col * cellW + (col - cols / 2) * tiltX * (r * 10);
+                var y = horizonY + r * cellH + wave + (r * 5) * tiltY;
+
+                if (col === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+</script>
+
+
+<!-- THREE.JS & 3D HOLOGRAPHIC ROBOT CORE -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<div id="hologramRobotContainer" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.85;"></div>
+<script>
+(function() {
+    var container = document.getElementById('hologramRobotContainer');
+    if (!container || typeof THREE === 'undefined') return;
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 24;
+
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    var robotGroup = new THREE.Group();
+    scene.add(robotGroup);
+
+    // Holographic Core Cranium
+    var headGeo = new THREE.IcosahedronGeometry(5.2, 2);
+    var holoMat = new THREE.MeshBasicMaterial({
+        color: 0x38BDF8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35
+    });
+    var headMesh = new THREE.Mesh(headGeo, holoMat);
+    robotGroup.add(headMesh);
+
+    // Inner Quantum Core
+    var coreGeo = new THREE.OctahedronGeometry(2.8, 1);
+    var coreMat = new THREE.MeshBasicMaterial({
+        color: 0x6366F1,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.65
+    });
+    var coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    robotGroup.add(coreMesh);
+
+    // Orbiting Data Rings
+    var ringGeo = new THREE.TorusGeometry(7.2, 0.06, 16, 100);
+    var ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.4 });
+    var ring1 = new THREE.Mesh(ringGeo, ringMat);
+    ring1.rotation.x = Math.PI / 3;
+    robotGroup.add(ring1);
+
+    var ring2 = new THREE.Mesh(ringGeo, ringMat);
+    ring2.rotation.y = Math.PI / 4;
+    robotGroup.add(ring2);
+
+    robotGroup.position.set(0, 1.5, 0);
+
+    var mouseX = 0, mouseY = 0;
+    var targetX = 0, targetY = 0;
+
+    window.addEventListener('mousemove', function(e) {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+    });
+
+    window.addEventListener('resize', function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        // 360 Continuous Smooth Hologram Rotation
+        robotGroup.rotation.y += 0.009;
+        robotGroup.rotation.x = targetY * 0.6;
+        robotGroup.rotation.z = targetX * 0.4;
+
+        coreMesh.rotation.y -= 0.02;
+        coreMesh.rotation.x += 0.01;
+
+        ring1.rotation.z += 0.012;
+        ring2.rotation.x -= 0.015;
+
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+
+
+<!-- REAL USER FEEDBACK AUDIT DESK FOR ADMIN -->
+
+</div>
+
+<script>
+async function loadAdminFeedbackList() {
+    var box = document.getElementById('adminFeedbackContainer');
+    if (!box) return;
+    try {
+        var r = await fetch('/api/feedback/admin/all');
+        var list = await r.json();
+        if (!list.length) {
+            box.innerHTML = '<div style="color:#64748B; grid-column:1/-1; padding:20px; text-align:center;">No feedback reviews logged in database yet.</div>';
+            return;
+        }
+        var html = '';
+        list.forEach(function(item) {
+            var stars = '';
+            for (var s = 0; s < 5; s++) stars += (s < item.rating ? '★' : '☆');
+            html += '<div style="background:rgba(10,15,28,0.8); border:1px solid rgba(245,158,11,0.25); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px;">' +
+                '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+                    '<span style="font-weight:bold; color:#F8FAFC; font-size:13px;">' + item.username + '</span>' +
+                    '<span style="color:#F59E0B; font-size:13px; font-weight:bold;">' + stars + ' (' + item.rating + '/5)</span>' +
+                '</div>' +
+                '<div style="font-size:12px; color:#CBD5E1; background:rgba(15,23,42,0.9); padding:8px; border-radius:6px; min-height:36px;">' + (item.comment || '<i style="color:#64748B;">No written comment</i>') + '</div>' +
+                '<div style="font-size:10px; color:#64748B; text-align:right;">' + item.created_at + '</div>' +
+            '</div>';
+        });
+        box.innerHTML = html;
+    } catch(e) {}
+}
+window.addEventListener('DOMContentLoaded', loadAdminFeedbackList);
+</script>
+
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ULTRA STABLE VERIFIED FEEDBACK SYSTEM -->
+<div id="smartFeedbackModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:99999999; align-items:center; justify-content:center; padding:16px;">
+    <div id="feedbackCardContainer" style="position:relative !important; width:100%; max-width:470px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 25px 60px rgba(0,0,0,0.9); box-sizing:border-box;">
+        
+        <!-- Clean Fixed Close Button (Top-Right Only) -->
+        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important; margin:0 !important;">✕</button>
+
+        <!-- Header -->
+        <div style="padding-right:45px; margin-bottom:18px;">
+            <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Submit Operator Feedback</h3>
+            <p style="margin:0; font-size:12px; color:#64748B;">System verified review submission</p>
+        </div>
+
+        <!-- Authenticated Username -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:16px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR CALL-SIGN</span>
+            <span id="feedbackUserDisplay" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">Detecting...</span>
+        </div>
+
+        <!-- Dynamic Non-Emoji SVG Face Reaction -->
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px;">
+            <div id="svgReactionBox" style="width:52px; height:52px; display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+
+        <!-- 5 Large Interactive SVG Stars -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:8px;">
+            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#334155" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+        <div id="starScoreDisplay" style="text-align:center; font-size:13px; font-weight:700; color:#38BDF8; margin-bottom:16px;">5 Stars - Exceptional</div>
+
+        <!-- Dynamic Context Options -->
+        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;"></div>
+
+        <!-- Other Custom Feedback Input -->
+        <div id="feedbackCustomInputWrap" style="display:none; margin-bottom:16px;">
+            <textarea id="feedbackCustomText" placeholder="Write your specific feedback or request..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
+        </div>
+
+        <!-- Curved Submit Button -->
+        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease;">Submit Verified Review</button>
+    </div>
+</div>
+
+<script id="FEEDBACK_CORE_SCRIPT">
+(function() {
+    let currentRating = 5;
+    let selectedOption = "";
+
+    const reactionSVGs = {
+        1: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M7 8l3 1"></path><path d="M17 8l-3 1"></path></svg>',
+        2: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        3: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        4: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        5: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M8 7.5c1-1 3-1 4 0"></path><path d="M12 7.5c1-1 3-1 4 0"></path></svg>'
+    };
+
+    const chipsData = {
+        5: ["Blazing Fast Performance", "Rock Solid Stability", "Intuitive Modern UI", "Flawless Node Sync", "Other..."],
+        4: ["Fast & Responsive", "Clean Dashboard", "Minor UI Polish Needed", "Good Companion App", "Other..."],
+        3: ["Average Latency", "UI Scaling Needs Work", "Setup Was Complex", "Frequent Reconnects", "Other..."],
+        2: ["High Latency / Lag", "Frequent Disconnections", "Confusing Navigation", "Other..."],
+        1: ["System Crashes", "Cannot Authorize Node", "Critical Audio Failure", "Other..."]
+    };
+
+    const scoreLabels = {
+        5: "5 Stars - Exceptional & Highly Responsive",
+        4: "4 Stars - Great Overall Performance",
+        3: "3 Stars - Moderate Experience",
+        2: "2 Stars - Encountered Usability Hurdles",
+        1: "1 Star - Critical System Issues"
+    };
+
+    function getAuthenticatedUser() {
+        let name = localStorage.getItem('username') || 
+                   localStorage.getItem('currentUser') || 
+                   sessionStorage.getItem('username');
+        
+        if (!name) {
+            // Check Cookies
+            const cookies = document.cookie.split(';');
+            for (let c of cookies) {
+                let [k, v] = c.trim().split('=');
+                if (k === 'username' || k === 'user') { name = decodeURIComponent(v); break; }
+            }
+        }
+
+        if (!name) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const pl = JSON.parse(atob(token.split('.')[1]));
+                    name = pl.sub || pl.username;
+                } catch(e) {}
+            }
+        }
+
+        if (!name) {
+            const domNode = document.querySelector('#currentUser, #username, .user-name, [data-username], #current-user');
+            if (domNode) name = domNode.innerText || domNode.value;
+        }
+
+        return (name || "Operator").trim();
+    }
+
+    function renderChips(rating) {
+        const area = document.getElementById('feedbackChipsArea');
+        const customWrap = document.getElementById('feedbackCustomInputWrap');
+        if (!area) return;
+        area.innerHTML = "";
+        customWrap.style.display = "none";
+        selectedOption = "";
+
+        const list = chipsData[rating] || chipsData[5];
+        list.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.innerText = opt;
+            btn.style.cssText = "padding:7px 15px; border-radius:9999px; background:#131E3A; border:1px solid #1E293B; color:#CBD5E1; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.2s ease;";
+            btn.onclick = () => {
+                area.querySelectorAll('button').forEach(b => {
+                    b.style.background = "#131E3A";
+                    b.style.borderColor = "#1E293B";
+                    b.style.color = "#CBD5E1";
+                });
+                btn.style.background = "#0284C7";
+                btn.style.borderColor = "#38BDF8";
+                btn.style.color = "#FFFFFF";
+                selectedOption = opt;
+
+                if (opt.toLowerCase().includes("other")) {
+                    customWrap.style.display = "block";
+                    document.getElementById('feedbackCustomText').focus();
+                } else {
+                    customWrap.style.display = "none";
+                }
+            };
+            area.appendChild(btn);
+        });
+    }
+
+    function setRating(val) {
+        currentRating = val;
+
+        // Solid Golden stars filling
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            const v = parseInt(star.getAttribute('data-val'));
+            if (v <= val) {
+                star.setAttribute('fill', '#FBBF24');
+                star.setAttribute('stroke', '#F59E0B');
+                star.style.transform = 'scale(1.08)';
+            } else {
+                star.setAttribute('fill', '#334155');
+                star.setAttribute('stroke', '#475569');
+                star.style.transform = 'scale(1)';
+            }
+        });
+
+        // Dynamic SVG Reaction
+        const faceBox = document.getElementById('svgReactionBox');
+        if (faceBox) faceBox.innerHTML = reactionSVGs[val] || reactionSVGs[5];
+
+        // Label
+        const lbl = document.getElementById('starScoreDisplay');
+        if (lbl) lbl.innerText = scoreLabels[val] || (val + " Stars");
+
+        renderChips(val);
+    }
+
+    function setup() {
+        const overlay = document.getElementById('smartFeedbackModalOverlay');
+        const closeBtn = document.getElementById('closeFeedbackModalBtn');
+
+        if (closeBtn) closeBtn.onclick = () => { overlay.style.display = 'none'; };
+        if (overlay) overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+
+        // Star click listeners
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            star.onclick = () => setRating(parseInt(star.getAttribute('data-val')));
+        });
+
+        // Feedback Open Triggers
+        document.querySelectorAll('button, a').forEach(el => {
+            const t = (el.innerText || '').toLowerCase();
+            if (t.includes('feedback') || t.includes('rating') || t.includes('review')) {
+                if (el.id !== 'submitFeedbackBtn' && !el.classList.contains('admin-inspect-btn')) {
+                    el.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        document.getElementById('feedbackUserDisplay').innerText = getAuthenticatedUser();
+                        setRating(5);
+                        overlay.style.display = 'flex';
+                    };
+                }
+            }
+        });
+
+        // Submit API
+        const submitBtn = document.getElementById('submitFeedbackBtn');
+        if (submitBtn) {
+            submitBtn.onclick = async () => {
+                const u = document.getElementById('feedbackUserDisplay').innerText;
+                const txt = document.getElementById('feedbackCustomText').value;
+                const comment = selectedOption.toLowerCase().includes("other") ? txt : (selectedOption || "Standard Verified Review");
+
+                if (!comment.trim()) {
+                    alert("Please select an option or provide feedback details.");
+                    return;
+                }
+
+                submitBtn.innerText = "Submitting...";
+                submitBtn.disabled = true;
+
+                try {
+                    await fetch('/api/feedback', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            username: u,
+                            rating: currentRating,
+                            comment: comment
+                        })
+                    });
+                } catch(err) {}
+
+                submitBtn.innerText = "Verified & Saved!";
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    submitBtn.innerText = "Submit Verified Review";
+                    submitBtn.disabled = false;
+                }, 700);
+            };
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', setup);
+    setTimeout(setup, 500);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- REAL OPERATOR FEEDBACK MODAL -->
+<div id="realFeedbackInspectModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999999999; align-items:center; justify-content:center; padding:16px;">
+    <div style="position:relative !important; width:100%; max-width:440px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 30px 80px rgba(0,0,0,0.95); box-sizing:border-box;">
+        
+        <!-- Clean Close Cross -->
+        <button id="closeRealInspectCross" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:10 !important;">✕</button>
+
+        <h3 style="margin:0 0 4px 0; font-size:19px; font-weight:800; color:#F8FAFC;">Operator Feedback</h3>
+        <p style="margin:0 0 16px 0; font-size:12px; color:#64748B;">Direct database record</p>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR</span>
+            <span id="realModalOpName" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">-</span>
+        </div>
+
+        <div id="realRatingSection" style="display:none; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:12px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">RATING</span>
+            <span id="realModalStarCount" style="font-size:20px; color:#FBBF24;">★★★★★</span>
+        </div>
+
+        <div style="background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:6px;">COMMENT</span>
+            <p id="realModalFeedbackText" style="margin:0; font-size:13px; color:#E2E8F0; line-height:1.6; word-break:break-word;">Checking database...</p>
+            <span id="realModalTimestamp" style="display:none; margin-top:8px; font-size:10px; color:#64748B;"></span>
+        </div>
+
+        <button id="closeRealInspectBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<style id="FEEDBACK_ORIGINAL_PILL_STYLE">
+.see-feedback-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px 10px !important;
+    margin-left: 8px !important;
+    border-radius: 6px !important;
+    background: #1E293B !important;
+    border: 1px solid #38BDF8 !important;
+    color: #38BDF8 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    font-family: monospace !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+}
+
+.see-feedback-pill:hover {
+    background: #0284C7 !important;
+    color: #FFFFFF !important;
+}
+</style>
+
+<script id="REAL_FEEDBACK_RUNTIME">
+(function() {
+    async function loadFeedback(opName) {
+        const modal = document.getElementById('realFeedbackInspectModal');
+        const nameEl = document.getElementById('realModalOpName');
+        const ratingBox = document.getElementById('realRatingSection');
+        const starsEl = document.getElementById('realModalStarCount');
+        const commentEl = document.getElementById('realModalFeedbackText');
+        const dateEl = document.getElementById('realModalTimestamp');
+
+        nameEl.innerText = opName;
+        ratingBox.style.display = 'none';
+        dateEl.style.display = 'none';
+        commentEl.innerText = "Connecting to database...";
+        modal.style.display = 'flex';
+
+        try {
+            const clean = opName.split('(')[0].trim();
+            const res = await fetch(`/api/feedback/operator?name=${encodeURIComponent(clean)}`);
+            const data = await res.json();
+            if (data && data.found) {
+                const r = parseInt(data.rating) || 5;
+                starsEl.innerText = "★".repeat(r) + "☆".repeat(5 - r);
+                ratingBox.style.display = 'flex';
+                commentEl.innerText = data.comment;
+                if (data.date) {
+                    dateEl.innerText = "Date: " + data.date;
+                    dateEl.style.display = 'block';
+                }
+            } else {
+                commentEl.innerText = "No feedback";
+            }
+        } catch(err) {
+            commentEl.innerText = "No feedback";
+        }
+    }
+
+    function attachOnce() {
+        const container = document.getElementById('masterNodesContainer');
+        if (!container) return;
+
+        const cards = container.children;
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            if (card.getAttribute('data-pill-added') === 'true') continue;
+
+            let opTitle = "";
+            const lines = (card.innerText || '').split('\n');
+            for (let l of lines) {
+                l = l.trim();
+                if (l.includes('(#') || (l.length > 0 && !l.includes('Allocation') && !l.includes('STANDBY') && !l.includes('+5D') && !l.includes('-5D') && !l.includes('DELETE'))) {
+                    opTitle = l;
+                    break;
+                }
+            }
+
+            if (!opTitle) {
+                const titleTag = card.querySelector('h3, h4, span, div');
+                if (titleTag) opTitle = titleTag.innerText.trim();
+            }
+
+            if (opTitle) {
+                card.setAttribute('data-pill-added', 'true');
+                const pill = document.createElement('button');
+                pill.type = 'button';
+                pill.className = 'see-feedback-pill';
+                pill.innerText = 'See Feedback';
+
+                pill.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadFeedback(opTitle);
+                };
+
+                const targetRow = card.querySelector('div, p, span');
+                if (targetRow) {
+                    targetRow.appendChild(pill);
+                } else {
+                    card.appendChild(pill);
+                }
+            }
+        }
+    }
+
+    function init() {
+        const modal = document.getElementById('realFeedbackInspectModal');
+        const cross = document.getElementById('closeRealInspectCross');
+        const btn = document.getElementById('closeRealInspectBtn');
+
+        if (cross) cross.onclick = () => { modal.style.display = 'none'; };
+        if (btn) btn.onclick = () => { modal.style.display = 'none'; };
+        if (modal) modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+        attachOnce();
+
+        const observer = new MutationObserver(() => {
+            attachOnce();
+        });
+        const container = document.getElementById('masterNodesContainer');
+        if (container) {
+            observer.observe(container, { childList: true, subtree: false });
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    setTimeout(init, 500);
+})();
+</script>
+
+
+
+
+
+<!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
+<style id="jarvis-coming-soon-lock-style">
+.btn-coming-soon-lock {
+    background: #0f172a !important;
+    color: #f97316 !important;
+    border: 2px solid #ea580c !important;
+    cursor: not-allowed !important;
+    opacity: 0.9 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    user-select: none !important;
+    transition: all 0.25s ease !important;
+}
+.btn-coming-soon-lock:hover {
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.45), inset 0 0 10px rgba(234, 88, 12, 0.25) !important;
+    transform: scale(1.02) !important;
+    color: #ffedd5 !important;
+    border-color: #fb923c !important;
+}
+</style>
+<script id="jarvis-mobile-state-manager">
+(function() {
+    async function syncMobileDownloadState() {
+        try {
+            const res = await fetch('/api/system/mobile-status');
+            const data = await res.json();
+            const isActive = data.active;
+
+            // Har download link/button ko dhoondo
+            const downloadElems = document.querySelectorAll('a[download], a[href*=".apk"], [data-action="download"], #mobileDownloadBtn, .download-btn');
+            
+            downloadElems.forEach(el => {
+                if (!isActive) {
+                    // Lock state - Coming Soon with Fire Icon 🔥
+                    if (!el.dataset.origHtml) {
+                        el.dataset.origHtml = el.innerHTML;
+                        el.dataset.origHref = el.getAttribute('href') || '#';
+                    }
+                    el.innerHTML = '🔥 Coming Soon';
+                    el.removeAttribute('href');
+                    el.classList.add('btn-coming-soon-lock');
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    };
+                } else {
+                    // Active state - Restore original download
+                    if (el.dataset.origHtml) {
+                        el.innerHTML = el.dataset.origHtml;
+                        el.setAttribute('href', el.dataset.origHref);
+                    }
+                    el.classList.remove('btn-coming-soon-lock');
+                    el.onclick = null;
+                }
+            });
+
+            // Admin Toggle Button text sync
+            const adminToggles = document.querySelectorAll('#btnToggleMasterGlobal, #toggleAllServicesBtn, [data-toggle="all-services"]');
+            adminToggles.forEach(btn => {
+                if (isActive) {
+                    btn.classList.add('active-state');
+                } else {
+                    btn.classList.remove('active-state');
+                }
+            });
+        } catch (e) {
+            console.warn("Mobile status sync:", e);
+        }
+    }
+
+    window.toggleGlobalActivation = async function(explicitState) {
+        try {
+            const body = typeof explicitState === 'boolean' ? JSON.stringify({ active: explicitState }) : null;
+            await fetch('/api/system/mobile-toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            });
+            syncMobileDownloadState();
+        } catch (err) {
+            console.error("Toggle error:", err);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', syncMobileDownloadState);
+    window.addEventListener('load', syncMobileDownloadState);
+    syncMobileDownloadState();
+})();
+</script>
+
+</div>
+
+
+
+
+<div id="holo-universe" role="presentation" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+  <div class="holo-stage">
+    <div class="h-ring h-x"></div>
+    <div class="h-ring h-y"></div>
+    <div class="h-ring h-z"></div>
+    <div class="h-ring h-diag"></div>
+    <div class="h-core-sphere"></div>
+  </div>
+</div>
+<style id="holo-style">
+  .holo-stage {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    animation: holoWorldRotate 18s linear infinite;
+    will-change: transform;
+  }
+  .h-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(147, 197, 253, 0.35);
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.22), inset 0 0 16px rgba(59, 130, 246, 0.15);
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .h-x {
+    transform: rotateX(80deg);
+    animation: spinX 9s linear infinite;
+  }
+  .h-y {
+    transform: rotateY(80deg);
+    animation: spinY 12s linear infinite reverse;
+  }
+  .h-z {
+    transform: rotateZ(45deg) rotateX(45deg);
+    animation: spinZ 15s linear infinite;
+  }
+  .h-diag {
+    transform: rotate3d(1, 1, 0, 60deg);
+    animation: spinDiag 10s linear infinite reverse;
+    border-color: rgba(96, 165, 250, 0.45);
+  }
+  .h-core-sphere {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(96,165,250,0.5) 45%, rgba(30,58,138,0.15) 80%, transparent 100%);
+    box-shadow: 0 0 25px rgba(59,130,246,0.55);
+    animation: pulseCore 3s ease-in-out infinite alternate;
+  }
+  @keyframes holoWorldRotate {
+    0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
+    50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(10deg); }
+    100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
+  }
+  @keyframes spinX { 0% { transform: rotateX(80deg) rotateZ(0deg); } 100% { transform: rotateX(80deg) rotateZ(360deg); } }
+  @keyframes spinY { 0% { transform: rotateY(80deg) rotateZ(0deg); } 100% { transform: rotateY(80deg) rotateZ(360deg); } }
+  @keyframes spinZ { 0% { transform: rotateZ(45deg) rotateX(45deg) rotate(0deg); } 100% { transform: rotateZ(45deg) rotateX(45deg) rotate(360deg); } }
+  @keyframes spinDiag { 0% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(0deg); } 100% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(360deg); } }
+  @keyframes pulseCore { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
+  
+  /* Bold Blue Professional Accents */
+  .title-accent-blue {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 2px 10px rgba(37, 99, 235, 0.45);
+  }
+  .sub-accent-blue {
+    color: #93c5fd !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.025em;
+  }
+</style>
+
+<script id="PORTAL_AUTO_SYNC">
+<script>
+async function loadPortalFeedbacks() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // Count update
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"]').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        // Grid containers update
+        const targets = document.querySelectorAll('#liveFeedbackCardsGrid, #feedbackList, #userPanelFeedbackGrid, #reviewsContainer');
+        targets.forEach(grid => {
+            if (!data.feedbacks || data.feedbacks.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#94a3b8;font-family:monospace;font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                grid.innerHTML = data.feedbacks.map(f => `
+                    <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.3); border-radius:12px; padding:14px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <strong style="color:#c084fc; font-size:12px;">${f.name || 'Verified Operator'}</strong>
+                            <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; margin:0;">${f.comment || ''}</p>
+                        <span style="color:#64748b; font-size:10px;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch (err) {
+        console.error("Feedback fetch failed:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadPortalFeedbacks);
+setInterval(loadPortalFeedbacks, 5000);
+</script>
+</script>
+
+<script id="JARVIS_UNIVERSAL_FEEDBACK_ENGINE">
+(function() {
+    window.submitRealFeedback = async function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        
+        let comment = "";
+        let name = "Verified Operator";
+        let rating = 5;
+
+        // Auto-detect input elements across all modal types
+        const textareas = document.querySelectorAll('#realFeedbackModal textarea, #feedbackCommentInput, textarea[placeholder*="review" i], textarea[placeholder*="feedback" i], textarea');
+        for (let ta of textareas) {
+            if (ta.offsetParent !== null && ta.value.trim()) {
+                comment = ta.value.trim();
+                break;
+            }
+        }
+
+        const nameInputs = document.querySelectorAll('#realFeedbackModal input[type="text"], input[placeholder*="name" i]');
+        for (let inp of nameInputs) {
+            if (inp.offsetParent !== null && inp.value.trim()) {
+                name = inp.value.trim();
+                break;
+            }
+        }
+
+        if (!comment) {
+            alert("Please enter a feedback message.");
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/feedback/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ operator_name: name, name: name, comment: comment, rating: rating })
+            });
+            const data = await res.json();
+            if (data.success) {
+                // Clear inputs
+                textareas.forEach(t => t.value = "");
+                // Hide active modals
+                document.querySelectorAll('#realFeedbackModal, .modal').forEach(m => m.style.display = 'none');
+                await window.refreshUniversalFeedbacks();
+            } else {
+                alert("Submission failed: " + (data.error || "Server error"));
+            }
+        } catch(err) {
+            alert("Server connection failed. Ensure server is active.");
+        }
+    };
+
+    window.refreshUniversalFeedbacks = async function() {
+        try {
+            const res = await fetch('/api/feedback/list');
+            const data = await res.json();
+            if (!data || !data.success) return;
+
+            // Sync total counters
+            document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count').forEach(el => {
+                el.innerText = data.count || 0;
+            });
+
+            // Target containers in Landing and User Panel
+            const containers = document.querySelectorAll('#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, [id*="feedbackReviews"]');
+            containers.forEach(box => {
+                if (!data.feedbacks || data.feedbacks.length === 0) {
+                    box.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:24px; color:#94a3b8; font-family:monospace; font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+                } else {
+                    box.innerHTML = data.feedbacks.map(f => `
+                        <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px; margin-bottom:8px; display:flex; flex-direction:column; gap:6px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name}</span>
+                                <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                            </div>
+                            <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:0;">${f.comment}</p>
+                            <span style="color:#64748b; font-size:10px; font-family:monospace;">${(f.date || '').split(' ')[0]}</span>
+                        </div>
+                    `).join('');
+                }
+            });
+        } catch(err) {
+            console.error("Feedback refresh error:", err);
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        window.refreshUniversalFeedbacks();
+    });
+    // Auto sync every 4 seconds
+    setInterval(window.refreshUniversalFeedbacks, 4000);
+})();
+</script>
+
+
+<script id="FORCE_FEEDBACK_RENDER_ENGINE">
+async function renderAllFeedbacksNow() {
+    try {
+        const res = await fetch('/api/feedback/list?t=' + Date.now());
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // 1. Update all counter badges
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        // 2. Locate containers
+        const containers = document.querySelectorAll(
+            '#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, #reviewsContainer, [id*="feedbackCards"]'
+        );
+
+        const list = data.feedbacks || [];
+        containers.forEach(box => {
+            if (list.length === 0) {
+                box.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#94a3b8;font-family:monospace;font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                box.innerHTML = list.map(f => `
+                    <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.35); border-radius:14px; padding:16px; margin:8px 0; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#c084fc; font-weight:bold; font-size:13px; font-family:monospace;">${f.name || 'Verified Operator'}</span>
+                            <span style="color:#eab308; font-size:12px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:4px 0;">${f.comment}</p>
+                        <span style="color:#64748b; font-size:10px; font-family:monospace;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch(err) {
+        console.error("Auto render error:", err);
+    }
+}
+
+// Initial triggers
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", renderAllFeedbacksNow);
+} else {
+    renderAllFeedbacksNow();
+}
+window.addEventListener("load", renderAllFeedbacksNow);
+setInterval(renderAllFeedbacksNow, 3000);
+</script>
+
+
+<script id="JARVIS_CORE_CYBER_FEEDBACK">
+let selectedFeedbackRating = 5;
+
+function selectStarRating(val) {
+    selectedFeedbackRating = val;
+    document.querySelectorAll('.star-rating-btn, [data-star]').forEach((el) => {
+        const starVal = parseInt(el.getAttribute('data-star') || 0);
+        el.style.color = (starVal <= val) ? '#eab308' : '#334155';
+    });
+    const bonusBadge = document.getElementById('feedbackRewardBonusBadge');
+    if (bonusBadge) {
+        bonusBadge.innerText = `+${val} DAYS ACCESS BONUS UNLOCKED`;
+    }
+}
+
+async function submitRealFeedback(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const modal = document.getElementById('realFeedbackModal') || document.getElementById('feedbackModal');
+    let comment = "";
+    let name = "Verified Operator";
+
+    const textareas = document.querySelectorAll('#realFeedbackModal textarea, #feedbackModal textarea, #feedbackCommentInput, textarea');
+    for (let ta of textareas) {
+        if (ta.offsetParent !== null && ta.value.trim()) {
+            comment = ta.value.trim();
+            break;
+        }
+    }
+
+    const nameInputs = document.querySelectorAll('#realFeedbackModal input[type="text"], #feedbackModal input[type="text"], #feedbackOperatorName');
+    for (let inp of nameInputs) {
+        if (inp.offsetParent !== null && inp.value.trim()) {
+            name = inp.value.trim();
+            break;
+        }
+    }
+
+    if (!comment) {
+        alert("Please provide telemetry report / review details.");
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                operator_name: name,
+                name: name,
+                comment: comment,
+                rating: selectedFeedbackRating
+            })
+        });
+        const resData = await res.json();
+        if (resData.success) {
+            textareas.forEach(t => t.value = "");
+            if (modal) modal.style.display = 'none';
+            alert(`🎉 ${resData.message}`);
+            await syncRealFeedbackDisplays();
+        } else {
+            alert("Error: " + (resData.error || "Failed to submit"));
+        }
+    } catch(err) {
+        alert("Server communication error.");
+    }
+}
+
+async function syncRealFeedbackDisplays() {
+    try {
+        const res = await fetch('/api/feedback/list?t=' + Date.now());
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // Sync Total Verified Feedbacks Count Everywhere
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count, #reviewCountBadge').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        const targets = document.querySelectorAll(
+            '#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, #reviewsContainer, #downloadSectionReviews'
+        );
+
+        targets.forEach(box => {
+            const list = data.feedbacks || [];
+            if (list.length === 0) {
+                box.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:26px;color:#94a3b8;font-family:monospace;font-size:12px;background:rgba(15,23,42,0.6);border:1px dashed rgba(168,85,247,0.3);border-radius:14px;">NO OPERATOR REVIEWS YET // SUBMIT YOUR FEEDBACK TO UNLOCK EXTRA ACCESS DAYS</div>';
+            } else {
+                box.innerHTML = list.map(f => `
+                    <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(168,85,247,0.35); box-shadow:0 0 15px rgba(168,85,247,0.1); border-radius:14px; padding:18px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e;"></span>
+                                <span style="color:#c084fc; font-weight:bold; font-size:13px; font-family:monospace;">${f.name}</span>
+                            </div>
+                            <span style="background:rgba(234,179,8,0.15); color:#eab308; border:1px solid rgba(234,179,8,0.4); padding:2px 8px; border-radius:8px; font-size:11px; font-weight:bold; font-family:monospace;">
+                                +${f.reward_days || f.rating} DAYS REWARDED
+                            </span>
+                        </div>
+                        <div style="color:#eab308; font-size:13px;">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</div>
+                        <p style="color:#e2e8f0; font-size:12.5px; line-height:1.5; margin:0;">${f.comment}</p>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                            <span style="color:#64748b; font-size:10px; font-family:monospace;">VERIFIED ENTRY // ${(f.date || '').split(' ')[0]}</span>
+                            <span style="color:#a855f7; font-size:10px; font-family:monospace;">STATUS: ACTIVE</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch(err) {
+        console.error("Feedback auto-sync error:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    syncRealFeedbackDisplays();
+});
+setInterval(syncRealFeedbackDisplays, 3500);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= PREMIUM VERIFIED FEEDBACK SECTION ================= -->
+<div id="PREMIUM_JARVIS_FEEDBACK_ROOT" style="max-width: 960px; margin: 40px auto 30px; padding: 0 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; position: relative; z-index: 30;">
+  <div style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: 20px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7), 0 0 25px rgba(168, 85, 247, 0.1); padding: 28px 24px;">
+
+    <!-- TOP BAR -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 20px; margin-bottom: 24px;">
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;">
+          <!-- Shield Check Icon -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Verified Operator Telemetry
+        </div>
+        <h2 style="font-size: 22px; font-weight: 800; color: #f8fafc; margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+          <!-- Message Square Icon -->
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Community Feedbacks & Reviews
+        </h2>
+        <p style="font-size: 13px; color: #94a3b8; margin: 0;">Verified reviews grant +1 to +5 days extra access keys instantly.</p>
+      </div>
+
+      <!-- COUNTER & ACTION BUTTON -->
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 8px 16px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Total Feedbacks</div>
+          <div id="masterFeedbackCountBadge" style="font-size: 20px; font-weight: 800; color: #38bdf8; margin-top: 2px;">0</div>
+        </div>
+
+        <button type="button" onclick="toggleReviewModal(true)" style="background: linear-gradient(135deg, #9333ea, #3b82f6); color: #fff; border: none; padding: 11px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); transition: transform 0.15s ease;">
+          <!-- Plus Icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Leave Feedback
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL / DRAWER FOR SUBMISSION -->
+    <div id="jarvisReviewModalOverlay" style="display: none; background: rgba(10, 15, 29, 0.95); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 16px; padding: 22px; margin-bottom: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; color: #f8fafc; font-weight: 700; font-size: 15px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          Post Verified Operator Review
+        </div>
+        <span id="starDaysBonusNotice" style="background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.35); padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+          <!-- Gift Icon -->
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+          +5 DAYS BONUS UNLOCKED
+        </span>
+      </div>
+
+      <!-- STAR RATING PICKER -->
+      <div style="margin-bottom: 14px;">
+        <span style="font-size: 12px; color: #94a3b8; font-weight: 600; display: block; margin-bottom: 6px;">Select Rating:</span>
+        <div id="starPickerContainer" style="display: flex; gap: 8px; cursor: pointer;">
+          <span onclick="setReviewRating(1)" style="font-size: 26px; color: #facc15; transition: transform 0.1s;">★</span>
+          <span onclick="setReviewRating(2)" style="font-size: 26px; color: #facc15; transition: transform 0.1s;">★</span>
+          <span onclick="setReviewRating(3)" style="font-size: 26px; color: #facc15; transition: transform 0.1s;">★</span>
+          <span onclick="setReviewRating(4)" style="font-size: 26px; color: #facc15; transition: transform 0.1s;">★</span>
+          <span onclick="setReviewRating(5)" style="font-size: 26px; color: #facc15; transition: transform 0.1s;">★</span>
+        </div>
+      </div>
+
+      <!-- INPUT FIELDS -->
+      <div style="position: relative; margin-bottom: 12px;">
+        <input type="text" id="reviewAuthorName" placeholder="Operator Name (Default: Verified User)" style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; padding: 11px 14px; color: #f8fafc; font-size: 13px; outline: none;" />
+      </div>
+
+      <div style="position: relative; margin-bottom: 16px;">
+        <textarea id="reviewCommentBody" rows="3" placeholder="Write telemetry review, feedback, or system experience..." style="width: 100%; box-sizing: border-box; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 10px; padding: 11px 14px; color: #f8fafc; font-size: 13px; outline: none; resize: vertical;"></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="toggleReviewModal(false)" style="background: rgba(255, 255, 255, 0.05); color: #94a3b8; border: 1px solid rgba(255, 255, 255, 0.1); padding: 9px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button type="button" onclick="submitOperatorFeedbackNow()" style="background: #22c55e; color: #fff; border: none; padding: 9px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);">
+          <!-- Send Icon -->
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Submit Review
+        </button>
+      </div>
+    </div>
+
+    <!-- REVIEWS STREAM GRID -->
+    <div id="masterFeedbacksCardsStream" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      <div style="grid-column: 1 / -1; text-align: center; padding: 24px; color: #64748b; font-size: 13px;">Loading feedbacks...</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let activeRatingVal = 5;
+
+function toggleReviewModal(show) {
+  const modal = document.getElementById('jarvisReviewModalOverlay');
+  if (modal) {
+    modal.style.display = show ? 'block' : 'none';
+  }
+}
+
+function setReviewRating(r) {
+  activeRatingVal = r;
+  const stars = document.querySelectorAll('#starPickerContainer span');
+  stars.forEach((s, idx) => {
+    s.style.color = (idx < r) ? '#facc15' : '#334155';
+  });
+  const notice = document.getElementById('starDaysBonusNotice');
+  if (notice) {
+    notice.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/></svg> +${r} DAYS BONUS UNLOCKED`;
+  }
+}
+
+async function submitOperatorFeedbackNow() {
+  const nameInp = document.getElementById('reviewAuthorName');
+  const commentInp = document.getElementById('reviewCommentBody');
+  const name = (nameInp && nameInp.value.trim()) ? nameInp.value.trim() : "Verified User";
+  const comment = (commentInp && commentInp.value.trim()) ? commentInp.value.trim() : "";
+
+  if (!comment) {
+    alert("Please enter feedback comment details.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/feedback/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name,
+        operator_name: name,
+        comment: comment,
+        rating: activeRatingVal
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (commentInp) commentInp.value = "";
+      toggleReviewModal(false);
+      alert(`Success! Review verified. +${data.reward_days || activeRatingVal} extra access days awarded.`);
+      await fetchAllJarvisFeedbacksLive();
+    } else {
+      alert("Error: " + (data.error || "Submission failed"));
+    }
+  } catch (err) {
+    alert("Server communication error. Check server status.");
+  }
+}
+
+async function fetchAllJarvisFeedbacksLive() {
+  try {
+    const res = await fetch('/api/feedback/list?t=' + Date.now());
+    const data = await res.json();
+    if (!data || !data.success) return;
+
+    // Sync all badge counts
+    document.querySelectorAll('#masterFeedbackCountBadge, #humanFeedbackCounter, #fbTotalCount, [id*="feedbackCount"]').forEach(el => {
+      el.innerText = data.count || 0;
+    });
+
+    const stream = document.getElementById('masterFeedbacksCardsStream');
+    if (!stream) return;
+
+    const list = data.feedbacks || [];
+    if (list.length === 0) {
+      stream.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 28px; color: #64748b; font-size: 13px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.08);">No reviews yet. Click "Leave Feedback" to submit the first review and claim bonus days!</div>';
+      return;
+    }
+
+    stream.innerHTML = list.map(item => `
+      <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #9333ea); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff;">
+                ${(item.name || 'U')[0].toUpperCase()}
+              </div>
+              <strong style="color: #f1f5f9; font-size: 13px;">${item.name}</strong>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #34d399; background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.3); padding: 2px 7px; border-radius: 6px;">
+              +${item.reward_days || item.rating}d Access
+            </span>
+          </div>
+          <div style="color: #facc15; font-size: 12px; margin-bottom: 8px;">
+            ${'★'.repeat(item.rating)}${'☆'.repeat(5 - item.rating)}
+          </div>
+          <p style="color: #cbd5e1; font-size: 12.5px; line-height: 1.5; margin: 0; word-break: break-word;">${item.comment}</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 10px; color: #64748b; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 8px;">
+          <span>${(item.date || '').split(' ')[0]}</span>
+          <span style="color: #38bdf8; display: flex; align-items: center; gap: 3px;">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            Verified
+          </span>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error("Feedback stream error:", e);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", fetchAllJarvisFeedbacksLive);
+setTimeout(fetchAllJarvisFeedbacksLive, 400);
+</script>
+<!-- ================= END PREMIUM VERIFIED FEEDBACK SECTION ================= -->
+
+</body>
+  </html>
+
+
+

@@ -1,0 +1,3042 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS PORTAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #06020c; color: #f3e8ff; overflow-x: hidden; min-height: 100vh; }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-purple {
+            background: rgba(20, 8, 36, 0.85);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+        .purple-btn {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(126, 34, 206, 0.45));
+            border: 1px solid rgba(192, 132, 252, 0.55);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+            transition: all 0.25s ease;
+        }
+        .purple-btn:hover {
+            border-color: #c084fc;
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
+            transform: translateY(-2px);
+        }
+    </style>
+
+
+
+
+<style id="REAL_INTERACTIVE_GLASS_ENGINE">
+/* Background 3D Canvas Mount */
+#real3DCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+body {
+    background: #060913 !important;
+    color: #F8FAFC !important;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Glassmorphism Surface with Click-Reaction */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+    background: rgba(13, 20, 36, 0.72) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s !important;
+    position: relative;
+    z-index: 1;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+.jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+    transform: scale(0.995);
+}
+
+/* Interactive Glowing Action Buttons */
+button, .jarvis-btn-primary, .purple-btn {
+    font-family: inherit !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 10px !important;
+    padding: 9px 18px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    position: relative;
+    z-index: 2;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.2) !important;
+    color: #38BDF8 !important;
+}
+
+button:active {
+    transform: translateY(0) scale(0.97) !important;
+}
+
+/* Headings Visibility */
+h1, h2, h3, h4 {
+    color: #F8FAFC !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="COSMIC_MIDNIGHT_THEME">
+:root {
+    --bg-gradient: radial-gradient(circle at 50% 10%, #1E293B 0%, #0F172A 50%, #0B132B 100%);
+    --card-bg: rgba(30, 41, 59, 0.65);
+    --card-border: rgba(148, 163, 184, 0.2);
+    --card-hover: rgba(51, 65, 85, 0.75);
+    --accent-cyan: #38BDF8;
+    --accent-blue: #3B82F6;
+    --accent-indigo: #6366F1;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* 1. Remove Flat Black - Replace with Rich Cosmic Navy */
+html, body {
+    background: var(--bg-gradient) !important;
+    background-color: #0F172A !important;
+    background-attachment: fixed !important;
+    color: var(--text-primary) !important;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* 2. Organized Glass Containers & Cards */
+.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+.bg-slate-900, .bg-slate-900\/80, div[class*="bg-black"], div[class*="bg-slate"] {
+    background: var(--card-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
+    background: var(--card-hover) !important;
+    border-color: var(--accent-cyan) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+}
+
+/* 3. High-Contrast Organized Typography */
+h1, h2, h3, h4 {
+    color: var(--text-primary) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+}
+
+p, span, label, td {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+/* 4. Elegant Interactive Buttons with Glow & Tactile Lift */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 100%) !important;
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45), 0 0 15px rgba(56, 189, 248, 0.3) !important;
+}
+
+button:active {
+    transform: translateY(1px) scale(0.97) !important;
+}
+
+/* 5. Clean Table Layout */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+th {
+    color: var(--text-muted) !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 16px !important;
+    border: none !important;
+}
+
+tr {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border-radius: 10px !important;
+    transition: background 0.2s ease, transform 0.2s ease !important;
+}
+
+tr:hover {
+    background: rgba(51, 65, 85, 0.7) !important;
+    transform: translateY(-1px) !important;
+}
+
+td {
+    padding: 14px 16px !important;
+    border: none !important;
+}
+
+/* 6. Form Inputs & Selects */
+input[type="text"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent-cyan) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
+}
+</style>
+
+
+<style id="BUTTON_ICON_SYNC_THEME">
+/* Uniform Button & Icon Styling */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.4) !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3) !important;
+    color: #38BDF8 !important;
+}
+
+/* Match all button SVGs/Icons to Theme */
+button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    transition: transform 0.2s ease, stroke 0.2s ease !important;
+}
+
+button:hover svg {
+    stroke: #7DD3FC !important;
+    transform: scale(1.1) !important;
+}
+</style>
+
+
+
+
+<!-- LUCIDE ICONS OFFICIAL ENGINE -->
+<script src="https://unpkg.com/lucide@latest" defer></script>
+
+
+<style id="ENTERPRISE_MICRO_INTERACTIONS">
+/* 1. Global Crisp Typography */
+h1, h2, h3, h4, .font-cyber {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #F8FAFC !important;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
+}
+
+p, span, td, th, label {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* 2. Glassmorphic Tables & Hover Elevate */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100% !important;
+}
+
+thead tr th {
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(14px) !important;
+    color: #94A3B8 !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 12px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+tbody tr {
+    background: rgba(15, 23, 42, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+tbody tr td {
+    padding: 14px 18px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #F8FAFC !important;
+}
+
+tbody tr td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 12px 0 0 12px !important;
+}
+
+tbody tr td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0 12px 12px 0 !important;
+}
+
+tbody tr:hover {
+    background: rgba(22, 33, 58, 0.85) !important;
+    transform: translateY(-2px) scale(1.005) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(56, 189, 248, 0.12) !important;
+}
+
+/* 3. Lucide Vector Icon Glass Pods */
+svg.lucide, .lucide, [data-lucide] {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 2px !important;
+    stroke: #38BDF8 !important;
+    fill: none !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    transition: transform 0.22s ease, stroke 0.22s ease, filter 0.22s ease !important;
+    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.35)) !important;
+}
+
+button:hover svg.lucide, button:hover [data-lucide] {
+    transform: scale(1.15) rotate(4deg) !important;
+    stroke: #7DD3FC !important;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8)) !important;
+}
+
+/* 4. Tactile Buttons & Click Wave Ripple */
+button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+    position: relative !important;
+    overflow: hidden !important;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: 11px !important;
+    color: #F8FAFC !important;
+    font-weight: 700 !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active {
+    transform: translateY(1px) scale(0.96) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 5. Ripple Shockwave Injection */
+.click-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleEffect 0.55s ease-out;
+    background: rgba(56, 189, 248, 0.35);
+    pointer-events: none;
+}
+
+@keyframes rippleEffect {
+    to {
+        transform: scale(3.5);
+        opacity: 0;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+    if (!btn) return;
+    
+    var circle = document.createElement('span');
+    var diameter = Math.max(btn.clientWidth, btn.clientHeight);
+    var radius = diameter / 2;
+    var rect = btn.getBoundingClientRect();
+    
+    circle.style.width = circle.style.height = diameter + 'px';
+    circle.style.left = (e.clientX - rect.left - radius) + 'px';
+    circle.style.top = (e.clientY - rect.top - radius) + 'px';
+    circle.classList.add('click-ripple');
+    
+    var prev = btn.getElementsByClassName('click-ripple')[0];
+    if (prev) prev.remove();
+    btn.appendChild(circle);
+});
+</script>
+
+
+<style id="TOTAL_CYBER_OBSIDIAN_ALIGN">
+/* 1. Eliminate all purple backgrounds and borders */
+[class*="purple"], [class*="bg-purple"], [class*="border-purple"], [class*="text-purple"] {
+    background-color: transparent !important;
+}
+
+/* 2. Glassmorphic Input Fields & Textareas */
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], textarea, select {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: 10px !important;
+    color: #F8FAFC !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #38BDF8 !important;
+    outline: none !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* 3. All Cards, Nodes & Telemetry Blocks */
+.jarvis-card, [class*="rounded-"], div[style*="background"] {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Specific Admin Managed Nodes & Metric Cards */
+div[class*="bg-"][class*="border"] {
+    background: rgba(15, 23, 42, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.2) !important;
+}
+
+/* 4. Action Buttons (+5D, -5D, Del, Save Changes, Refresh, Reset) */
+button, input[type="submit"], a.purple-btn, .purple-btn {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    color: #F8FAFC !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    text-decoration: none !important;
+}
+
+button:hover, a.purple-btn:hover, .purple-btn:hover {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
+}
+
+button:active, a.purple-btn:active {
+    transform: scale(0.96) !important;
+}
+
+/* Del Button Specific Warning Accent */
+button:has(svg.lucide-trash), button:contains("Del") {
+    border-color: rgba(239, 68, 68, 0.4) !important;
+}
+button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
+    border-color: #EF4444 !important;
+    color: #EF4444 !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* 5. Clean Modern Android Button Replacement */
+.android-clean-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
+}
+</style>
+
+
+<style id="FEEDBACK_RAINBOW_TACTILE_ENGINE">
+/* 1. Curved Buttons & Lift Hover */
+button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+input[type="submit"], input[type="button"], #supportLauncherBtn {
+    border-radius: 9999px !important;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.22s ease,
+                border-color 0.22s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.4) !important;
+    color: #38BDF8 !important;
+}
+
+button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+    transform: translateY(2px) scale(0.96) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 2. Compact Proceed to Downloads Button Constraint */
+a:has(> span:contains("Proceed to Downloads")),
+a:contains("Proceed to Downloads") {
+    display: inline-flex !important;
+    width: auto !important;
+    max-width: 300px !important;
+    margin: 12px auto !important;
+    padding: 10px 28px !important;
+}
+
+/* 3. Enlarged Feedback Rating Stars & Rainbow FX */
+#starContainer, .star-rating-container, div:has(> span.star-btn) {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 0 !important;
+}
+
+.star-btn, span[data-star], svg[data-star] {
+    font-size: 34px !important;
+    width: 34px !important;
+    height: 34px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease !important;
+    display: inline-block !important;
+}
+
+.star-btn:hover, span[data-star]:hover {
+    transform: scale(1.25) rotate(-6deg) !important;
+}
+
+/* Rainbow Animated Gradient for Selected Stars */
+@keyframes rainbowFlow {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 0 12px #ff0055); }
+    50% { filter: hue-rotate(180deg) drop-shadow(0 0 16px #00f2fe); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 0 12px #ff0055); }
+}
+
+.star-active, .star-selected, .text-amber-400, .text-yellow-400 {
+    animation: rainbowFlow 2.5s infinite linear !important;
+    transform: scale(1.15) !important;
+}
+</style>
+
+<script id="AUTO_NAME_AND_STAR_FX">
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Auto Fill Logged-in Username into Feedback Input
+    const fillRegisteredName = () => {
+        let loggedUser = localStorage.getItem('currentUser') || 
+                         localStorage.getItem('username') || 
+                         localStorage.getItem('operator_id');
+        
+        if (!loggedUser) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    loggedUser = payload.sub || payload.username;
+                } catch(e) {}
+            }
+        }
+
+        const nameInput = document.querySelector('input[placeholder*="Name"], input[placeholder*="Call-sign"], #feedbackName');
+        if (nameInput && loggedUser) {
+            nameInput.value = loggedUser;
+            nameInput.setAttribute('readonly', 'true');
+            nameInput.style.opacity = '0.9';
+            nameInput.style.borderColor = '#38BDF8';
+        }
+    };
+
+    fillRegisteredName();
+
+    // 2. Star Click Ripple & Rainbow Particle Pulse
+    document.querySelectorAll('.star-btn, [data-star]').forEach(star => {
+        star.addEventListener('click', function() {
+            this.style.transform = 'scale(1.4) rotate(15deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1.15) rotate(0deg)';
+            }, 200);
+        });
+    });
+});
+</script>
+
+
+<style id="LAYOUT_RESTORE_PATCH">
+    #real3DCanvas { z-index: -1 !important; pointer-events: none !important; }
+    main, .main-content, #app, header, section, .jarvis-card, .container { 
+        position: relative !important; 
+        z-index: 10 !important; 
+    }
+</style>
+
+</head>
+<body class="min-h-screen relative flex flex-col justify-between">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const specDetails = {
+            neural: {
+                title: "NEURAL INTERFACE // ACOUSTIC CORE",
+                body: `
+                    <div style="background:linear-gradient(135deg, rgba(168,85,247,0.12), rgba(88,28,135,0.05)); border:1px solid rgba(168,85,247,0.35); border-radius:12px; padding:16px; margin-bottom:16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#a855f7; box-shadow:0 0 10px #a855f7;"></span>
+                            <span style="color:#c084fc; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Localized Neural Runtime</span>
+                        </div>
+                        <p style="color:#f3e8ff; font-size:13.5px; font-weight:600; line-height:1.5; margin:0 0 6px 0;">Sub-350ms Deterministic Audio Synthesis</p>
+                        <p style="color:#cbd5e1; font-size:12px; line-height:1.6; margin:0;">Zero external round-trip overhead. Microphone input processes directly on local host silicon through an isolated inference pipeline.</p>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px;">
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#e9d5ff; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Circular Audio Ring Buffer</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Continuous background streaming with dedicated memory bounds, eliminating buffer bloat and system memory leaks.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#e9d5ff; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Ambient Standby Mesh</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Low-frequency wake-word listener maintains sub-1% CPU consumption during persistent standby states.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#e9d5ff; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Hybrid Intent Dispatcher</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Deterministic system instructions trigger instantly offline; conversational reasoning effortlessly routes to the Gemini engine.</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#020617; border:1px solid rgba(168,85,247,0.25); border-radius:8px; padding:10px 14px; font-size:11px;">
+                        <span style="color:#94a3b8;">SYSTEM STATE:</span>
+                        <span style="color:#a855f7; font-weight:700; letter-spacing:0.8px;">ONLINE // OPTIMIZED</span>
+                    </div>
+                `
+            },
+            hwid: {
+                title: "CRYPTOGRAPHIC HWID // SECURITY LOCK",
+                body: `
+                    <div style="background:linear-gradient(135deg, rgba(56,189,248,0.12), rgba(14,116,144,0.05)); border:1px solid rgba(56,189,248,0.35); border-radius:12px; padding:16px; margin-bottom:16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#38bdf8; box-shadow:0 0 10px #38bdf8;"></span>
+                            <span style="color:#7dd3fc; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Hardware Authentication</span>
+                        </div>
+                        <p style="color:#f0f9ff; font-size:13.5px; font-weight:600; line-height:1.5; margin:0 0 6px 0;">Cryptographic Machine Fingerprint Binding</p>
+                        <p style="color:#cbd5e1; font-size:12px; line-height:1.6; margin:0;">Generates an immutable 256-bit hash bound to host motherboard UUID, CPU microcode, and drive partition headers.</p>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px;">
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bae6fd; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Anti-Virtualization Shield</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Detects automated sandboxes, debugging hooks, and nested hypervisors to prevent execution duplication.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bae6fd; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">SHA-256 Telemetry Hash</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Every outbound socket packet is cryptographically signed, mitigating man-in-the-middle session tampering.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bae6fd; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Zero-Tolerance Node Lock</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Sessions lock strictly to a verified machine profile. Unauthorized parallel boots undergo immediate quarantine.</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#020617; border:1px solid rgba(56,189,248,0.25); border-radius:8px; padding:10px 14px; font-size:11px;">
+                        <span style="color:#94a3b8;">CIPHER STATUS:</span>
+                        <span style="color:#38bdf8; font-weight:700; letter-spacing:0.8px;">HARDWARE BOUND // VERIFIED</span>
+                    </div>
+                `
+            },
+            sync: {
+                title: "TELEMETRY MESH // COMPANION RELAY",
+                body: `
+                    <div style="background:linear-gradient(135deg, rgba(34,197,94,0.12), rgba(20,83,45,0.05)); border:1px solid rgba(34,197,94,0.35); border-radius:12px; padding:16px; margin-bottom:16px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                            <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#22c55e; box-shadow:0 0 10px #22c55e;"></span>
+                            <span style="color:#86efac; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;">Bi-Directional Relay Mesh</span>
+                        </div>
+                        <p style="color:#f0fdf4; font-size:13.5px; font-weight:600; line-height:1.5; margin:0 0 6px 0;">Desktop Core to Android Companion Bridge</p>
+                        <p style="color:#cbd5e1; font-size:12px; line-height:1.6; margin:0;">Encrypted full-duplex socket tunnel orchestrating live command handoffs and low-latency system telemetry.</p>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:16px;">
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bbf7d0; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Continuous Heartbeat Pulse</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Monitors socket stability in real time, triggering seamless reconnection routines during network handoffs.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bbf7d0; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Companion Action Handoff</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Remote instructions triggered via mobile device execute natively on desktop runtime with zero input latency.</span>
+                        </div>
+                        <div style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:12px 14px;">
+                            <span style="color:#bbf7d0; font-size:12px; font-weight:700; display:block; margin-bottom:3px;">Live Metric Streaming</span>
+                            <span style="color:#94a3b8; font-size:11.5px; line-height:1.6;">Diagnostic logs, memory overhead, and processor loads stream straight to the companion UI.</span>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#020617; border:1px solid rgba(34,197,94,0.25); border-radius:8px; padding:10px 14px; font-size:11px;">
+                        <span style="color:#94a3b8;">SOCKET STATE:</span>
+                        <span style="color:#22c55e; font-weight:700; letter-spacing:0.8px;">DUPLEX TUNNEL // ACTIVE</span>
+                    </div>
+                `
+            }
+        };
+
+        window.openDetailModal = function(k) {
+            const d = specDetails[k] || specDetails.neural;
+            const m = document.getElementById('specDetailModal');
+            const t = document.getElementById('specModalTitle');
+            const b = document.getElementById('specModalBody');
+            
+            if (t) {
+                t.innerText = d.title;
+                t.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+                t.style.fontSize = "13px";
+                t.style.letterSpacing = "1.5px";
+                t.style.color = "#f3e8ff";
+            }
+            if (b) {
+                b.innerHTML = d.body;
+                b.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+            }
+            
+            if (m) {
+                m.classList.remove('hidden');
+                m.style.setProperty('display', 'flex', 'important');
+            }
+            if (window.lucide && typeof lucide.createIcons === 'function') {
+                lucide.createIcons();
+            }
+        };
+
+        window.closeDetailModal = function() {
+            const m = document.getElementById('specDetailModal');
+            if (m) {
+                m.style.setProperty('display', 'none', 'important');
+                m.classList.add('hidden');
+            }
+        };
+    </script>
+
+
+    <script>
+        
+    </script>
+
+</div>
+
+<!-- INTERACTIVE STAR REVIEW MODAL -->
+<div id="realFeedbackModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+    <div class="glass-purple rounded-2xl p-6 max-w-sm w-full font-mono flex flex-col gap-4 shadow-2xl relative border border-purple-500/40">
+        <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-purple-300">Leave Your Rating</h4>
+            <span onclick="closeRealFeedbackModal()" class="cursor-pointer text-purple-400 hover:text-white">✕</span>
+        </div>
+        
+        <div class="flex justify-center gap-3 my-4">
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(1)" onmouseover="previewRating(1)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(2)" onmouseover="previewRating(2)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(3)" onmouseover="previewRating(3)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(4)" onmouseover="previewRating(4)" onmouseout="resetPreview()">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-purple-900 hover:text-amber-400 transition-colors" onclick="setSelectRating(5)" onmouseover="previewRating(5)" onmouseout="resetPreview()">★</span>
+        </div>
+        <div id="starRatingLabel" class="text-center text-[11px] text-amber-400 font-bold uppercase mb-2">Select Stars</div>
+
+        <div class="flex flex-col gap-3">
+            <input id="rt_user" type="text" placeholder="Your Name or Call-sign" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400" />
+            <textarea id="feedbackCommentInput" id="feedbackCommentInput" id="rt_comment" placeholder="Write your genuine feedback / experience..." class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400 h-24 resize-none"></textarea>
+            <button onclick="submitRealFeedback()" class="purple-btn py-3 rounded-xl text-xs font-bold text-purple-100">Submit Verified Review</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var chosenRating = 5;
+function updateStarVisuals(val) {
+    var stars = document.querySelectorAll('.interactive-star');
+    stars.forEach(function(s, idx) {
+        if (idx < val) {
+            s.classList.add('text-amber-400');
+            s.classList.remove('text-purple-900');
+        } else {
+            s.classList.remove('text-amber-400');
+            s.classList.add('text-purple-900');
+        }
+    });
+}
+function setSelectRating(val) {
+    chosenRating = val;
+    updateStarVisuals(val);
+    document.getElementById('starRatingLabel').innerText = val + ' Star' + (val > 1 ? 's' : '') + ' Selected';
+}
+function previewRating(val) {
+    updateStarVisuals(val);
+}
+function resetPreview() {
+    updateStarVisuals(chosenRating);
+}
+setSelectRating(5);
+
+async function loadLiveTelemetryScore() {
+    try {
+        var r = await fetch('/api/feedback/stats');
+        var d = await r.json();
+        var avgBox = document.getElementById('fb_avg');
+        var totBox = document.getElementById('fb_total');
+        var starBox = document.getElementById('fb_stars');
+        
+        if (d.total === 0) {
+            avgBox.innerText = '0.0';
+            totBox.innerText = '0 Verified Reviews (Be the first to review)';
+            starBox.innerText = '☆☆☆☆☆';
+            for (var i = 1; i <= 5; i++) {
+                document.getElementById('bar_' + i).style.width = '0%';
+                document.getElementById('pct_' + i).innerText = '0%';
+            }
+        } else {
+            avgBox.innerText = d.avg.toFixed(1);
+            totBox.innerText = d.total + ' Verified Review' + (d.total > 1 ? 's' : '');
+            var fullStars = Math.round(d.avg);
+            var starStr = '';
+            for(var s=0; s<5; s++) starStr += (s < fullStars ? '★' : '☆');
+            starBox.innerText = starStr;
+            
+            for (var i = 1; i <= 5; i++) {
+                var cnt = d.counts[i.toString()] || 0;
+                var pct = Math.round((cnt / d.total) * 100);
+                document.getElementById('bar_' + i).style.width = pct + '%';
+                document.getElementById('pct_' + i).innerText = pct + '%';
+            }
+        }
+    } catch(e) {}
+}
+
+async function submitRealFeedback() {
+    var u = document.getElementById('rt_user').value.trim() || 'Visitor';
+    var c = document.getElementById('rt_comment').value.trim();
+    var uid = localStorage.getItem('jarvis_support_uid') || 'USR_' + Math.random().toString(36).substring(2, 8);
+
+    await fetch('/api/feedback/submit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ user_id: uid, username: u, rating: chosenRating, comment: c })
+    });
+    document.getElementById('realFeedbackModal').style.display = 'none';
+    loadLiveTelemetryScore();
+}
+window.addEventListener('DOMContentLoaded', loadLiveTelemetryScore);
+</script>
+
+
+
+
+
+
+
+
+
+
+<footer class="relative z-10 w-full p-6 text-center font-mono border-t border-purple-950/40">
+        <p class="text-xs text-purple-300">{{ settings.footer_text }}</p>
+        <p class="mt-2 text-[11px] text-purple-400/70">
+            Contact: <a href="mailto:{{ settings.email }}" class="hover:text-purple-200">{{ settings.email }}</a>
+        </p>
+    </footer>
+
+    <!-- Universal Auth Modal with Cross Button -->
+    <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+        <div class="glass-purple rounded-2xl p-6 max-w-sm w-full font-mono flex flex-col gap-4 shadow-2xl relative border border-purple-500/40">
+            <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i> Operator Sign In
+                </span>
+                <button onclick="closeAuthModal()" class="text-purple-400 hover:text-white p-1 rounded-lg hover:bg-purple-900/50">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex flex-col gap-2.5">
+                <input type="text" id="authUsername" placeholder="Username" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400">
+                <input type="password" id="authPassword" placeholder="Password" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400">
+            </div>
+            <div id="authFeedback" class="text-[11px] text-rose-400 hidden"></div>
+            <div class="grid grid-cols-2 gap-2 pt-2">
+                <button onclick="submitAuth('login')" class="purple-btn py-2.5 rounded-lg text-xs font-bold text-purple-100">
+                    Sign In
+                </button>
+                <button onclick="submitAuth('register')" class="bg-purple-950/70 border border-purple-700/60 hover:border-purple-400 text-purple-300 font-bold py-2.5 rounded-lg text-xs">
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal with Top and Bottom Close -->
+    
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+            document.getElementById('authModal').classList.add('flex');
+            lucide.createIcons();
+        }
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('flex');
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        async function submitAuth(type) {
+            const u = document.getElementById('authUsername').value.trim();
+            const p = document.getElementById('authPassword').value.trim();
+            const fb = document.getElementById('authFeedback');
+            fb.classList.add('hidden');
+
+            if (!u || !p) {
+                fb.innerText = "Please fill username and password.";
+                fb.classList.remove('hidden');
+                return;
+            }
+
+            const res = await fetch(type === 'register' ? '/api/auth/register' : '/api/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: u, password: p })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                window.location.href = data.redirect;
+            } else {
+                fb.innerText = data.message || "Auth Error";
+                fb.classList.remove('hidden');
+            }
+        }
+
+        
+
+        
+        const specDetails = {
+            neural: {
+                title: "NEURAL INTERFACE & ACOUSTIC INFERENCE",
+                body: `<div style="margin-bottom:12px; padding:10px; background:rgba(168,85,247,0.1); border-left:3px solid #a855f7; border-radius:6px; color:#f3e8ff;">
+                    <b>Local Acoustic Synthesis Pipeline</b><br>
+                    Engineered for sub-350ms turnaround, executing local wake-word analysis without external API dependencies.
+                </div>
+                <ul style="padding-left:16px; margin:0; color:#e2e8f0; font-size:12.5px; line-height:1.8;">
+                    <li><b>Local Processing:</b> Handles voice inputs on local silicon to bypass cloud round-trip delay.</li>
+                    <li><b>Ring Buffer Stream:</b> Employs an isolated memory pipeline preventing system memory leaks.</li>
+                    <li><b>Standby Listening:</b> Keeps background power consumption below 1% during listening states.</li>
+                    <li><b>Hybrid Intent Router:</b> Resolves commands locally while passing broad reasoning to Gemini API.</li>
+                </ul>`
+            },
+            hwid: {
+                title: "CRYPTOGRAPHIC HWID & ACCESS LOCK",
+                body: `<div style="margin-bottom:12px; padding:10px; background:rgba(56,189,248,0.1); border-left:3px solid #38bdf8; border-radius:6px; color:#bae6fd;">
+                    <b>Hardware-Bound Machine Identity</b><br>
+                    Extracts motherboard UUIDs and hardware serials into a persistent 256-bit unforgeable access token.
+                </div>
+                <ul style="padding-left:16px; margin:0; color:#e2e8f0; font-size:12.5px; line-height:1.8;">
+                    <li><b>Anti-Virtualization:</b> Automatically blocks sandbox emulation layers and concurrent machine cloning.</li>
+                    <li><b>Strict Node Lock:</b> Prevents unauthorized parallel sessions on unmatched motherboards.</li>
+                    <li><b>Signed Payloads:</b> Cryptographically signs telemetry packages using SHA-256 state hashing.</li>
+                    <li><b>Central Revocation:</b> Allows immediate terminal isolation from the administration dashboard.</li>
+                </ul>`
+            },
+            sync: {
+                title: "REAL-TIME TELEMETRY & COMPANION RELAY",
+                body: `<div style="margin-bottom:12px; padding:10px; background:rgba(34,197,94,0.1); border-left:3px solid #22c55e; border-radius:6px; color:#bbf7d0;">
+                    <b>Bi-Directional Node State Synchronization</b><br>
+                    Coordinates state exchange seamlessly between desktop systems and the Android companion APK.
+                </div>
+                <ul style="padding-left:16px; margin:0; color:#e2e8f0; font-size:12.5px; line-height:1.8;">
+                    <li><b>Encrypted Sockets:</b> Delivers low-latency data transmission with complete delivery guarantees.</li>
+                    <li><b>Heartbeat Relay:</b> Verifies transport connection uptime and manages automatic link recoveries.</li>
+                    <li><b>Mobile Handoff:</b> Relays mobile action commands directly to native desktop execution loops.</li>
+                    <li><b>Health Telemetry:</b> Streams hardware loads and active runtime states directly to the mobile app.</li>
+                </ul>`
+            }
+        };
+
+        
+
+    </script>
+    <script src="/static/cosmic-background.js"></script>
+
+<!-- CIRCULAR LOGO SUPPORT LAUNCHER -->
+<div id="dualSupportFloat" style="position:fixed; bottom:24px; right:24px; z-index:99999;">
+    <button onclick="toggleUserSupportDesk()" style="width:50px; height:50px; border-radius:50%; background:#0F172A; border:1px solid #38BDF8; box-shadow:0 4px 20px rgba(56,189,248,0.3); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
+        <svg style="width:24px;height:24px;stroke:#38BDF8;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    </button>
+</div>
+
+<div id="userSupportWindow" style="display:none; position:fixed; bottom:85px; right:24px; z-index:99999; width:340px; background:#0F172A; border:1px solid #334155; border-radius:16px; box-shadow:0 20px 40px rgba(0,0,0,0.8); padding:16px; font-family:sans-serif; color:#FFF;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1E293B; padding-bottom:8px; margin-bottom:10px;">
+        <div style="font-size:13px; font-weight:800; color:#38BDF8;">Developer Direct Desk</div>
+        <span onclick="toggleUserSupportDesk()" style="cursor:pointer; color:#94A3B8; font-weight:bold;">✕</span>
+    </div>
+    <div id="userChatStream" style="height:190px; overflow-y:auto; font-size:12px; background:#090D16; border:1px solid #1E293B; border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:6px;">
+        <div style="color:#64748B; text-align:center; padding:20px 0;">Developer is online. Ask your query.</div>
+    </div>
+    <div style="display:flex; gap:6px;">
+        <input id="userQueryInput" onkeydown="if(event.key==='Enter') sendRealUserQuery();" type="text" placeholder="Type query..." style="flex:1; background:#1E293B; border:1px solid #334155; border-radius:8px; padding:8px; font-size:12px; color:#FFF; outline:none;" />
+        <button onclick="sendRealUserQuery()" style="background:#4F46E5; color:#FFF; border:none; border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer;">Send</button>
+    </div>
+</div>
+
+<script>
+var mySupportId = localStorage.getItem('jarvis_support_uid');
+if(!mySupportId) {
+    mySupportId = 'USR_' + Math.random().toString(36).substring(2, 9).toUpperCase();
+    localStorage.setItem('jarvis_support_uid', mySupportId);
+}
+function toggleUserSupportDesk() {
+    var win = document.getElementById('userSupportWindow');
+    if(!win) return;
+    win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'block' : 'none';
+    if(win.style.display === 'block') refreshUserChat();
+}
+async function refreshUserChat() {
+    try {
+        var res = await fetch('/api/support/user/' + mySupportId);
+        var data = await res.json();
+        var box = document.getElementById('userChatStream');
+        if(!box || !data.length) return;
+        var html = '';
+        data.forEach(function(item) {
+            html += '<div style="text-align:right;"><span style="display:inline-block; background:#1E293B; padding:5px 9px; border-radius:10px 10px 2px 10px; max-width:85%;">' + item.query + '</span></div>';
+            if(item.reply) {
+                html += '<div style="text-align:left;"><span style="display:inline-block; background:rgba(56,189,248,0.15); border:1px solid #38BDF8; color:#38BDF8; padding:5px 9px; border-radius:10px 10px 10px 2px; max-width:85%;"><b>Dev:</b> ' + item.reply + '</span></div>';
+            }
+        });
+        box.innerHTML = html;
+        box.scrollTop = box.scrollHeight;
+    } catch(e){}
+}
+async function sendRealUserQuery() {
+    var inp = document.getElementById('userQueryInput');
+    var val = inp.value.trim();
+    if(!val) return;
+    inp.value = '';
+    await fetch('/api/support/send', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ user_id: mySupportId, username: 'User (' + mySupportId.slice(-4) + ')', query: val })
+    });
+    refreshUserChat();
+}
+setInterval(function(){
+    var win = document.getElementById('userSupportWindow');
+    if(win && win.style.display === 'block') refreshUserChat();
+}, 4000);
+</script>
+
+
+<!-- 3D AI NEURAL WAVE GRID -->
+<canvas id="real3DCanvas"></canvas>
+<script>
+(function() {
+    var c = document.getElementById('real3DCanvas');
+    if (!c) {
+        c = document.createElement('canvas');
+        c.id = 'real3DCanvas';
+        document.body.prepend(c);
+    }
+    var ctx = c.getContext('2d');
+    var w, h;
+    var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    var t = 0;
+
+    function resize() {
+        w = c.width = window.innerWidth;
+        h = c.height = window.innerHeight;
+        mouse.tx = w / 2;
+        mouse.ty = h / 2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', function(e) {
+        mouse.tx = e.clientX;
+        mouse.ty = e.clientY;
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        t += 0.015;
+
+        mouse.x += (mouse.tx - mouse.x) * 0.04;
+        mouse.y += (mouse.ty - mouse.y) * 0.04;
+
+        var cols = 32;
+        var rows = 16;
+        var cellW = w / (cols - 1);
+        var cellH = (h * 0.6) / (rows - 1);
+        var horizonY = h * 0.40;
+
+        var tiltX = (mouse.x - w / 2) * 0.0003;
+        var tiltY = (mouse.y - h / 2) * 0.0003;
+
+        ctx.lineWidth = 0.8;
+        for (var r = 0; r < rows; r++) {
+            ctx.beginPath();
+            var depth = (r + 1) / rows;
+            ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.03 + depth * 0.14) + ')';
+
+            for (var col = 0; col < cols; col++) {
+                var wave = Math.sin(t + col * 0.28 + r * 0.35) * (15 * depth);
+                var x = col * cellW + (col - cols / 2) * tiltX * (r * 10);
+                var y = horizonY + r * cellH + wave + (r * 5) * tiltY;
+
+                if (col === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+</script>
+
+
+<!-- THREE.JS & 3D HOLOGRAPHIC ROBOT CORE -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<div id="hologramRobotContainer" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.85;"></div>
+<script>
+(function() {
+    var container = document.getElementById('hologramRobotContainer');
+    if (!container || typeof THREE === 'undefined') return;
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 24;
+
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    var robotGroup = new THREE.Group();
+    scene.add(robotGroup);
+
+    // Holographic Core Cranium
+    var headGeo = new THREE.IcosahedronGeometry(5.2, 2);
+    var holoMat = new THREE.MeshBasicMaterial({
+        color: 0x38BDF8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35
+    });
+    var headMesh = new THREE.Mesh(headGeo, holoMat);
+    robotGroup.add(headMesh);
+
+    // Inner Quantum Core
+    var coreGeo = new THREE.OctahedronGeometry(2.8, 1);
+    var coreMat = new THREE.MeshBasicMaterial({
+        color: 0x6366F1,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.65
+    });
+    var coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    robotGroup.add(coreMesh);
+
+    // Orbiting Data Rings
+    var ringGeo = new THREE.TorusGeometry(7.2, 0.06, 16, 100);
+    var ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.4 });
+    var ring1 = new THREE.Mesh(ringGeo, ringMat);
+    ring1.rotation.x = Math.PI / 3;
+    robotGroup.add(ring1);
+
+    var ring2 = new THREE.Mesh(ringGeo, ringMat);
+    ring2.rotation.y = Math.PI / 4;
+    robotGroup.add(ring2);
+
+    robotGroup.position.set(0, 1.5, 0);
+
+    var mouseX = 0, mouseY = 0;
+    var targetX = 0, targetY = 0;
+
+    window.addEventListener('mousemove', function(e) {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
+    });
+
+    window.addEventListener('resize', function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+
+        // 360 Continuous Smooth Hologram Rotation
+        robotGroup.rotation.y += 0.009;
+        robotGroup.rotation.x = targetY * 0.6;
+        robotGroup.rotation.z = targetX * 0.4;
+
+        coreMesh.rotation.y -= 0.02;
+        coreMesh.rotation.x += 0.01;
+
+        ring1.rotation.z += 0.012;
+        ring2.rotation.x -= 0.015;
+
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ULTRA STABLE VERIFIED FEEDBACK SYSTEM -->
+<div id="smartFeedbackModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:99999999; align-items:center; justify-content:center; padding:16px;">
+    <div id="feedbackCardContainer" style="position:relative !important; width:100%; max-width:470px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 25px 60px rgba(0,0,0,0.9); box-sizing:border-box;">
+        
+        <!-- Close Button -->
+        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:100 !important;">✕</button>
+
+        <!-- Header -->
+        <div style="padding-right:45px; margin-bottom:18px;">
+            <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Submit Operator Feedback</h3>
+            <p style="margin:0; font-size:12px; color:#64748B;">System verified review submission</p>
+        </div>
+
+        <!-- Authenticated Username -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:16px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR CALL-SIGN</span>
+            <span id="feedbackUserDisplay" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">Detecting...</span>
+        </div>
+
+        <!-- SVG Face Reaction -->
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px; pointer-events:none;">
+            <div id="svgReactionBox" style="width:52px; height:52px; display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+
+        <!-- 5 Large Interactive SVG Stars -->
+        <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:8px;">
+            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </div>
+        <div id="starScoreDisplay" style="text-align:center; font-size:13px; font-weight:700; color:#38BDF8; margin-bottom:16px;">5 Stars - Exceptional</div>
+
+        <!-- Dedicated Multi-Select Chips Wrapper -->
+        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; position:relative; z-index:50;"></div>
+
+        <!-- Custom Feedback Text Input -->
+        <div id="feedbackCustomInputWrap" style="display:none; margin-bottom:16px;">
+            <textarea id="feedbackCustomText" placeholder="Apna feedback ya sujhav yahan likhein..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease; position:relative; z-index:50;">Submit Verified Review</button>
+    </div>
+</div>
+
+<style id="CHIPS_SELECTION_CSS">
+.smart-feedback-pill {
+    padding: 8px 16px !important;
+    border-radius: 9999px !important;
+    background: #131E3A !important;
+    border: 1px solid #1E293B !important;
+    color: #CBD5E1 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.15s ease !important;
+}
+
+.smart-feedback-pill:hover {
+    border-color: #38BDF8 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px) !important;
+}
+
+.smart-feedback-pill.chip-selected {
+    background: #0284C7 !important;
+    border-color: #38BDF8 !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.45) !important;
+    transform: scale(1.03) !important;
+}
+</style>
+
+<script id="FEEDBACK_CORE_SCRIPT">
+(function() {
+    let currentRating = 5;
+    let selectedChipsSet = new Set();
+
+    const reactionSVGs = {
+        1: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M7 8l3 1"></path><path d="M17 8l-3 1"></path></svg>',
+        2: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        3: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        4: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        5: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M8 7.5c1-1 3-1 4 0"></path><path d="M12 7.5c1-1 3-1 4 0"></path></svg>'
+    };
+
+    const chipsData = {
+        5: ["Blazing Fast Performance", "Rock Solid Stability", "Intuitive Modern UI", "Flawless Node Sync", "Other..."],
+        4: ["Fast & Responsive", "Clean Dashboard", "Minor UI Polish Needed", "Good Companion App", "Other..."],
+        3: ["Average Latency", "UI Scaling Needs Work", "Setup Was Complex", "Frequent Reconnects", "Other..."],
+        2: ["High Latency / Lag", "Frequent Disconnections", "Confusing Navigation", "Other..."],
+        1: ["System Crashes", "Cannot Authorize Node", "Critical Audio Failure", "Other..."]
+    };
+
+    const scoreLabels = {
+        5: "5 Stars - Exceptional & Highly Responsive",
+        4: "4 Stars - Great Overall Performance",
+        3: "3 Stars - Moderate Experience",
+        2: "2 Stars - Encountered Usability Hurdles",
+        1: "1 Star - Critical System Issues"
+    };
+
+    function getAuthenticatedUser() {
+        let name = localStorage.getItem('username') || 
+                   localStorage.getItem('currentUser') || 
+                   sessionStorage.getItem('username');
+        if (!name) {
+            const cookies = document.cookie.split(';');
+            for (let c of cookies) {
+                let [k, v] = c.trim().split('=');
+                if (k === 'username' || k === 'user') { name = decodeURIComponent(v); break; }
+            }
+        }
+        if (!name) {
+            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
+            if (token) {
+                try {
+                    const pl = JSON.parse(atob(token.split('.')[1]));
+                    name = pl.sub || pl.username;
+                } catch(e) {}
+            }
+        }
+        if (!name) {
+            const domNode = document.querySelector('#currentUser, #username, .user-name, [data-username], #current-user');
+            if (domNode) name = domNode.innerText || domNode.value;
+        }
+        return (name || "Operator").trim();
+    }
+
+    function renderChips(rating) {
+        const area = document.getElementById('feedbackChipsArea');
+        const customWrap = document.getElementById('feedbackCustomInputWrap');
+        if (!area) return;
+        area.innerHTML = "";
+        customWrap.style.display = "none";
+        selectedChipsSet.clear();
+
+        const list = chipsData[rating] || chipsData[5];
+        list.forEach(opt => {
+            const chip = document.createElement('div');
+            chip.className = 'smart-feedback-pill';
+            chip.setAttribute('data-label', opt);
+            chip.innerText = opt;
+            
+            // Pointer event to guarantee instant click response
+            chip.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isOther = opt.toLowerCase().includes("other");
+
+                if (selectedChipsSet.has(opt)) {
+                    selectedChipsSet.delete(opt);
+                    chip.classList.remove('chip-selected');
+                    if (isOther) {
+                        customWrap.style.display = "none";
+                    }
+                } else {
+                    selectedChipsSet.add(opt);
+                    chip.classList.add('chip-selected');
+                    if (isOther) {
+                        customWrap.style.display = "block";
+                        const txt = document.getElementById('feedbackCustomText');
+                        if (txt) txt.focus();
+                    }
+                }
+            });
+
+            area.appendChild(chip);
+        });
+    }
+
+    function setRating(val) {
+        currentRating = val;
+
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            const v = parseInt(star.getAttribute('data-val'));
+            if (v <= val) {
+                star.setAttribute('fill', '#FBBF24');
+                star.setAttribute('stroke', '#F59E0B');
+                star.style.transform = 'scale(1.08)';
+            } else {
+                star.setAttribute('fill', '#334155');
+                star.setAttribute('stroke', '#475569');
+                star.style.transform = 'scale(1)';
+            }
+        });
+
+        const faceBox = document.getElementById('svgReactionBox');
+        if (faceBox) faceBox.innerHTML = reactionSVGs[val] || reactionSVGs[5];
+
+        const lbl = document.getElementById('starScoreDisplay');
+        if (lbl) lbl.innerText = scoreLabels[val] || (val + " Stars");
+
+        renderChips(val);
+    }
+
+    function setup() {
+        const overlay = document.getElementById('smartFeedbackModalOverlay');
+        const closeBtn = document.getElementById('closeFeedbackModalBtn');
+
+        if (closeBtn) closeBtn.onclick = () => { overlay.style.display = 'none'; };
+        if (overlay) overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+
+        document.querySelectorAll('.star-rating-item').forEach(star => {
+            star.onclick = () => setRating(parseInt(star.getAttribute('data-val')));
+        });
+
+        // Trigger open
+        document.querySelectorAll('button, a').forEach(el => {
+            const t = (el.innerText || '').toLowerCase();
+            if (t.includes('feedback') || t.includes('rating') || t.includes('review')) {
+                if (el.id !== 'submitFeedbackBtn' && !el.classList.contains('admin-inspect-btn')) {
+                    el.onclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        document.getElementById('feedbackUserDisplay').innerText = getAuthenticatedUser();
+                        setRating(5);
+                        overlay.style.display = 'flex';
+                    };
+                }
+            }
+        });
+
+        // Submit to API
+        const submitBtn = document.getElementById('submitFeedbackBtn');
+        if (submitBtn) {
+            submitBtn.onclick = async () => {
+                const u = document.getElementById('feedbackUserDisplay').innerText;
+                const customTxt = document.getElementById('feedbackCustomText').value.trim();
+
+                let combined = [...Array.from(selectedChipsSet).filter(c => !c.toLowerCase().includes("other"))];
+                if (customTxt) combined.push(customTxt);
+
+                const finalPayloadComment = combined.length > 0 ? combined.join(" | ") : "Verified Review";
+
+                submitBtn.innerText = "Saving to Database...";
+                submitBtn.disabled = true;
+
+                try {
+                    await fetch('/api/feedback', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            username: u,
+                            rating: currentRating,
+                            comment: finalPayloadComment
+                        })
+                    });
+                } catch(err) {
+                    console.error("Submission error:", err);
+                }
+
+                submitBtn.innerText = "Feedback Saved!";
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    submitBtn.innerText = "Submit Verified Review";
+                    submitBtn.disabled = false;
+                }, 750);
+            };
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', setup);
+    setTimeout(setup, 300);
+})();
+</script>
+
+
+
+
+
+<!-- OPERATOR NODE FEEDBACK INSPECTION SYSTEM -->
+<div id="operatorNodeFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.88); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999999999; align-items:center; justify-content:center; padding:16px;">
+    <div style="position:relative !important; width:100%; max-width:460px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 30px 80px rgba(0,0,0,0.95); box-sizing:border-box;">
+        
+        <!-- Clean Close Button Top-Right -->
+        <button id="closeNodeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important;">✕</button>
+
+        <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Operator Feedback Profile</h3>
+        <p style="margin:0 0 16px 0; font-size:12px; color:#64748B;">Telemetry verified feedback log</p>
+
+        <!-- Operator Name Display -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR IDENTITY</span>
+            <span id="nodeInspectOpName" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">-</span>
+        </div>
+
+        <!-- Rating & Dynamic Reaction -->
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
+            <div>
+                <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">RATING</span>
+                <span id="nodeInspectOpStars" style="font-size:20px; color:#FBBF24;">★★★★★</span>
+            </div>
+            <div id="nodeInspectReactionFace" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"></div>
+        </div>
+
+        <!-- Feedback Content Details -->
+        <div style="background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:14px 16px; margin-bottom:18px;">
+            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:6px;">FEEDBACK DETAILS</span>
+            <p id="nodeInspectOpComment" style="margin:0; font-size:13px; color:#E2E8F0; line-height:1.6; word-break:break-word;">Loading feedback details...</p>
+            <span id="nodeInspectOpDate" style="display:block; margin-top:8px; font-size:10px; color:#64748B;">-</span>
+        </div>
+
+        <button id="dismissNodeFeedbackModalBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3);">Close Panel</button>
+    </div>
+</div>
+
+<script id="NODE_FEEDBACK_INSPECTION_SCRIPT">
+(function() {
+    const reactionSVGs = {
+        1: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+        2: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path></svg>',
+        3: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line></svg>',
+        4: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>',
+        5: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path></svg>'
+    };
+
+    async function fetchAndShowFeedback(rawName) {
+        // Strip out (#id) tags (e.g. 'Mom 6 (#8)' -> 'Mom 6')
+        const cleanName = rawName.replace(/\(#[0-9]+\)/g, '').trim();
+
+        const modal = document.getElementById('operatorNodeFeedbackModal');
+        const nameEl = document.getElementById('nodeInspectOpName');
+        const starsEl = document.getElementById('nodeInspectOpStars');
+        const faceEl = document.getElementById('nodeInspectReactionFace');
+        const commentEl = document.getElementById('nodeInspectOpComment');
+        const dateEl = document.getElementById('nodeInspectOpDate');
+
+        nameEl.innerText = rawName;
+        starsEl.innerText = "★★★★★";
+        faceEl.innerHTML = reactionSVGs[5];
+        commentEl.innerText = "Fetching feedback from database...";
+        dateEl.innerText = "";
+        modal.style.display = 'flex';
+
+        try {
+            const res = await fetch(`/api/feedback/operator?name=${encodeURIComponent(cleanName)}`);
+            const data = await res.json();
+            if (data.found) {
+                const r = parseInt(data.rating) || 5;
+                starsEl.innerText = "★".repeat(r) + "☆".repeat(5 - r);
+                faceEl.innerHTML = reactionSVGs[r] || reactionSVGs[5];
+                commentEl.innerText = data.comment;
+                dateEl.innerText = "Submitted: " + (data.date || "Recently");
+            } else {
+                commentEl.innerText = "No feedback submitted by this operator yet.";
+            }
+        } catch (e) {
+            commentEl.innerText = "No feedback record found in database.";
+        }
+    }
+
+    function bindManagedOperatorBoxes() {
+        // Find all operator node boxes under MANAGED OPERATOR NODES
+        const boxes = document.querySelectorAll('div[class*="border"], div[class*="rounded"]');
+        boxes.forEach(box => {
+            // Must have action buttons (+5D, -5D, Del) and Allocation info
+            const hasButtons = box.querySelector('button');
+            const hasAllocation = box.innerText && (box.innerText.includes('Allocation:') || box.innerText.includes('STANDBY') || box.innerText.includes('Role:'));
+
+            if (hasButtons && hasAllocation) {
+                // Find node title (e.g., Mom 6 (#8))
+                const titleEl = box.querySelector('h3, h4, span, div');
+                let operatorTitle = "";
+                if (titleEl) {
+                    const lines = box.innerText.split('\n');
+                    for (let line of lines) {
+                        line = line.trim();
+                        if (line.includes('(#') || (line.length > 0 && !line.includes('Allocation') && !line.includes('STANDBY') && !line.includes('Role:') && !line.includes('+5D'))) {
+                            operatorTitle = line;
+                            break;
+                        }
+                    }
+                }
+
+                if (operatorTitle && !box.hasAttribute('data-node-bound')) {
+                    box.setAttribute('data-node-bound', 'true');
+                    box.style.cursor = 'pointer';
+                    box.style.transition = 'all 0.2s ease';
+
+                    // Hover styling
+                    box.addEventListener('mouseenter', () => {
+                        box.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                    });
+                    box.addEventListener('mouseleave', () => {
+                        box.style.borderColor = '';
+                    });
+
+                    // Click anywhere inside box EXCEPT buttons
+                    box.addEventListener('click', function(e) {
+                        if (e.target.closest('button, a, input, select')) {
+                            return; // Let +5D, -5D, Del buttons work as usual
+                        }
+                        e.preventDefault();
+                        e.stopPropagation();
+                        fetchAndShowFeedback(operatorTitle);
+                    });
+                }
+            }
+        });
+    }
+
+    function init() {
+        const modal = document.getElementById('operatorNodeFeedbackModal');
+        const closeBtn = document.getElementById('closeNodeFeedbackModalBtn');
+        const dismissBtn = document.getElementById('dismissNodeFeedbackModalBtn');
+
+        if (closeBtn) closeBtn.onclick = () => { modal.style.display = 'none'; };
+        if (dismissBtn) dismissBtn.onclick = () => { modal.style.display = 'none'; };
+        if (modal) modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+        bindManagedOperatorBoxes();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    setTimeout(init, 500);
+    setTimeout(bindManagedOperatorBoxes, 1500);
+})();
+</script>
+
+
+
+
+
+<!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
+<style id="jarvis-coming-soon-lock-style">
+.btn-coming-soon-lock {
+    background: #0f172a !important;
+    color: #f97316 !important;
+    border: 2px solid #ea580c !important;
+    cursor: not-allowed !important;
+    opacity: 0.9 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    user-select: none !important;
+    transition: all 0.25s ease !important;
+}
+.btn-coming-soon-lock:hover {
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.45), inset 0 0 10px rgba(234, 88, 12, 0.25) !important;
+    transform: scale(1.02) !important;
+    color: #ffedd5 !important;
+    border-color: #fb923c !important;
+}
+</style>
+<script id="jarvis-mobile-state-manager">
+(function() {
+    async function syncMobileDownloadState() {
+        try {
+            const res = await fetch('/api/system/mobile-status');
+            const data = await res.json();
+            const isActive = data.active;
+
+            // Har download link/button ko dhoondo
+            const downloadElems = document.querySelectorAll('a[download], a[href*=".apk"], [data-action="download"], #mobileDownloadBtn, .download-btn');
+            
+            downloadElems.forEach(el => {
+                if (!isActive) {
+                    // Lock state - Coming Soon with Fire Icon 🔥
+                    if (!el.dataset.origHtml) {
+                        el.dataset.origHtml = el.innerHTML;
+                        el.dataset.origHref = el.getAttribute('href') || '#';
+                    }
+                    el.innerHTML = '🔥 Coming Soon';
+                    el.removeAttribute('href');
+                    el.classList.add('btn-coming-soon-lock');
+                    el.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    };
+                } else {
+                    // Active state - Restore original download
+                    if (el.dataset.origHtml) {
+                        el.innerHTML = el.dataset.origHtml;
+                        el.setAttribute('href', el.dataset.origHref);
+                    }
+                    el.classList.remove('btn-coming-soon-lock');
+                    el.onclick = null;
+                }
+            });
+
+            // Admin Toggle Button text sync
+            const adminToggles = document.querySelectorAll('#btnToggleMasterGlobal, #toggleAllServicesBtn, [data-toggle="all-services"]');
+            adminToggles.forEach(btn => {
+                if (isActive) {
+                    btn.classList.add('active-state');
+                } else {
+                    btn.classList.remove('active-state');
+                }
+            });
+        } catch (e) {
+            console.warn("Mobile status sync:", e);
+        }
+    }
+
+    window.toggleGlobalActivation = async function(explicitState) {
+        try {
+            const body = typeof explicitState === 'boolean' ? JSON.stringify({ active: explicitState }) : null;
+            await fetch('/api/system/mobile-toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            });
+            syncMobileDownloadState();
+        } catch (err) {
+            console.error("Toggle error:", err);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', syncMobileDownloadState);
+    window.addEventListener('load', syncMobileDownloadState);
+    syncMobileDownloadState();
+})();
+</script>
+
+
+<script id="mobile-coming-soon-enforcer">
+(function() {
+    async function enforceMobileState() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            const isActive = (data.active === true || data.enabled === true || data.status === 'active');
+
+            // Find all Android / Mobile / APK links and buttons
+            const candidates = document.querySelectorAll('a, button');
+            candidates.forEach(el => {
+                const href = (el.getAttribute('href') || '').toLowerCase();
+                const text = (el.innerText || el.textContent || '').toLowerCase();
+                const id = (el.id || '').toLowerCase();
+                const cl = (el.className || '').toLowerCase();
+
+                // Target strictly Android / APK / Mobile downloads
+                const isMobileBtn = href.includes('.apk') || 
+                                    text.includes('android') || 
+                                    text.includes('mobile download') || 
+                                    text.includes('download apk') || 
+                                    id.includes('mobile') || 
+                                    id.includes('android') || 
+                                    cl.includes('mobile-download');
+
+                // Leave Windows / PC strictly untouched
+                const isWindows = href.includes('.exe') || href.includes('.zip') || text.includes('windows') || text.includes('pc');
+                if (isWindows) return;
+
+                if (isMobileBtn) {
+                    if (!isActive) {
+                        if (!el.dataset.originalContent) {
+                            el.dataset.originalContent = el.innerHTML;
+                            el.dataset.originalHref = el.getAttribute('href') || '#';
+                        }
+                        el.innerHTML = '<span class="inline-flex items-center gap-1.5 font-bold">🔥 Coming Soon</span>';
+                        el.removeAttribute('href');
+                        el.style.pointerEvents = 'none';
+                        el.style.opacity = '0.75';
+                        el.style.cursor = 'not-allowed';
+                    } else {
+                        if (el.dataset.originalContent) {
+                            el.innerHTML = el.dataset.originalContent;
+                            el.setAttribute('href', el.dataset.originalHref);
+                        }
+                        el.style.pointerEvents = 'auto';
+                        el.style.opacity = '1';
+                        el.style.cursor = 'pointer';
+                    }
+                }
+            });
+        } catch(err) {
+            console.error("Master mobile enforcement error:", err);
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", enforceMobileState);
+    setInterval(enforceMobileState, 2000);
+})();
+</script>
+
+
+
+
+</div>
+
+
+
+
+<div id="holo-universe" role="presentation" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+  <div class="holo-stage">
+    <div class="h-ring h-x"></div>
+    <div class="h-ring h-y"></div>
+    <div class="h-ring h-z"></div>
+    <div class="h-ring h-diag"></div>
+    <div class="h-core-sphere"></div>
+  </div>
+</div>
+<style id="holo-style">
+  .holo-stage {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    animation: holoWorldRotate 18s linear infinite;
+    will-change: transform;
+  }
+  .h-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(147, 197, 253, 0.35);
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.22), inset 0 0 16px rgba(59, 130, 246, 0.15);
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .h-x {
+    transform: rotateX(80deg);
+    animation: spinX 9s linear infinite;
+  }
+  .h-y {
+    transform: rotateY(80deg);
+    animation: spinY 12s linear infinite reverse;
+  }
+  .h-z {
+    transform: rotateZ(45deg) rotateX(45deg);
+    animation: spinZ 15s linear infinite;
+  }
+  .h-diag {
+    transform: rotate3d(1, 1, 0, 60deg);
+    animation: spinDiag 10s linear infinite reverse;
+    border-color: rgba(96, 165, 250, 0.45);
+  }
+  .h-core-sphere {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(96,165,250,0.5) 45%, rgba(30,58,138,0.15) 80%, transparent 100%);
+    box-shadow: 0 0 25px rgba(59,130,246,0.55);
+    animation: pulseCore 3s ease-in-out infinite alternate;
+  }
+  @keyframes holoWorldRotate {
+    0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
+    50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(10deg); }
+    100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
+  }
+  @keyframes spinX { 0% { transform: rotateX(80deg) rotateZ(0deg); } 100% { transform: rotateX(80deg) rotateZ(360deg); } }
+  @keyframes spinY { 0% { transform: rotateY(80deg) rotateZ(0deg); } 100% { transform: rotateY(80deg) rotateZ(360deg); } }
+  @keyframes spinZ { 0% { transform: rotateZ(45deg) rotateX(45deg) rotate(0deg); } 100% { transform: rotateZ(45deg) rotateX(45deg) rotate(360deg); } }
+  @keyframes spinDiag { 0% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(0deg); } 100% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(360deg); } }
+  @keyframes pulseCore { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
+  
+  /* Bold Blue Professional Accents */
+  .title-accent-blue {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 2px 10px rgba(37, 99, 235, 0.45);
+  }
+  .sub-accent-blue {
+    color: #93c5fd !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.025em;
+  }
+</style>
+
+
+<!-- PROFESSIONAL SPEC MODAL WITH DUAL CLOSE BUTTONS & HIGH-TECH STYLING -->
+<div id="specDetailModal" style="display:none; position:fixed; inset:0; z-index:999999; background:rgba(2,6,23,0.92); backdrop-filter:blur(14px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:linear-gradient(180deg, #090d16 0%, #030712 100%); border:1px solid rgba(168,85,247,0.4); border-radius:20px; max-width:640px; width:100%; max-height:86vh; display:flex; flex-direction:column; box-shadow:0 0 50px rgba(168,85,247,0.25); overflow:hidden; font-family:system-ui, -apple-system, sans-serif;">
+        
+        <!-- Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(168,85,247,0.2); padding:16px 22px; background:rgba(15,23,42,0.7);">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); display:flex; align-items:center; justify-content:center; color:#c084fc;">
+                    <i data-lucide="cpu" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 id="specModalTitle" style="color:#ffffff; font-weight:700; font-size:14px; margin:0; letter-spacing:0.8px; font-family:monospace;">SYSTEM SPECIFICATION</h3>
+                    <p style="color:#a855f7; font-size:10px; margin:2px 0 0 0; font-family:monospace; letter-spacing:1px;">JARVIS PROTOCOL // NODE VERIFIED</p>
+                </div>
+            </div>
+            <!-- Top Cross Close Button -->
+            <button type="button" onclick="closeDetailModal()" title="Close Window" style="color:#ffffff !important; background:#1e293b; border:1px solid #64748b; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; font-weight:900; line-height:1;">&#x2715;</button>
+        </div>
+
+        <!-- Scrollable High Contrast Content -->
+        <div id="specModalBody" style="color:#cbd5e1; font-size:13px; line-height:1.75; padding:22px; overflow-y:auto; flex:1;">
+        </div>
+
+        <!-- Footer With Bottom Close Button -->
+        <div style="border-top:1px solid rgba(168,85,247,0.2); padding:14px 22px; background:rgba(15,23,42,0.7); display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#22c55e;"></span>
+                <span style="color:#94a3b8; font-size:11px; font-family:monospace;">STATUS: RUNTIME SYNCHRONIZED</span>
+            </div>
+            <button type="button" onclick="closeDetailModal()" title="Close Window" style="color:#ffffff !important; background:#1e293b; border:1px solid #64748b; border-radius:8px; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; font-weight:900; line-height:1;">&#x2715;</button>
+        </div>
+    </div>
+</div>
+
+<script id="UNIFIED_SPEC_AND_FEEDBACK_ENGINE">
+const specContentData = {
+    neural: {
+        title: "NEURAL INTERFACE & ACOUSTIC INFERENCE",
+        body: `
+            <div style="background:rgba(168,85,247,0.08); border-left:3px solid #a855f7; border-radius:8px; padding:14px; margin-bottom:16px;">
+                <b style="color:#f3e8ff; font-size:13px;">Real-Time Acoustic Inference Core</b><br>
+                <p style="color:#cbd5e1; font-size:12px; margin:4px 0 0 0; line-height:1.6;">Engineered for sub-350ms deterministic voice response with zero external latency bottlenecks.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#e9d5ff; font-size:12px;">On-Device Signal Parsing</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Captures and processes microphone streams locally on silicon, avoiding external cloud transit delay.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#e9d5ff; font-size:12px;">Isolated Circular Audio Buffer</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Ring memory buffer prevents memory degradation while continuously evaluating hotword triggers.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#e9d5ff; font-size:12px;">Hybrid Task Routing</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Executes local machine tasks immediately offline; forwards conversational logic to Gemini API.</p>
+                </div>
+            </div>
+        `
+    },
+    hwid: {
+        title: "CRYPTOGRAPHIC HWID & SECURITY LOCK",
+        body: `
+            <div style="background:rgba(56,189,248,0.08); border-left:3px solid #38bdf8; border-radius:8px; padding:14px; margin-bottom:16px;">
+                <b style="color:#bae6fd; font-size:13px;">Hardware-Bound Machine Identity</b><br>
+                <p style="color:#cbd5e1; font-size:12px; margin:4px 0 0 0; line-height:1.6;">Generates an immutable 256-bit machine lock using motherboard UUID, CPU microcode, and drive partition serials.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bae6fd; font-size:12px;">Anti-Virtualization Guard</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Blocks sandbox replication, virtual container cloning, and unauthorized simultaneous runtimes.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bae6fd; font-size:12px;">Cryptographic State Hashing</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Signs all client telemetry frames with SHA-256 tokens to ensure uncorrupted packet integrity.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bae6fd; font-size:12px;">Single Machine Authorization</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Locks operating licenses strictly to one physical motherboard footprint with zero tolerance for spoofing.</p>
+                </div>
+            </div>
+        `
+    },
+    sync: {
+        title: "REAL-TIME TELEMETRY & COMPANION RELAY",
+        body: `
+            <div style="background:rgba(34,197,94,0.08); border-left:3px solid #22c55e; border-radius:8px; padding:14px; margin-bottom:16px;">
+                <b style="color:#bbf7d0; font-size:13px;">Full-Duplex Companion Relay Bridge</b><br>
+                <p style="color:#cbd5e1; font-size:12px; margin:4px 0 0 0; line-height:1.6;">Maintains synchronized bidirectional communication between desktop JARVIS and the companion node.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bbf7d0; font-size:12px;">Encrypted Socket Relay</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Streams operator commands and telemetry payloads with lossless delivery guarantees.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bbf7d0; font-size:12px;">Heartbeat Pulse Monitoring</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Conducts continuous link health checks and executes immediate handshake recovery during network shifts.</p>
+                </div>
+                <div style="background:rgba(15,23,42,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:12px;">
+                    <b style="color:#bbf7d0; font-size:12px;">Live Metric Telemetry</b>
+                    <p style="color:#94a3b8; font-size:11.5px; margin:3px 0 0 0;">Relays real-time CPU consumption, RAM utilization, and active task states directly to the companion view.</p>
+                </div>
+            </div>
+        `
+    }
+};
+
+window.openDetailModal = function(key) {
+    const data = specContentData[key] || specContentData.neural;
+    const m = document.getElementById('specDetailModal');
+    const t = document.getElementById('specModalTitle');
+    const b = document.getElementById('specModalBody');
+    if (t) t.innerText = data.title;
+    if (b) b.innerHTML = data.body;
+    if (m) {
+        m.classList.remove('hidden');
+        m.style.setProperty('display', 'flex', 'important');
+    }
+    if (window.lucide && typeof lucide.createIcons === 'function') {
+        lucide.createIcons();
+    }
+};
+
+window.closeDetailModal = function() {
+    const m = document.getElementById('specDetailModal');
+    if (m) {
+        m.style.setProperty('display', 'none', 'important');
+        m.classList.add('hidden');
+    }
+};
+
+// LIVE REAL-TIME FEEDBACK FETCHER & SUBMITTER
+async function loadRealFeedbacks() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.feedbacks)) {
+            // Update feedback count in UI if element exists
+            document.querySelectorAll('[id*="feedbackCount"], [class*="feedback-count"]').forEach(el => {
+                el.innerText = data.count;
+            });
+        }
+    } catch (e) {}
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadRealFeedbacks();
+    
+    // Intercept feedback form to refresh data dynamically
+    const feedbackForm = document.querySelector('form[action*="feedback"], #feedbackForm');
+    if (feedbackForm) {
+        feedbackForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const textarea = feedbackForm.querySelector('textarea');
+            const nameInput = feedbackForm.querySelector('input[type="text"]');
+            const comment = textarea ? textarea.value.trim() : '';
+            const name = nameInput ? nameInput.value.trim() : 'Verified Operator';
+
+            if (!comment) return;
+
+            try {
+                const res = await fetch('/api/feedback/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, comment: comment, rating: 5 })
+                });
+                const d = await res.json();
+                if (d.success) {
+                    if (textarea) textarea.value = '';
+                    alert('Feedback successfully recorded in system database.');
+                    loadRealFeedbacks();
+                }
+            } catch (err) {}
+        };
+    }
+});
+</script>
+
+
+<script id="LIVE_FEEDBACK_RENDER_ENGINE">
+async function syncFeedbackDisplay() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.feedbacks)) {
+            // Update total review count wherever displayed
+            document.querySelectorAll('[id*="feedbackCount"], [class*="feedback-count"]').forEach(el => {
+                el.innerText = data.count;
+            });
+
+            // Target feedback review container on landing page
+            const container = document.querySelector('#feedbackList, #reviewsContainer, [data-feedback-container]');
+            if (container) {
+                container.innerHTML = data.feedbacks.map(f => `
+                    <div class="p-4 rounded-xl bg-slate-900/60 border border-purple-500/20 flex flex-col gap-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-purple-300 font-mono">${f.name || 'Verified Operator'}</span>
+                            <span class="text-[10px] text-slate-500">${f.date ? f.date.split(' ')[0] : 'Recent'}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">${f.comment}</p>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch(err) {
+        console.error("Feedback sync error:", err);
+    }
+}
+
+// Bind to submit button directly
+document.addEventListener("DOMContentLoaded", () => {
+    syncFeedbackDisplay();
+    
+    document.querySelectorAll('form').forEach(f => {
+        if (f.action.includes('feedback') || f.id.includes('feedback')) {
+            f.addEventListener('submit', () => {
+                setTimeout(syncFeedbackDisplay, 800);
+            });
+        }
+    });
+});
+</script>
+
+
+<script id="DIRECT_FEEDBACK_AND_X_FIX">
+async function refreshFeedbackUI() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.feedbacks)) {
+            // Count badges update karna
+            document.querySelectorAll('[id*="feedbackCount"], [class*="feedback-count"], #totalFeedbackCount').forEach(el => {
+                el.innerText = data.count;
+            });
+
+            // Reviews container update karna
+            const box = document.querySelector('#feedbackList, #reviewsContainer, #feedbackReviewsList, [data-feedback-container]');
+            if (box) {
+                if (data.feedbacks.length === 0) {
+                    box.innerHTML = '<p style="color:#64748b; font-size:12px;">No operator feedback submitted yet.</p>';
+                } else {
+                    box.innerHTML = data.feedbacks.map(f => `
+                        <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(168,85,247,0.25); border-radius:12px; padding:14px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name || 'Verified Operator'}</span>
+                                <span style="color:#64748b; font-size:11px;">${(f.date || '').split(' ')[0]}</span>
+                            </div>
+                            <p style="color:#e2e8f0; font-size:12.5px; line-height:1.6; margin:4px 0 0 0;">${f.comment}</p>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+    } catch(err) {
+        console.error("Feedback fetch error:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    refreshFeedbackUI();
+
+    // Feedback submit action connect karna
+    const allForms = document.querySelectorAll('form');
+    allForms.forEach(form => {
+        const hasTextarea = form.querySelector('textarea');
+        if (hasTextarea) {
+            form.onsubmit = async function(e) {
+                e.preventDefault();
+                const textarea = form.querySelector('textarea');
+                const nameInput = form.querySelector('input[type="text"]');
+                const comment = textarea ? textarea.value.trim() : '';
+                const name = nameInput ? nameInput.value.trim() : 'Operator';
+
+                if (!comment) {
+                    alert("Please write your feedback first.");
+                    return;
+                }
+
+                try {
+                    const resp = await fetch('/api/feedback/submit', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ name: name, comment: comment, rating: 5 })
+                    });
+                    const resData = await resp.json();
+                    if (resData.success) {
+                        textarea.value = '';
+                        alert("Feedback submitted successfully!");
+                        refreshFeedbackUI();
+                    } else {
+                        alert("Error: " + (resData.error || "Submission failed"));
+                    }
+                } catch(error) {
+                    alert("Network error. Ensure server is running.");
+                }
+            };
+        }
+    });
+});
+</script>
+
+
+<script id="FEEDBACK_MODAL_CONTROLLER_SAFE">
+window.openRealFeedbackModal = function() {
+    // Agar page par feedback section hai toh pehle wahan scroll karo
+    const sec = document.getElementById('REAL_FEEDBACK_SECTION');
+    if (sec) {
+        sec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    // Modal open karo bina Tailwind 'hidden' conflict ke
+    const m = document.getElementById('realFeedbackModal');
+    if (m) {
+        m.classList.remove('hidden');
+        m.style.setProperty('display', 'flex', 'important');
+    }
+};
+
+window.closeRealFeedbackModal = function() {
+    const m = document.getElementById('realFeedbackModal');
+    if (m) {
+        m.style.setProperty('display', 'none', 'important');
+        m.classList.add('hidden');
+    }
+};
+</script>
+
+
+<script id="LIVE_ZERO_BASED_REVIEW_SYNC">
+async function updateLiveReviews() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        
+        if (data && data.success) {
+            const list = data.feedbacks || [];
+            const count = data.count || list.length;
+
+            // 1. Sabhi review count badges ko exact live number se sync karo
+            document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], [class*="feedback-count"]').forEach(el => {
+                el.innerText = count;
+            });
+
+            // 2. Reviews container me dynamic cards load karo
+            const container = document.getElementById('feedbackReviewsList') || 
+                              document.querySelector('#REAL_FEEDBACK_SECTION .grid') ||
+                              document.querySelector('#reviewsContainer');
+
+            if (container) {
+                if (list.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 30px; background: rgba(15,23,42,0.6); border: 1px dashed rgba(168,85,247,0.3); border-radius: 16px;">
+                            <p style="color: #94a3b8; font-size: 13px; font-family: monospace; margin: 0;">NO OPERATOR REVIEWS RECORDED YET</p>
+                            <span style="color: #64748b; font-size: 11px;">Be the first operator to submit system feedback.</span>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = list.map(item => {
+                        const stars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5));
+                        const dateStr = item.date ? item.date.split(' ')[0] : 'Just now';
+                        return `
+                            <div style="background: rgba(15,23,42,0.7); border: 1px solid rgba(168,85,247,0.25); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); display: flex; align-items: center; justify-content: center; color: #c084fc; font-weight: bold; font-size: 11px;">
+                                            ${(item.name || 'O').charAt(0).toUpperCase()}
+                                        </div>
+                                        <span style="color: #f1f5f9; font-weight: 700; font-size: 13px; font-family: monospace;">${item.name || 'Verified Operator'}</span>
+                                    </div>
+                                    <span style="color: #fbbf24; font-size: 12px; letter-spacing: 2px;">${stars}</span>
+                                </div>
+                                <p style="color: #cbd5e1; font-size: 12.5px; line-height: 1.6; margin: 4px 0 0 0;">${item.comment}</p>
+                                <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                                    <span style="color: #64748b; font-size: 10px; font-family: monospace;">${dateStr}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+    } catch(err) {
+        console.error("Live sync failed:", err);
+    }
+}
+
+// Form submission interceptor taaki submit hote hi bina reload turant render ho
+document.addEventListener("DOMContentLoaded", () => {
+    updateLiveReviews();
+
+    const forms = document.querySelectorAll('#realFeedbackModal form, #feedbackForm, form');
+    forms.forEach(f => {
+        if (f.querySelector('textarea') || f.action.includes('feedback')) {
+            f.onsubmit = async function(e) {
+                e.preventDefault();
+                const textarea = f.querySelector('textarea');
+                const nameInput = f.querySelector('input[type="text"]');
+                const comment = textarea ? textarea.value.trim() : '';
+                const name = nameInput ? nameInput.value.trim() : 'Operator';
+
+                if (!comment) {
+                    alert('Please write your feedback message.');
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/feedback/submit', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ name: name, comment: comment, rating: 5 })
+                    });
+                    const d = await res.json();
+                    if (d.success) {
+                        if (textarea) textarea.value = '';
+                        if (typeof closeRealFeedbackModal === 'function') closeRealFeedbackModal();
+                        updateLiveReviews();
+                    } else {
+                        alert('Submission error: ' + (d.error || 'Server error'));
+                    }
+                } catch(err) {
+                    alert('Network error. Please ensure server is running.');
+                }
+            };
+        }
+    });
+});
+</script>
+
+
+<script>
+async function loadLiveFeedbacksDirect() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const d = await res.json();
+        if (!d.success) return;
+
+        // Count update
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"]').forEach(el => {
+            el.innerText = d.count;
+        });
+
+        // Grid update
+        const grid = document.getElementById('liveFeedbackCardsGrid') || document.querySelector('#REAL_FEEDBACK_SECTION .grid');
+        if (grid) {
+            if (d.feedbacks.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:24px; color:#94a3b8; font-family:monospace; font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                grid.innerHTML = d.feedbacks.map(f => `
+                    <div style="background:#0f172a; border:1px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name || 'Verified Operator'}</span>
+                            <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:0;">${f.comment}</p>
+                        <span style="color:#64748b; font-size:10px; font-family:monospace; margin-top:4px;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (e) {}
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadLiveFeedbacksDirect();
+
+    // Hook every form inside feedback modal
+    const modalForm = document.querySelector('#realFeedbackModal form, #feedbackForm');
+    if (modalForm) {
+        modalForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const txt = modalForm.querySelector('textarea');
+            const nameInput = modalForm.querySelector('input[type="text"]');
+            const comment = txt ? txt.value.trim() : '';
+            const name = nameInput ? nameInput.value.trim() : 'Operator';
+
+            if (!comment) return;
+
+            const res = await fetch('/api/feedback/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name: name, comment: comment, rating: 5 })
+            });
+            const out = await res.json();
+            if (out.success) {
+                if (txt) txt.value = '';
+                if (typeof closeRealFeedbackModal === 'function') closeRealFeedbackModal();
+                await loadLiveFeedbacksDirect();
+            }
+        };
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+<script id="DIRECT_FEEDBACK_SUBMIT_SYSTEM">
+let selectedRating = 5;
+
+window.setRatingStars = function(val) {
+    selectedRating = val;
+    document.querySelectorAll('.star-btn').forEach((s, idx) => {
+        s.style.color = (idx < val) ? '#fbbf24' : '#475569';
+    });
+};
+
+window.sendFeedbackDirect = async function(e) {
+    if (e) e.preventDefault();
+    
+    const modal = document.getElementById('realFeedbackModal');
+    const nameInput = modal ? modal.querySelector('input[type="text"]') : document.querySelector('#feedbackName');
+    const commentInput = modal ? modal.querySelector('textarea') : document.querySelector('#feedbackComment');
+    
+    const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Verified Operator';
+    const comment = commentInput ? commentInput.value.trim() : '';
+    
+    if (!comment) {
+        alert('Please enter your review text.');
+        return;
+    }
+    
+    try {
+        const res = await fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                comment: comment,
+                rating: selectedRating
+            })
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+            if (commentInput) commentInput.value = '';
+            if (typeof closeRealFeedbackModal === 'function') {
+                closeRealFeedbackModal();
+            } else if (modal) {
+                modal.style.display = 'none';
+            }
+            if (typeof loadLiveFeedbacksDirect === 'function') {
+                await loadLiveFeedbacksDirect();
+            } else {
+                location.reload();
+            }
+        } else {
+            alert('Failed: ' + (data.error || 'Server error'));
+        }
+    } catch(err) {
+        alert('API Call Failed: Check if backend server is running.');
+    }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById('realFeedbackModal');
+    if (modal) {
+        const form = modal.querySelector('form');
+        if (form) {
+            form.onsubmit = window.sendFeedbackDirect;
+        }
+        const submitBtn = modal.querySelector('button[type="submit"], button.purple-btn');
+        if (submitBtn) {
+            submitBtn.onclick = window.sendFeedbackDirect;
+        }
+    }
+});
+</script>
+
+
+
+
+
+<script id="SUBMIT_REAL_FEEDBACK_FIX">
+let selectedFeedbackRating = 5;
+
+function setRating(val) {
+    selectedFeedbackRating = val;
+    document.querySelectorAll('.star-btn, [onclick*="setRating"]').forEach((el, idx) => {
+        el.style.color = (idx < val) ? '#fbbf24' : '#475569';
+    });
+}
+
+async function fetchAndRenderFeedbacks() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // Count badges sync
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"]').forEach(el => {
+            el.innerText = data.count || (data.feedbacks ? data.feedbacks.length : 0);
+        });
+
+        // Review list render
+        const box = document.getElementById('liveFeedbackCardsGrid') || 
+                    document.querySelector('#REAL_FEEDBACK_SECTION .grid') || 
+                    document.querySelector('#reviewsContainer');
+                    
+        if (box) {
+            const list = data.feedbacks || [];
+            if (list.length === 0) {
+                box.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:24px; color:#94a3b8; font-family:monospace; font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                box.innerHTML = list.map(f => `
+                    <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name || 'Verified Operator'}</span>
+                            <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:0;">${f.comment}</p>
+                        <span style="color:#64748b; font-size:10px; font-family:monospace; margin-top:4px;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch(err) {
+        console.error("Fetch error:", err);
+    }
+}
+
+async function submitRealFeedback() {
+    const modal = document.getElementById('realFeedbackModal');
+    const txt = modal ? (modal.querySelector('textarea') || document.getElementById('feedbackCommentInput')) : null;
+    const nameInput = modal ? modal.querySelector('input[type="text"]') : null;
+
+    const comment = txt ? txt.value.trim() : '';
+    const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Verified Operator';
+
+    if (!comment) {
+        alert("Please write your feedback message first.");
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: name,
+                comment: comment,
+                rating: selectedFeedbackRating
+            })
+        });
+
+        const result = await res.json();
+        if (result.success) {
+            if (txt) txt.value = '';
+            if (modal) modal.style.display = 'none';
+            await fetchAndRenderFeedbacks();
+        } else {
+            alert("Error: " + (result.error || "Submission failed"));
+        }
+    } catch(e) {
+        alert("Server connection failed. Make sure the server is running.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchAndRenderFeedbacks();
+});
+</script>
+
+
+<script>
+window.submitRealFeedback = async function() {
+    const modal = document.getElementById('realFeedbackModal');
+    const commentEl = modal ? modal.querySelector('textarea') : document.getElementById('feedbackCommentInput');
+    const nameEl = modal ? modal.querySelector('input[type="text"]') : null;
+
+    const comment = commentEl ? commentEl.value.trim() : "";
+    const name = nameEl && nameEl.value.trim() ? nameEl.value.trim() : "Verified Operator";
+
+    if (!comment) {
+        alert("Please enter a review message!");
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ operator_name: name, name: name, comment: comment, rating: 5 })
+        });
+        const out = await res.json();
+        if (out.success) {
+            if (commentEl) commentEl.value = "";
+            if (modal) modal.style.display = "none";
+            await refreshLiveFeedbacks();
+        } else {
+            alert("Error: " + (out.error || "Submission failed"));
+        }
+    } catch(err) {
+        alert("Server connection failed!");
+    }
+};
+
+window.refreshLiveFeedbacks = async function() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const d = await res.json();
+        if (!d.success) return;
+
+        const countEls = document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"]');
+        countEls.forEach(el => el.innerText = d.count);
+
+        const grid = document.getElementById('liveFeedbackCardsGrid') || document.querySelector('#REAL_FEEDBACK_SECTION .grid');
+        if (grid) {
+            if (d.feedbacks.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:24px; color:#94a3b8; font-family:monospace; font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                grid.innerHTML = d.feedbacks.map(f => `
+                    <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name}</span>
+                            <span style="color:#eab308; font-size:11px;">★★★★★</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:0;">${f.comment}</p>
+                        <span style="color:#64748b; font-size:10px; font-family:monospace;">${f.date.split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch(e) {}
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    window.refreshLiveFeedbacks();
+});
+</script>
+
+<script id="PORTAL_AUTO_SYNC">
+<script>
+async function loadPortalFeedbacks() {
+    try {
+        const res = await fetch('/api/feedback/list');
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // Count update
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"]').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        // Grid containers update
+        const targets = document.querySelectorAll('#liveFeedbackCardsGrid, #feedbackList, #userPanelFeedbackGrid, #reviewsContainer');
+        targets.forEach(grid => {
+            if (!data.feedbacks || data.feedbacks.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#94a3b8;font-family:monospace;font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                grid.innerHTML = data.feedbacks.map(f => `
+                    <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.3); border-radius:12px; padding:14px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <strong style="color:#c084fc; font-size:12px;">${f.name || 'Verified Operator'}</strong>
+                            <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; margin:0;">${f.comment || ''}</p>
+                        <span style="color:#64748b; font-size:10px;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch (err) {
+        console.error("Feedback fetch failed:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadPortalFeedbacks);
+setInterval(loadPortalFeedbacks, 5000);
+</script>
+</script>
+
+<script id="JARVIS_UNIVERSAL_FEEDBACK_ENGINE">
+(function() {
+    window.submitRealFeedback = async function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+        
+        let comment = "";
+        let name = "Verified Operator";
+        let rating = 5;
+
+        // Auto-detect input elements across all modal types
+        const textareas = document.querySelectorAll('#realFeedbackModal textarea, #feedbackCommentInput, textarea[placeholder*="review" i], textarea[placeholder*="feedback" i], textarea');
+        for (let ta of textareas) {
+            if (ta.offsetParent !== null && ta.value.trim()) {
+                comment = ta.value.trim();
+                break;
+            }
+        }
+
+        const nameInputs = document.querySelectorAll('#realFeedbackModal input[type="text"], input[placeholder*="name" i]');
+        for (let inp of nameInputs) {
+            if (inp.offsetParent !== null && inp.value.trim()) {
+                name = inp.value.trim();
+                break;
+            }
+        }
+
+        if (!comment) {
+            alert("Please enter a feedback message.");
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/feedback/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ operator_name: name, name: name, comment: comment, rating: rating })
+            });
+            const data = await res.json();
+            if (data.success) {
+                // Clear inputs
+                textareas.forEach(t => t.value = "");
+                // Hide active modals
+                document.querySelectorAll('#realFeedbackModal, .modal').forEach(m => m.style.display = 'none');
+                await window.refreshUniversalFeedbacks();
+            } else {
+                alert("Submission failed: " + (data.error || "Server error"));
+            }
+        } catch(err) {
+            alert("Server connection failed. Ensure server is active.");
+        }
+    };
+
+    window.refreshUniversalFeedbacks = async function() {
+        try {
+            const res = await fetch('/api/feedback/list');
+            const data = await res.json();
+            if (!data || !data.success) return;
+
+            // Sync total counters
+            document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count').forEach(el => {
+                el.innerText = data.count || 0;
+            });
+
+            // Target containers in Landing and User Panel
+            const containers = document.querySelectorAll('#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, [id*="feedbackReviews"]');
+            containers.forEach(box => {
+                if (!data.feedbacks || data.feedbacks.length === 0) {
+                    box.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:24px; color:#94a3b8; font-family:monospace; font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+                } else {
+                    box.innerHTML = data.feedbacks.map(f => `
+                        <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.3); border-radius:14px; padding:16px; margin-bottom:8px; display:flex; flex-direction:column; gap:6px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span style="color:#c084fc; font-weight:bold; font-size:12px; font-family:monospace;">${f.name}</span>
+                                <span style="color:#eab308; font-size:11px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                            </div>
+                            <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:0;">${f.comment}</p>
+                            <span style="color:#64748b; font-size:10px; font-family:monospace;">${(f.date || '').split(' ')[0]}</span>
+                        </div>
+                    `).join('');
+                }
+            });
+        } catch(err) {
+            console.error("Feedback refresh error:", err);
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        window.refreshUniversalFeedbacks();
+    });
+    // Auto sync every 4 seconds
+    setInterval(window.refreshUniversalFeedbacks, 4000);
+})();
+</script>
+
+
+<script id="FORCE_FEEDBACK_RENDER_ENGINE">
+async function renderAllFeedbacksNow() {
+    try {
+        const res = await fetch('/api/feedback/list?t=' + Date.now());
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // 1. Update all counter badges
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        // 2. Locate containers
+        const containers = document.querySelectorAll(
+            '#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, #reviewsContainer, [id*="feedbackCards"]'
+        );
+
+        const list = data.feedbacks || [];
+        containers.forEach(box => {
+            if (list.length === 0) {
+                box.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#94a3b8;font-family:monospace;font-size:12px;">NO REVIEWS YET // BE THE FIRST OPERATOR TO SUBMIT</div>';
+            } else {
+                box.innerHTML = list.map(f => `
+                    <div style="background:rgba(15,23,42,0.85); border:1px solid rgba(168,85,247,0.35); border-radius:14px; padding:16px; margin:8px 0; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:#c084fc; font-weight:bold; font-size:13px; font-family:monospace;">${f.name || 'Verified Operator'}</span>
+                            <span style="color:#eab308; font-size:12px;">${'★'.repeat(f.rating || 5)}${'☆'.repeat(5 - (f.rating || 5))}</span>
+                        </div>
+                        <p style="color:#e2e8f0; font-size:12px; line-height:1.5; margin:4px 0;">${f.comment}</p>
+                        <span style="color:#64748b; font-size:10px; font-family:monospace;">${(f.date || '').split(' ')[0]}</span>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch(err) {
+        console.error("Auto render error:", err);
+    }
+}
+
+// Initial triggers
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", renderAllFeedbacksNow);
+} else {
+    renderAllFeedbacksNow();
+}
+window.addEventListener("load", renderAllFeedbacksNow);
+setInterval(renderAllFeedbacksNow, 3000);
+</script>
+
+
+<script id="JARVIS_CORE_CYBER_FEEDBACK">
+let selectedFeedbackRating = 5;
+
+function selectStarRating(val) {
+    selectedFeedbackRating = val;
+    document.querySelectorAll('.star-rating-btn, [data-star]').forEach((el) => {
+        const starVal = parseInt(el.getAttribute('data-star') || 0);
+        el.style.color = (starVal <= val) ? '#eab308' : '#334155';
+    });
+    const bonusBadge = document.getElementById('feedbackRewardBonusBadge');
+    if (bonusBadge) {
+        bonusBadge.innerText = `+${val} DAYS ACCESS BONUS UNLOCKED`;
+    }
+}
+
+async function submitRealFeedback(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const modal = document.getElementById('realFeedbackModal') || document.getElementById('feedbackModal');
+    let comment = "";
+    let name = "Verified Operator";
+
+    const textareas = document.querySelectorAll('#realFeedbackModal textarea, #feedbackModal textarea, #feedbackCommentInput, textarea');
+    for (let ta of textareas) {
+        if (ta.offsetParent !== null && ta.value.trim()) {
+            comment = ta.value.trim();
+            break;
+        }
+    }
+
+    const nameInputs = document.querySelectorAll('#realFeedbackModal input[type="text"], #feedbackModal input[type="text"], #feedbackOperatorName');
+    for (let inp of nameInputs) {
+        if (inp.offsetParent !== null && inp.value.trim()) {
+            name = inp.value.trim();
+            break;
+        }
+    }
+
+    if (!comment) {
+        alert("Please provide telemetry report / review details.");
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/feedback/submit', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                operator_name: name,
+                name: name,
+                comment: comment,
+                rating: selectedFeedbackRating
+            })
+        });
+        const resData = await res.json();
+        if (resData.success) {
+            textareas.forEach(t => t.value = "");
+            if (modal) modal.style.display = 'none';
+            alert(`🎉 ${resData.message}`);
+            await syncRealFeedbackDisplays();
+        } else {
+            alert("Error: " + (resData.error || "Failed to submit"));
+        }
+    } catch(err) {
+        alert("Server communication error.");
+    }
+}
+
+async function syncRealFeedbackDisplays() {
+    try {
+        const res = await fetch('/api/feedback/list?t=' + Date.now());
+        const data = await res.json();
+        if (!data || !data.success) return;
+
+        // Sync Total Verified Feedbacks Count Everywhere
+        document.querySelectorAll('#totalFeedbackCount, [id*="feedbackCount"], .feedback-count, #reviewCountBadge').forEach(el => {
+            el.innerText = data.count || 0;
+        });
+
+        const targets = document.querySelectorAll(
+            '#liveFeedbackCardsGrid, #REAL_FEEDBACK_SECTION .grid, #userPanelFeedbackGrid, #feedbackList, #reviewsContainer, #downloadSectionReviews'
+        );
+
+        targets.forEach(box => {
+            const list = data.feedbacks || [];
+            if (list.length === 0) {
+                box.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:26px;color:#94a3b8;font-family:monospace;font-size:12px;background:rgba(15,23,42,0.6);border:1px dashed rgba(168,85,247,0.3);border-radius:14px;">NO OPERATOR REVIEWS YET // SUBMIT YOUR FEEDBACK TO UNLOCK EXTRA ACCESS DAYS</div>';
+            } else {
+                box.innerHTML = list.map(f => `
+                    <div style="background:rgba(15,23,42,0.9); border:1px solid rgba(168,85,247,0.35); box-shadow:0 0 15px rgba(168,85,247,0.1); border-radius:14px; padding:18px; margin-bottom:12px; display:flex; flex-direction:column; gap:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e;"></span>
+                                <span style="color:#c084fc; font-weight:bold; font-size:13px; font-family:monospace;">${f.name}</span>
+                            </div>
+                            <span style="background:rgba(234,179,8,0.15); color:#eab308; border:1px solid rgba(234,179,8,0.4); padding:2px 8px; border-radius:8px; font-size:11px; font-weight:bold; font-family:monospace;">
+                                +${f.reward_days || f.rating} DAYS REWARDED
+                            </span>
+                        </div>
+                        <div style="color:#eab308; font-size:13px;">${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)}</div>
+                        <p style="color:#e2e8f0; font-size:12.5px; line-height:1.5; margin:0;">${f.comment}</p>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                            <span style="color:#64748b; font-size:10px; font-family:monospace;">VERIFIED ENTRY // ${(f.date || '').split(' ')[0]}</span>
+                            <span style="color:#a855f7; font-size:10px; font-family:monospace;">STATUS: ACTIVE</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        });
+    } catch(err) {
+        console.error("Feedback auto-sync error:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    syncRealFeedbackDisplays();
+});
+setInterval(syncRealFeedbackDisplays, 3500);
+</script>
+
+
+
+
+</body>
+</html>
+<!-- SYNC -->

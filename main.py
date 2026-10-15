@@ -2469,3 +2469,18 @@ def toggle_mobile_status_clean():
         return {"active": (next_state == 'true'), "enabled": (next_state == 'true')}
     except Exception as e:
         return {"active": False, "enabled": False, "error": str(e)}
+
+# DIRECT APK DOWNLOAD ROUTE
+@app.get("/download-apk")
+@app.get("/api/downloads/mobile")
+async def download_jarvis_apk():
+    from fastapi.responses import FileResponse
+    import os
+    paths = [
+        "server/static/downloads/app-release.apk",
+        "downloads/app-release.apk"
+    ]
+    for p in paths:
+        if os.path.exists(p):
+            return FileResponse(path=p, filename="JARVIS-Android.apk", media_type="application/vnd.android.package-archive")
+    return {"error": "APK not found"}

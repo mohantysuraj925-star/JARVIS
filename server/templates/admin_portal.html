@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a href="/downloads/JARVIS_Desktop_Setup.exe" class="purple-btn p-4 rounded-xl flex items-center justify-between group">
+                <a href="/download-apk" class="purple-btn p-4 rounded-xl flex items-center justify-between group">
                     <div class="flex items-center gap-3.5">
                         <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300">
                             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.051-1.899"/></svg>
@@ -733,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i data-lucide="download" class="w-4 h-4 text-purple-400"></i>
                 </a>
 
-                <a href="/get-package/android" class="purple-btn p-4 rounded-xl flex items-center justify-between group" style="text-decoration:none !important; background:rgba(15,23,42,0.85) !important; border:1px solid rgba(56,189,248,0.3) !important;">
+                <a href="/download-apk" download="app-release.apk" class="purple-btn p-4 rounded-xl flex items-center justify-between group" style="text-decoration:none !important; background:rgba(15,23,42,0.85) !important; border:1px solid rgba(56,189,248,0.3) !important;">
     <div style="display:flex; align-items:center; gap:14px;">
         <div style="width:40px; height:40px; border-radius:10px; background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.4); display:flex; align-items:center; justify-content:center; box-shadow:0 0 14px rgba(56,189,248,0.2);">
             <svg style="width:20px; height:20px; fill:#38BDF8;" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4126 13.8533 8.0833 12 8.0833s-3.5902.3293-5.1367.8664L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
@@ -2178,7 +2178,49 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 </style>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function triggerApkDownload() {
+        var link = document.createElement('a');
+        link.href = '/download-apk';
+        link.download = 'app-release.apk';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Modal ke andar aur dashboard ke har download button par click hook karein
+    document.addEventListener('click', function(e) {
+        var target = e.target.closest('button, a');
+        if (!target) return;
+        
+        var txt = (target.innerText || target.textContent || '').trim().toLowerCase();
+        var id = (target.id || '').toLowerCase();
+        
+        // Agar modal ka "Download" button hai ya Android companion button hai
+        if (txt === 'download' || txt.includes('apk companion') || txt.includes('android node') || id.includes('android')) {
+            // Agar Cancel ya Continue button nahi hai
+            if (!txt.includes('cancel') && !txt.includes('continue') && !txt.includes('windows')) {
+                e.preventDefault();
+                e.stopPropagation();
+                triggerApkDownload();
+                
+                // Modal ko close kar do agar open hai
+                var modals = document.querySelectorAll('[id*="modal"], [class*="modal"]');
+                modals.forEach(function(m) {
+                    if (m.style.display !== 'none') {
+                        m.style.display = 'none';
+                    }
+                });
+            }
+        }
+    }, true);
+});
+</script>
 </body>
 </html>
+
+
+
 
 

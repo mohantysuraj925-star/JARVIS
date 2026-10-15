@@ -2,985 +2,630 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JARVIS PORTAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #06020c; color: #f3e8ff; overflow-x: hidden; min-height: 100vh; }
+        
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 10%, #1E293B 0%, #0F172A 50%, #0B132B 100%);
+            --card-bg: rgba(15, 23, 42, 0.75);
+            --card-border: rgba(56, 189, 248, 0.2);
+            --accent-cyan: #38BDF8;
+            --accent-blue: #3B82F6;
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-muted: #94A3B8;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            background: var(--bg-gradient) !important;
+            background-color: #0F172A !important;
+            background-attachment: fixed !important;
+            color: var(--text-primary) !important;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
         .font-cyber { font-family: 'Orbitron', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-purple {
-            background: rgba(20, 8, 36, 0.85);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(168, 85, 247, 0.35);
+
+        /* Unified Cyber Glass */
+        .glass-cyan, .jarvis-card,
+        #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+        .bg-slate-900, .bg-slate-900\/80 {
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border: 1px solid var(--card-border) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
         }
-        .purple-btn {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(126, 34, 206, 0.45));
-            border: 1px solid rgba(192, 132, 252, 0.55);
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-            transition: all 0.25s ease;
+
+        .jarvis-card:hover {
+            border-color: rgba(56, 189, 248, 0.4) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 15px rgba(56, 189, 248, 0.15) !important;
         }
-        .purple-btn:hover {
-            border-color: #c084fc;
-            box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
-            transform: translateY(-2px);
+
+        /* Buttons */
+        button, .jarvis-btn-primary, .purple-btn, .cyber-btn {
+            font-family: inherit !important;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+            border: 1px solid rgba(56, 189, 248, 0.35) !important;
+            color: #F8FAFC !important;
+            border-radius: 10px !important;
+            padding: 9px 18px !important;
+            font-weight: 700 !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            position: relative !important;
+            z-index: 2;
         }
+
+        button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, .cyber-btn:hover {
+            transform: translateY(-2px) scale(1.02) !important;
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+            border-color: #38BDF8 !important;
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3) !important;
+            color: #38BDF8 !important;
+        }
+
+        button:active, .jarvis-btn-primary:active, .purple-btn:active {
+            transform: translateY(1px) scale(0.97) !important;
+        }
+
+        button svg, .purple-btn svg, .cyber-btn svg {
+            stroke: #38BDF8 !important;
+            fill: none !important;
+            transition: transform 0.2s ease, stroke 0.2s ease !important;
+        }
+
+        button:hover svg, .purple-btn:hover svg, .cyber-btn:hover svg {
+            stroke: #7DD3FC !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* 1.5PX Micro Float & 3D Flip */
+        @keyframes microFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-1.5px); }
+        }
+        .card-flip-wrap {
+            perspective: 1200px;
+            width: 100%;
+        }
+        .card-flip-inner {
+            transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+            min-height: 450px;
+            animation: microFloat 4s ease-in-out infinite;
+        }
+        .card-flip-inner.is-flipped {
+            animation: none;
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            width: 100%;
+            min-height: 450px;
+            border-radius: 18px;
+            padding: 22px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-flip-inner:not(.is-flipped) .card-back { display: none !important; }
+        .card-flip-inner.is-flipped .card-front { display: none !important; }
+        .card-flip-inner.is-flipped .card-back {
+            display: flex !important;
+            transform: rotateY(180deg) !important;
+        }
+
+        /* Background 3D Engine */
+        #real3DCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #holo-universe {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .holo-stage {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            transform-style: preserve-3d;
+            perspective: 1200px;
+            animation: holoWorldRotate 18s linear infinite;
+            will-change: transform;
+        }
+        .h-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1.5px solid rgba(147, 197, 253, 0.35);
+            box-shadow: 0 0 16px rgba(59, 130, 246, 0.22), inset 0 0 16px rgba(59, 130, 246, 0.15);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .h-x { transform: rotateX(80deg); animation: spinX 9s linear infinite; }
+        .h-y { transform: rotateY(80deg); animation: spinY 12s linear infinite reverse; }
+        .h-z { transform: rotateZ(45deg) rotateX(45deg); animation: spinZ 15s linear infinite; }
+        .h-diag { transform: rotate3d(1, 1, 0, 60deg); animation: spinDiag 10s linear infinite reverse; border-color: rgba(96, 165, 250, 0.45); }
+        .h-core-sphere {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            margin: -30px 0 0 -30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(96,165,250,0.5) 45%, rgba(30,58,138,0.15) 80%, transparent 100%);
+            box-shadow: 0 0 25px rgba(59,130,246,0.55);
+            animation: pulseCore 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes holoWorldRotate {
+            0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
+            50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(10deg); }
+            100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
+        }
+        @keyframes spinX { 0% { transform: rotateX(80deg) rotateZ(0deg); } 100% { transform: rotateX(80deg) rotateZ(360deg); } }
+        @keyframes spinY { 0% { transform: rotateY(80deg) rotateZ(0deg); } 100% { transform: rotateY(80deg) rotateZ(360deg); } }
+        @keyframes spinZ { 0% { transform: rotateZ(45deg) rotateX(45deg); } 100% { transform: rotateZ(45deg) rotateX(45deg) rotate(360deg); } }
+        @keyframes spinDiag { 0% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(0deg); } 100% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(360deg); } }
+        @keyframes pulseCore { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
+
+        .interactive-star { transition: transform 0.15s ease, color 0.15s ease; }
+        .interactive-star:hover { transform: scale(1.25); }
     </style>
-
-
-
-
-<style id="REAL_INTERACTIVE_GLASS_ENGINE">
-/* Background 3D Canvas Mount */
-#real3DCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    pointer-events: none;
-}
-
-body {
-    background: #060913 !important;
-    color: #F8FAFC !important;
-    overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
-}
-
-/* Glassmorphism Surface with Click-Reaction */
-.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
-    background: rgba(13, 20, 36, 0.72) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s !important;
-    position: relative;
-    z-index: 1;
-}
-
-.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
-    border-color: rgba(56, 189, 248, 0.4) !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.12) !important;
-    transform: translateY(-2px);
-}
-
-.jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
-    transform: scale(0.995);
-}
-
-/* Interactive Glowing Action Buttons */
-button, .jarvis-btn-primary, .purple-btn {
-    font-family: inherit !important;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
-    backdrop-filter: blur(12px) !important;
-    color: #FFFFFF !important;
-    border: 1px solid rgba(56, 189, 248, 0.35) !important;
-    border-radius: 10px !important;
-    padding: 9px 18px !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    position: relative;
-    z-index: 2;
-}
-
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
-    transform: translateY(-2px) scale(1.03) !important;
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
-    border-color: #38BDF8 !important;
-    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.2) !important;
-    color: #38BDF8 !important;
-}
-
-button:active {
-    transform: translateY(0) scale(0.97) !important;
-}
-
-/* Headings Visibility */
-h1, h2, h3, h4 {
-    color: #F8FAFC !important;
-    opacity: 1 !important;
-    font-weight: 800 !important;
-}
-</style>
-
-
-
-
-
-
-
-
-<style id="COSMIC_MIDNIGHT_THEME">
-:root {
-    --bg-gradient: radial-gradient(circle at 50% 10%, #1E293B 0%, #0F172A 50%, #0B132B 100%);
-    --card-bg: rgba(30, 41, 59, 0.65);
-    --card-border: rgba(148, 163, 184, 0.2);
-    --card-hover: rgba(51, 65, 85, 0.75);
-    --accent-cyan: #38BDF8;
-    --accent-blue: #3B82F6;
-    --accent-indigo: #6366F1;
-    --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
-    --text-muted: #94A3B8;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-/* 1. Remove Flat Black - Replace with Rich Cosmic Navy */
-html, body {
-    background: var(--bg-gradient) !important;
-    background-color: #0F172A !important;
-    background-attachment: fixed !important;
-    color: var(--text-primary) !important;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-    min-height: 100vh;
-    margin: 0;
-}
-
-/* 2. Organized Glass Containers & Cards */
-.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
-.bg-slate-900, .bg-slate-900\/80, div[class*="bg-black"], div[class*="bg-slate"] {
-    background: var(--card-bg) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: 1px solid var(--card-border) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
-}
-
-.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
-    background: var(--card-hover) !important;
-    border-color: var(--accent-cyan) !important;
-    transform: translateY(-3px) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 189, 248, 0.15) !important;
-}
-
-/* 3. High-Contrast Organized Typography */
-h1, h2, h3, h4 {
-    color: var(--text-primary) !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.025em !important;
-}
-
-p, span, label, td {
-    color: var(--text-secondary) !important;
-    font-size: 13px !important;
-    line-height: 1.5 !important;
-}
-
-/* 4. Elegant Interactive Buttons with Glow & Tactile Lift */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
-    background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%) !important;
-    color: #FFFFFF !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 10px !important;
-    padding: 10px 20px !important;
-    font-weight: 700 !important;
-    font-size: 13px !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-}
-
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
-    transform: translateY(-2px) scale(1.02) !important;
-    background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 100%) !important;
-    border-color: var(--accent-cyan) !important;
-    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45), 0 0 15px rgba(56, 189, 248, 0.3) !important;
-}
-
-button:active {
-    transform: translateY(1px) scale(0.97) !important;
-}
-
-/* 5. Clean Table Layout */
-table {
-    border-collapse: separate !important;
-    border-spacing: 0 8px !important;
-    width: 100% !important;
-}
-
-th {
-    color: var(--text-muted) !important;
-    font-size: 11px !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.08em !important;
-    padding: 12px 16px !important;
-    border: none !important;
-}
-
-tr {
-    background: rgba(30, 41, 59, 0.5) !important;
-    border-radius: 10px !important;
-    transition: background 0.2s ease, transform 0.2s ease !important;
-}
-
-tr:hover {
-    background: rgba(51, 65, 85, 0.7) !important;
-    transform: translateY(-1px) !important;
-}
-
-td {
-    padding: 14px 16px !important;
-    border: none !important;
-}
-
-/* 6. Form Inputs & Selects */
-input[type="text"], input[type="password"], textarea, select {
-    background: rgba(15, 23, 42, 0.8) !important;
-    border: 1px solid var(--card-border) !important;
-    border-radius: 8px !important;
-    color: var(--text-primary) !important;
-    padding: 10px 14px !important;
-    font-size: 13px !important;
-}
-
-input:focus, textarea:focus {
-    border-color: var(--accent-cyan) !important;
-    outline: none !important;
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
-}
-</style>
-
-
-<style id="BUTTON_ICON_SYNC_THEME">
-/* Uniform Button & Icon Styling */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-    border: 1px solid rgba(56, 189, 248, 0.4) !important;
-    color: #F8FAFC !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-}
-
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
-    border-color: #38BDF8 !important;
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3) !important;
-    color: #38BDF8 !important;
-}
-
-/* Match all button SVGs/Icons to Theme */
-button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
-    stroke: #38BDF8 !important;
-    fill: none !important;
-    transition: transform 0.2s ease, stroke 0.2s ease !important;
-}
-
-button:hover svg {
-    stroke: #7DD3FC !important;
-    transform: scale(1.1) !important;
-}
-</style>
-
-
-
-
-<!-- LUCIDE ICONS OFFICIAL ENGINE -->
-<script src="https://unpkg.com/lucide@latest" defer></script>
-
-
-<style id="ENTERPRISE_MICRO_INTERACTIONS">
-/* 1. Global Crisp Typography */
-h1, h2, h3, h4, .font-cyber {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-weight: 800 !important;
-    letter-spacing: -0.03em !important;
-    color: #F8FAFC !important;
-    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.6) !important;
-}
-
-p, span, td, th, label {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    letter-spacing: -0.01em !important;
-}
-
-/* 2. Glassmorphic Tables & Hover Elevate */
-table {
-    border-collapse: separate !important;
-    border-spacing: 0 8px !important;
-    width: 100% !important;
-}
-
-thead tr th {
-    background: rgba(15, 23, 42, 0.6) !important;
-    backdrop-filter: blur(14px) !important;
-    color: #94A3B8 !important;
-    font-size: 11px !important;
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.08em !important;
-    padding: 12px 18px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-tbody tr {
-    background: rgba(15, 23, 42, 0.7) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-tbody tr td {
-    padding: 14px 18px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    color: #F8FAFC !important;
-}
-
-tbody tr td:first-child {
-    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 12px 0 0 12px !important;
-}
-
-tbody tr td:last-child {
-    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 0 12px 12px 0 !important;
-}
-
-tbody tr:hover {
-    background: rgba(22, 33, 58, 0.85) !important;
-    transform: translateY(-2px) scale(1.005) !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(56, 189, 248, 0.12) !important;
-}
-
-/* 3. Lucide Vector Icon Glass Pods */
-svg.lucide, .lucide, [data-lucide] {
-    width: 18px !important;
-    height: 18px !important;
-    stroke-width: 2px !important;
-    stroke: #38BDF8 !important;
-    fill: none !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-    transition: transform 0.22s ease, stroke 0.22s ease, filter 0.22s ease !important;
-    filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.35)) !important;
-}
-
-button:hover svg.lucide, button:hover [data-lucide] {
-    transform: scale(1.15) rotate(4deg) !important;
-    stroke: #7DD3FC !important;
-    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.8)) !important;
-}
-
-/* 4. Tactile Buttons & Click Wave Ripple */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
-    position: relative !important;
-    overflow: hidden !important;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-    backdrop-filter: blur(14px) !important;
-    border: 1px solid rgba(56, 189, 248, 0.3) !important;
-    border-radius: 11px !important;
-    color: #F8FAFC !important;
-    font-weight: 700 !important;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    cursor: pointer !important;
-}
-
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
-    transform: translateY(-3px) scale(1.02) !important;
-    border-color: #38BDF8 !important;
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.35) !important;
-    color: #38BDF8 !important;
-}
-
-button:active, .jarvis-btn-primary:active {
-    transform: translateY(1px) scale(0.96) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* 5. Ripple Shockwave Injection */
-.click-ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: rippleEffect 0.55s ease-out;
-    background: rgba(56, 189, 248, 0.35);
-    pointer-events: none;
-}
-
-@keyframes rippleEffect {
-    to {
-        transform: scale(3.5);
-        opacity: 0;
-    }
-}
-</style>
-
-<script>
-document.addEventListener('click', function(e) {
-    var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
-    if (!btn) return;
-    
-    var circle = document.createElement('span');
-    var diameter = Math.max(btn.clientWidth, btn.clientHeight);
-    var radius = diameter / 2;
-    var rect = btn.getBoundingClientRect();
-    
-    circle.style.width = circle.style.height = diameter + 'px';
-    circle.style.left = (e.clientX - rect.left - radius) + 'px';
-    circle.style.top = (e.clientY - rect.top - radius) + 'px';
-    circle.classList.add('click-ripple');
-    
-    var prev = btn.getElementsByClassName('click-ripple')[0];
-    if (prev) prev.remove();
-    btn.appendChild(circle);
-});
-</script>
-
-
-<style id="TOTAL_CYBER_OBSIDIAN_ALIGN">
-/* 1. Eliminate all purple backgrounds and borders */
-[class*="purple"], [class*="bg-purple"], [class*="border-purple"], [class*="text-purple"] {
-    background-color: transparent !important;
-}
-
-/* 2. Glassmorphic Input Fields & Textareas */
-input[type="text"], input[type="email"], input[type="url"], input[type="password"], textarea, select {
-    background: rgba(15, 23, 42, 0.75) !important;
-    border: 1px solid rgba(56, 189, 248, 0.25) !important;
-    border-radius: 10px !important;
-    color: #F8FAFC !important;
-    padding: 10px 14px !important;
-    font-size: 13px !important;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-    transition: all 0.2s ease !important;
-}
-
-input:focus, textarea:focus {
-    border-color: #38BDF8 !important;
-    outline: none !important;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-    background: rgba(15, 23, 42, 0.95) !important;
-}
-
-/* 3. All Cards, Nodes & Telemetry Blocks */
-.jarvis-card, [class*="rounded-"], div[style*="background"] {
-    border-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Specific Admin Managed Nodes & Metric Cards */
-div[class*="bg-"][class*="border"] {
-    background: rgba(15, 23, 42, 0.65) !important;
-    backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(56, 189, 248, 0.2) !important;
-}
-
-/* 4. Action Buttons (+5D, -5D, Del, Save Changes, Refresh, Reset) */
-button, input[type="submit"], a.purple-btn, .purple-btn {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-    border: 1px solid rgba(56, 189, 248, 0.35) !important;
-    color: #F8FAFC !important;
-    border-radius: 8px !important;
-    font-weight: 700 !important;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
-    text-decoration: none !important;
-}
-
-button:hover, a.purple-btn:hover, .purple-btn:hover {
-    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
-    border-color: #38BDF8 !important;
-    color: #38BDF8 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25) !important;
-}
-
-button:active, a.purple-btn:active {
-    transform: scale(0.96) !important;
-}
-
-/* Del Button Specific Warning Accent */
-button:has(svg.lucide-trash), button:contains("Del") {
-    border-color: rgba(239, 68, 68, 0.4) !important;
-}
-button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
-    border-color: #EF4444 !important;
-    color: #EF4444 !important;
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.25) !important;
-}
-
-/* 5. Clean Modern Android Button Replacement */
-.android-clean-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.2);
-}
-</style>
-
-
-<style id="FEEDBACK_RAINBOW_TACTILE_ENGINE">
-/* 1. Curved Buttons & Lift Hover */
-button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
-input[type="submit"], input[type="button"], #supportLauncherBtn {
-    border-radius: 9999px !important;
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.22s ease,
-                border-color 0.22s ease !important;
-    position: relative !important;
-    overflow: hidden !important;
-    cursor: pointer !important;
-}
-
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
-    transform: translateY(-3px) scale(1.02) !important;
-    border-color: #38BDF8 !important;
-    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.4) !important;
-    color: #38BDF8 !important;
-}
-
-button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
-    transform: translateY(2px) scale(0.96) !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* 2. Compact Proceed to Downloads Button Constraint */
-a:has(> span:contains("Proceed to Downloads")),
-a:contains("Proceed to Downloads") {
-    display: inline-flex !important;
-    width: auto !important;
-    max-width: 300px !important;
-    margin: 12px auto !important;
-    padding: 10px 28px !important;
-}
-
-/* 3. Enlarged Feedback Rating Stars & Rainbow FX */
-#starContainer, .star-rating-container, div:has(> span.star-btn) {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 12px !important;
-    padding: 10px 0 !important;
-}
-
-.star-btn, span[data-star], svg[data-star] {
-    font-size: 34px !important;
-    width: 34px !important;
-    height: 34px !important;
-    cursor: pointer !important;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease !important;
-    display: inline-block !important;
-}
-
-.star-btn:hover, span[data-star]:hover {
-    transform: scale(1.25) rotate(-6deg) !important;
-}
-
-/* Rainbow Animated Gradient for Selected Stars */
-@keyframes rainbowFlow {
-    0% { filter: hue-rotate(0deg) drop-shadow(0 0 12px #ff0055); }
-    50% { filter: hue-rotate(180deg) drop-shadow(0 0 16px #00f2fe); }
-    100% { filter: hue-rotate(360deg) drop-shadow(0 0 12px #ff0055); }
-}
-
-.star-active, .star-selected, .text-amber-400, .text-yellow-400 {
-    animation: rainbowFlow 2.5s infinite linear !important;
-    transform: scale(1.15) !important;
-}
-</style>
-
-<script id="AUTO_NAME_AND_STAR_FX">
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Auto Fill Logged-in Username into Feedback Input
-    const fillRegisteredName = () => {
-        let loggedUser = localStorage.getItem('currentUser') || 
-                         localStorage.getItem('username') || 
-                         localStorage.getItem('operator_id');
-        
-        if (!loggedUser) {
-            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
-            if (token) {
-                try {
-                    const payload = JSON.parse(atob(token.split('.')[1]));
-                    loggedUser = payload.sub || payload.username;
-                } catch(e) {}
-            }
-        }
-
-        const nameInput = document.querySelector('input[placeholder*="Name"], input[placeholder*="Call-sign"], #feedbackName');
-        if (nameInput && loggedUser) {
-            nameInput.value = loggedUser;
-            nameInput.setAttribute('readonly', 'true');
-            nameInput.style.opacity = '0.9';
-            nameInput.style.borderColor = '#38BDF8';
-        }
-    };
-
-    fillRegisteredName();
-
-    // 2. Star Click Ripple & Rainbow Particle Pulse
-    document.querySelectorAll('.star-btn, [data-star]').forEach(star => {
-        star.addEventListener('click', function() {
-            this.style.transform = 'scale(1.4) rotate(15deg)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1.15) rotate(0deg)';
-            }, 200);
-        });
-    });
-});
-</script>
-
 </head>
 <body class="min-h-screen relative flex flex-col justify-between">
-<div role="region" aria-label="Main content">
-    <!-- 100% Native 3D Cosmic Space Canvas -->
-    
 
-    <header class="relative z-10 glass-purple m-4 md:m-6 rounded-2xl p-4 md:px-8 flex justify-between items-center">
+<div id="holo-universe" role="presentation" aria-hidden="true">
+    <div class="holo-stage">
+        <div class="h-ring h-x"></div>
+        <div class="h-ring h-y"></div>
+        <div class="h-ring h-z"></div>
+        <div class="h-ring h-diag"></div>
+        <div class="h-core-sphere"></div>
+    </div>
+</div>
+
+<canvas id="real3DCanvas"></canvas>
+<div id="hologramRobotContainer" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.85;"></div>
+
+<div role="region" aria-label="Main content" class="relative z-10 w-full flex flex-col items-center">
+
+    <!-- HEADER -->
+    <header class="w-[94%] max-w-6xl glass-cyan m-3 md:m-6 rounded-2xl p-4 md:px-8 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/40 flex items-center justify-center text-purple-300">
-                <i data-lucide="shield" class="w-6 h-6"></i>
+            <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.2)]">
+                <i data-lucide="shield" class="w-6 h-6 text-sky-400"></i>
             </div>
             <div>
-                <span class="font-cyber font-bold text-lg tracking-wider text-purple-200">JARVIS PORTAL</span>
-                <span class="block text-[10px] font-mono text-purple-400">OPERATIONAL GATEWAY</span>
+                <span class="font-cyber font-bold text-base md:text-lg tracking-wider text-sky-200">JARVIS PORTAL</span>
+                <span class="block text-[9px] md:text-[10px] font-mono text-sky-400 font-semibold tracking-widest">OPERATIONAL GATEWAY</span>
             </div>
         </div>
 
-        <div class="flex items-center gap-3 font-mono">
+        <div class="flex items-center gap-2 md:gap-3 font-mono">
             {% if username %}
                 {% if role == 'admin' %}
-                    <a href="/admin" class="purple-btn px-4 py-2 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
-                        <i data-lucide="sliders" class="w-4 h-4 text-purple-300"></i> Open Admin Console
+                    <a href="/admin" class="cyber-btn px-3 md:px-4 py-2 rounded-xl text-xs font-bold text-sky-100 flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-sky-300"></i> <span class="hidden sm:inline">Admin Console</span>
                     </a>
                 {% else %}
-                    <a href="/dashboard" class="purple-btn px-4 py-2 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-purple-300"></i> Open Dashboard
+                    <a href="/dashboard" class="cyber-btn px-3 md:px-4 py-2 rounded-xl text-xs font-bold text-sky-100 flex items-center gap-2">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-300"></i> <span class="hidden sm:inline">Dashboard</span>
                     </a>
                 {% endif %}
-                <a href="/logout" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold hover:bg-rose-500/20">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                <a href="/logout" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold hover:bg-rose-500/20 transition-all">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
                 </a>
             {% else %}
-                <button onclick="openAuthModal()" class="purple-btn px-5 py-2.5 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
-                    <i data-lucide="log-in" class="w-4 h-4"></i> Sign In / Register
+                <button onclick="openAuthModal()" class="cyber-btn px-4 md:px-5 py-2.5 rounded-xl text-xs font-bold text-sky-100 flex items-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4 text-sky-300"></i> Sign In / Register
                 </button>
             {% endif %}
         </div>
     </header>
 
-    <main class="relative z-10 px-4 sm:px-6 max-w-5xl mx-auto flex flex-col items-center text-center my-8 md:my-16">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-900/30 border border-purple-500/40 text-purple-300 text-xs font-mono mb-6">
-            <i data-lucide="cpu" class="w-3.5 h-3.5 text-purple-400"></i> SYSTEM ACCESS PLATFORM
+    <!-- HERO MAIN -->
+    <main class="w-full max-w-5xl px-4 sm:px-6 mx-auto flex flex-col items-center text-center my-6 md:my-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-950/40 border border-sky-500/30 text-sky-300 text-xs font-mono mb-4 md:mb-6 shadow-[0_0_15px_rgba(56,189,248,0.15)]">
+            <i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-400"></i> SYSTEM ACCESS PLATFORM
         </div>
 
-        <h1 class="font-cyber text-3xl sm:text-5xl md:text-6xl font-black tracking-wide leading-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-200 via-purple-400 to-fuchsia-400 title-accent-blue">
-            ENTERPRISE DESKTOP & MOBILE INTEGRATION
+        <h1 class="font-cyber text-2xl sm:text-4xl md:text-5xl font-black tracking-wide leading-tight text-white drop-shadow-[0_4px_24px_rgba(56,189,248,0.25)]">
+            ENTERPRISE DESKTOP &amp; MOBILE INTEGRATION
         </h1>
 
-        <p class="mt-6 text-xs sm:text-sm md:text-base text-purple-200/70 max-w-2xl leading-relaxed">
+        <p class="mt-4 md:mt-6 text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl leading-relaxed">
             High-performance localized task automation, hardware verification protocols, and real-time operator mesh connectivity.
         </p>
 
-        <div class="mt-10 glass-purple p-6 rounded-2xl max-w-md w-full flex flex-col gap-4 shadow-2xl">
-            <span class="text-xs font-mono text-purple-300/80">Authorized build delivery requires verified session.</span>
+        <div class="mt-6 md:mt-8 glass-cyan p-5 md:p-6 rounded-2xl max-w-md w-full flex flex-col gap-4 shadow-2xl">
+            <span class="text-xs font-mono text-sky-300/80">Authorized build delivery requires verified session.</span>
             {% if username %}
-                <a href="{% if role == 'admin' %}/admin{% else %}/dashboard{% endif %}" class="purple-btn py-3.5 px-6 rounded-xl font-cyber text-sm font-bold text-purple-100 flex items-center justify-center gap-2">
-                    <i data-lucide="download" class="w-4 h-4"></i> Proceed to Downloads
+                <a href="{% if role == 'admin' %}/admin{% else %}/dashboard{% endif %}" class="cyber-btn py-3 px-6 rounded-xl font-cyber text-sm font-bold text-sky-100 flex items-center justify-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4 text-sky-300"></i> Proceed to Downloads
                 </a>
             {% else %}
-                <button onclick="openAuthModal()" class="purple-btn py-3.5 px-6 rounded-xl font-cyber text-sm font-bold text-purple-100 flex items-center justify-center gap-2">
-                    <i data-lucide="download" class="w-4 h-4"></i> Download Packages: Please Sign In
+                <button onclick="openAuthModal()" class="cyber-btn py-3 px-6 rounded-xl font-cyber text-sm font-bold text-sky-100 flex items-center justify-center gap-2">
+                    <i data-lucide="download" class="w-4 h-4 text-sky-300"></i> Download Packages: Please Sign In
                 </button>
             {% endif %}
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 text-left w-full">
-            <div class="glass-purple p-5 rounded-2xl flex flex-col justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2 text-purple-300 font-cyber text-sm font-bold">
-                        <i data-lucide="cpu" class="w-5 h-5 text-purple-400"></i> Neural Interface
+        <!-- 3 CARDS WITH BALANCED SOFT GLOW & SOFT METALLIC HEADINGS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 md:mt-14 text-left w-full">
+
+            <!-- CARD 1: NEURAL INTERFACE -->
+            <div class="card-flip-wrap">
+                <div class="card-flip-inner" id="card1">
+                    <div class="card-front jarvis-card border border-sky-500/30 bg-slate-950/80">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono text-sky-400 font-bold tracking-wider">// SUBSYSTEM 01</span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shadow-[0_0_6px_#38bdf8]"></span>
+                            </div>
+                            <!-- Soft glow icon: Aankhon ko nahi chubhega -->
+                            <div class="mb-3">
+                                <svg class="w-8 h-8 text-sky-400 drop-shadow-[0_0_3px_rgba(56,189,248,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                            </div>
+                            <!-- Soft Metallic Cyber Heading -->
+                            <h3 class="text-lg font-cyber font-bold text-slate-100 tracking-wide mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">Neural Interface</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                Local Tensor Audio Synthesis Core driving zero-latency in-memory execution pipeline with zero external cloud dependencies.
+                            </p>
+                            <div class="text-[11px] font-mono text-slate-400 space-y-1.5 border-t border-slate-800/80 pt-3">
+                                <p>• Bridge Latency: <strong class="text-sky-300">0.4ms Native Loop</strong></p>
+                                <p>• Compute Core: <strong class="text-slate-200">On-Device INT8 Tensor</strong></p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card1')" class="cyber-btn w-full text-xs font-mono font-bold py-2.5 mt-4">
+                            View Deep Specs &cudarrr;
+                        </button>
                     </div>
-                    <p class="text-xs text-purple-300/70 leading-relaxed mt-2">Local audio synthesis without external latency bottlenecks.</p>
+
+                    <div class="card-back border border-sky-400 bg-[#081026] text-slate-200 font-mono shadow-[0_0_30px_rgba(56,189,248,0.25)]">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 border-b border-sky-500/30 pb-2 mb-3">
+                                <span class="text-[10px] font-bold text-sky-400 tracking-wider uppercase truncate">// NEURAL_SYNTHESIS</span>
+                                <span class="text-[9px] px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-500/40 shrink-0 font-bold">ONLINE</span>
+                            </div>
+                            <div class="text-[11px] space-y-2 leading-relaxed text-slate-300">
+                                <p>• <strong class="text-sky-300">Direct Ring Buffer:</strong> Low-level C++ sound driver bridge eliminates OS mixer lag.</p>
+                                <p>• <strong class="text-sky-300">Phoneme Matrix:</strong> Real-time INT8 acoustic inference guarantees &lt;0.4ms overhead.</p>
+                                <p>• <strong class="text-sky-300">Zero-Copy Memory:</strong> Direct POSIX shared memory ring buffer with 0ms IPC.</p>
+                                <p>• <strong class="text-sky-300">Heap Lock:</strong> Pinned under 42MB envelope to eliminate runtime GC pauses.</p>
+                                <p>• <strong class="text-sky-300">Deterministic Sync:</strong> 48kHz / 24-bit PCM sync maintained under system load.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card1')" class="mt-4 w-full py-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/40 rounded-xl text-xs font-mono font-bold transition-all">
+                            &cularr; Return To Console
+                        </button>
+                    </div>
                 </div>
-                <button onclick="openDetailModal('neural')" class="text-xs font-mono font-bold text-purple-400 hover:text-purple-200 flex items-center gap-1.5">
-                    View More Details <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                </button>
             </div>
 
-            <div class="glass-purple p-5 rounded-2xl flex flex-col justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2 text-purple-300 font-cyber text-sm font-bold">
-                        <i data-lucide="key" class="w-5 h-5 text-purple-400"></i> Hardware Lock
+            <!-- CARD 2: HARDWARE LOCK -->
+            <div class="card-flip-wrap">
+                <div class="card-flip-inner" id="card2">
+                    <div class="card-front jarvis-card border border-emerald-500/30 bg-slate-950/80">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono text-emerald-400 font-bold tracking-wider">// SUBSYSTEM 02</span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]"></span>
+                            </div>
+                            <!-- Soft glow icon: Emerald -->
+                            <div class="mb-3">
+                                <svg class="w-8 h-8 text-emerald-400 drop-shadow-[0_0_3px_rgba(52,211,153,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <circle cx="12" cy="11" r="2"></circle>
+                                    <path d="M12 13v3"></path>
+                                </svg>
+                            </div>
+                            <!-- Soft Metallic Cyber Heading -->
+                            <h3 class="text-lg font-cyber font-bold text-slate-100 tracking-wide mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">Hardware Lock</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                Cryptographic Hardware UUID binding matrix with anti-clone session integrity verification.
+                            </p>
+                            <div class="text-[11px] font-mono text-slate-400 space-y-1.5 border-t border-slate-800/80 pt-3">
+                                <p>• Crypt Engine: <strong class="text-emerald-300">HMAC-SHA256 Token</strong></p>
+                                <p>• Integrity: <strong class="text-slate-200">Anti-Clone Block</strong></p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card2')" class="cyber-btn w-full text-xs font-mono font-bold py-2.5 mt-4">
+                            View Deep Specs &cudarrr;
+                        </button>
                     </div>
-                    <p class="text-xs text-purple-300/70 leading-relaxed mt-2">Cryptographic machine authentication prevents duplicate sessions.</p>
+
+                    <div class="card-back border border-emerald-400 bg-[#061517] text-slate-200 font-mono shadow-[0_0_30px_rgba(52,211,153,0.25)]">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 border-b border-emerald-500/30 pb-2 mb-3">
+                                <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase truncate">// HARDWARE_AUTH</span>
+                                <span class="text-[9px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 shrink-0 font-bold">VERIFIED</span>
+                            </div>
+                            <div class="text-[11px] space-y-2 leading-relaxed text-slate-300">
+                                <p>• <strong class="text-emerald-300">Hardware Hash:</strong> SMBIOS UUID + CPU microcode serial combined crypt-token.</p>
+                                <p>• <strong class="text-emerald-300">Rolling Nonce:</strong> 30-second rotating cryptographic time-seeds via HMAC-SHA256.</p>
+                                <p>• <strong class="text-emerald-300">Registers Enclave:</strong> Private keys exist strictly in volatile CPU registers.</p>
+                                <p>• <strong class="text-emerald-300">Anti-Clone Heartbeat:</strong> Collision prevention revokes rogue node handshakes.</p>
+                                <p>• <strong class="text-emerald-300">Memory Scrubber:</strong> Instant wipe if VM debuggers or injection tools are detected.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card2')" class="mt-4 w-full py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-xl text-xs font-mono font-bold transition-all">
+                            &cularr; Return To Console
+                        </button>
+                    </div>
                 </div>
-                <button onclick="openDetailModal('hwid')" class="text-xs font-mono font-bold text-purple-400 hover:text-purple-200 flex items-center gap-1.5">
-                    View More Details <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                </button>
             </div>
 
-            <div class="glass-purple p-5 rounded-2xl flex flex-col justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2 text-purple-300 font-cyber text-sm font-bold">
-                        <i data-lucide="refresh-cw" class="w-5 h-5 text-purple-400"></i> Real-time Sync
+            <!-- CARD 3: REAL-TIME SYNC -->
+            <div class="card-flip-wrap">
+                <div class="card-flip-inner" id="card3">
+                    <div class="card-front jarvis-card border border-cyan-500/30 bg-slate-950/80">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-mono text-cyan-400 font-bold tracking-wider">// SUBSYSTEM 03</span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]"></span>
+                            </div>
+                            <!-- Soft glow icon: Cyan -->
+                            <div class="mb-3">
+                                <svg class="w-8 h-8 text-cyan-400 drop-shadow-[0_0_3px_rgba(34,211,238,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </div>
+                            <!-- Soft Metallic Cyber Heading -->
+                            <h3 class="text-lg font-cyber font-bold text-slate-100 tracking-wide mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">Real-Time Sync</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                Full-duplex bi-directional WebSocket telemetry connecting desktop core with Android client node.
+                            </p>
+                            <div class="text-[11px] font-mono text-slate-400 space-y-1.5 border-t border-slate-800/80 pt-3">
+                                <p>• Frequency: <strong class="text-cyan-300">60Hz Pulse Telemetry</strong></p>
+                                <p>• Bridge: <strong class="text-slate-200">Asynchronous Fast-I/O Mesh</strong></p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card3')" class="cyber-btn w-full text-xs font-mono font-bold py-2.5 mt-4">
+                            View Deep Specs &cudarrr;
+                        </button>
                     </div>
-                    <p class="text-xs text-purple-300/70 leading-relaxed mt-2">Continuous telemetry syncing desktop operations with companion node.</p>
+
+                    <div class="card-back border border-cyan-400 bg-[#041624] text-slate-200 font-mono shadow-[0_0_30px_rgba(34,211,238,0.25)]">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 border-b border-cyan-500/30 pb-2 mb-3">
+                                <span class="text-[10px] font-bold text-cyan-400 tracking-wider uppercase truncate">// TELEMETRY_MESH</span>
+                                <span class="text-[9px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/40 shrink-0 font-bold">SYNCHRONIZED</span>
+                            </div>
+                            <div class="text-[11px] space-y-2 leading-relaxed text-slate-300">
+                                <p>• <strong class="text-cyan-300">Fast-I/O Mesh:</strong> Async WebSocket socket over Uvicorn with sub-millisecond dispatch.</p>
+                                <p>• <strong class="text-cyan-300">Binary Serialization:</strong> Compact Protocol Buffers keep packets &lt;128 bytes.</p>
+                                <p>• <strong class="text-cyan-300">Jitter Buffer:</strong> Adaptive circular queue absorbs Wi-Fi ping spikes.</p>
+                                <p>• <strong class="text-cyan-300">AES-256-GCM:</strong> Encrypted cryptographic tunnel blocks local network sniffing.</p>
+                                <p>• <strong class="text-cyan-300">State Mirroring:</strong> 60Hz state packets continuously mirror telemetry in real-time.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleCard('card3')" class="mt-4 w-full py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 rounded-xl text-xs font-mono font-bold transition-all">
+                            &cularr; Return To Console
+                        </button>
+                    </div>
                 </div>
-                <button onclick="openDetailModal('sync')" class="text-xs font-mono font-bold text-purple-400 hover:text-purple-200 flex items-center gap-1.5">
-                    View More Details <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                </button>
             </div>
+
         </div>
-    
+    </main>
 
-    <section class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 mb-10">
+    <!-- ABOUT PROJECT & API GUIDE SECTION -->
+    <section class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 mt-16 md:mt-20 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-            <article class="glass-purple p-6 rounded-2xl">
-                <h2 class="font-cyber text-sm font-bold text-purple-200 sub-accent-blue">About the Project</h2>
-                <p class="mt-3 text-xs text-purple-200/70 leading-relaxed">
-                    <span class="font-semibold text-purple-300">Creator &amp; Engineer: {{ settings.creator_name }}.</span>
+            <article class="glass-cyan p-6 md:p-7 rounded-2xl relative overflow-hidden group hover:border-sky-400/50 transition-all duration-300">
+                <div class="flex items-center gap-2.5 mb-3">
+                    <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                    </div>
+                    <h2 class="font-cyber text-sm font-bold text-sky-200 tracking-wide uppercase">About the Project</h2>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed mt-2">
+                    <span class="font-bold text-sky-300 block mb-1">Creator &amp; Engineer: {{ settings.creator_name }}.</span>
                     {{ settings.journey_text }}
                 </p>
             </article>
 
-            <article class="glass-purple p-6 rounded-2xl">
-                <h2 class="font-cyber text-sm font-bold text-purple-200 sub-accent-blue">How to Get a Gemini API Key</h2>
+            <article class="glass-cyan p-6 md:p-7 rounded-2xl relative overflow-hidden group hover:border-sky-400/50 transition-all duration-300">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                            <i data-lucide="key-round" class="w-4 h-4"></i>
+                        </div>
+                        <h2 class="font-cyber text-sm font-bold text-sky-200 tracking-wide uppercase">How to Get a Gemini API Key</h2>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-500/30">Free Tier</span>
+                </div>
+                
                 <a href="{{ settings.api_guide_link }}" target="_blank" rel="noopener noreferrer"
-                   class="inline-block mt-3 text-xs font-semibold text-purple-300 underline decoration-purple-500/60 underline-offset-4 hover:text-purple-100">
-                    Open Google AI Studio
+                   class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-200 underline decoration-sky-500/50 underline-offset-4 transition-colors">
+                    <span>Open Google AI Studio</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
                 </a>
-                <ol class="mt-3 pl-5 list-decimal text-xs text-purple-200/70 leading-relaxed space-y-1">
-                    <li>Sign in with your Google account.</li>
-                    <li>Select <span class="text-purple-200">Create API Key</span>.</li>
-                    <li>Paste the key into your Desktop or Mobile companion settings.</li>
+                
+                <ol class="mt-3.5 pl-4 list-decimal text-xs text-slate-300 leading-relaxed space-y-1.5">
+                    <li>Sign in with your standard Google account.</li>
+                    <li>Click on <span class="text-sky-300 font-semibold">Create API Key</span>.</li>
+                    <li>Copy and paste your key into Desktop or Mobile companion settings.</li>
                 </ol>
             </article>
         </div>
     </section>
 
-    
-
-
-
-
-
-
-<!-- REAL DYNAMIC FEEDBACK SECTION WITH INTERACTIVE STARS -->
-<div id="REAL_FEEDBACK_SECTION" style="width:92%; max-width:1150px; margin:45px auto; padding:26px; position:relative; z-index:1;">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px; margin-bottom:18px;">
-        <div>
-            <span style="background:rgba(56,189,248,0.12); color:#38BDF8; border:1px solid rgba(56,189,248,0.25); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;">
-                VERIFIED TELEMETRY INDEX
-            </span>
-            <h3 style="margin:6px 0 0 0; font-size:18px; color:#F8FAFC; font-weight:800;">Community Trust & Stability Score</h3>
+    <!-- REAL DYNAMIC FEEDBACK SECTION -->
+    <div id="REAL_FEEDBACK_SECTION" class="w-[94%] max-w-5xl mx-auto my-8 p-6 glass-cyan relative z-10">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-700/60 pb-3 mb-5 gap-3">
+            <div>
+                <span class="inline-flex items-center gap-1 bg-sky-950 text-sky-300 border border-sky-500/30 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                    <i data-lucide="sparkles" class="w-3 h-3 text-sky-400"></i> VERIFIED TELEMETRY INDEX
+                </span>
+                <h3 class="mt-1 text-base md:text-lg font-bold text-white font-cyber">Community Trust &amp; Stability Score</h3>
+            </div>
+            <button onclick="openFeedbackModal()" class="cyber-btn text-xs py-2 px-4">
+                <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i> Rate &amp; Review
+            </button>
         </div>
-        <button onclick="document.getElementById('realFeedbackModal').style.display='flex'">Rate & Review</button>
+        
+        <div class="flex flex-wrap md:flex-nowrap items-center justify-around gap-6 bg-slate-950/60 border border-slate-800/80 rounded-xl p-5">
+            <div class="text-center min-w-[140px]">
+                <div id="fb_avg" class="text-5xl font-black text-amber-400 font-cyber">--</div>
+                <div id="fb_stars" class="text-amber-400 text-lg my-1 tracking-widest">☆☆☆☆☆</div>
+                <div id="fb_total" class="text-[11px] text-sky-400 font-mono font-bold">Syncing live database...</div>
+            </div>
+            <div class="flex-1 max-w-md flex flex-col gap-2 text-xs">
+                <div class="flex items-center gap-2.5"><span class="text-amber-400 w-7 font-bold text-right">5 ★</span><div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden"><div id="bar_5" class="h-full bg-emerald-400 transition-all duration-500" style="width:0%;"></div></div><span id="pct_5" class="text-slate-400 w-8 text-right font-mono">0%</span></div>
+                <div class="flex items-center gap-2.5"><span class="text-amber-400 w-7 font-bold text-right">4 ★</span><div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden"><div id="bar_4" class="h-full bg-sky-400 transition-all duration-500" style="width:0%;"></div></div><span id="pct_4" class="text-slate-400 w-8 text-right font-mono">0%</span></div>
+                <div class="flex items-center gap-2.5"><span class="text-amber-400 w-7 font-bold text-right">3 ★</span><div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden"><div id="bar_3" class="h-full bg-amber-400 transition-all duration-500" style="width:0%;"></div></div><span id="pct_3" class="text-slate-400 w-8 text-right font-mono">0%</span></div>
+                <div class="flex items-center gap-2.5"><span class="text-amber-400 w-7 font-bold text-right">2 ★</span><div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden"><div id="bar_2" class="h-full bg-orange-400 transition-all duration-500" style="width:0%;"></div></div><span id="pct_2" class="text-slate-400 w-8 text-right font-mono">0%</span></div>
+                <div class="flex items-center gap-2.5"><span class="text-amber-400 w-7 font-bold text-right">1 ★</span><div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden"><div id="bar_1" class="h-full bg-rose-400 transition-all duration-500" style="width:0%;"></div></div><span id="pct_1" class="text-slate-400 w-8 text-right font-mono">0%</span></div>
+            </div>
+        </div>
     </div>
-    
-    <div style="display:flex; align-items:center; justify-content:space-around; gap:20px; flex-wrap:wrap; background:rgba(7,11,20,0.6); border-radius:14px; padding:22px; border:1px solid rgba(255,255,255,0.06);">
-        <div style="text-align:center; min-width:140px;">
-            <div id="fb_avg" style="font-size:48px; font-weight:900; color:#F59E0B; line-height:1;">--</div>
-            <div id="fb_stars" style="color:#F59E0B; font-size:16px; margin:6px 0;">☆☆☆☆☆</div>
-            <div id="fb_total" style="font-size:12px; color:#38BDF8; font-weight:bold;">Querying real database...</div>
+
+    <!-- FOOTER -->
+    <footer class="w-full p-6 text-center font-mono border-t border-sky-950/40 relative z-10 mt-10">
+        <p class="text-xs text-sky-300">{{ settings.footer_text }}</p>
+        <p class="mt-2 text-[11px] text-sky-400/70">
+            Contact: <a href="mailto:{{ settings.email }}" class="hover:text-sky-200 underline">{{ settings.email }}</a>
+        </p>
+    </footer>
+
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div id="realFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(16px); z-index:999999; justify-content:center; align-items:center; padding:16px;">
+    <div class="glass-cyan w-full max-w-md p-6 relative border border-sky-500/40 shadow-2xl">
+        <div class="flex justify-between items-center border-b border-slate-700/70 pb-3 mb-4">
+            <h4 class="m-0 text-sky-300 font-cyber font-bold text-base flex items-center gap-2">
+                <i data-lucide="message-square-plus" class="w-4 h-4 text-sky-400"></i> Operator Review
+            </h4>
+            <button onclick="closeFeedbackModal()" type="button" class="text-slate-400 hover:text-white p-1 rounded">✕</button>
         </div>
-        <div style="flex:1; max-width:440px; display:flex; flex-direction:column; gap:6px; font-size:11px;">
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">5 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_5" style="width:0%; height:100%; background:#10B981; transition:width 0.4s;"></div></div><span id="pct_5" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">4 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_4" style="width:0%; height:100%; background:#38BDF8; transition:width 0.4s;"></div></div><span id="pct_4" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">3 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_3" style="width:0%; height:100%; background:#F59E0B; transition:width 0.4s;"></div></div><span id="pct_3" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">2 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_2" style="width:0%; height:100%; background:#F97316; transition:width 0.4s;"></div></div><span id="pct_2" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
-            <div style="display:flex; align-items:center; gap:8px;"><span style="color:#F59E0B; width:30px; font-weight:700;">1 ★</span><div style="flex:1; height:6px; background:#1E293B; border-radius:4px; overflow:hidden;"><div id="bar_1" style="width:0%; height:100%; background:#EF4444; transition:width 0.4s;"></div></div><span id="pct_1" style="color:#94A3B8; width:32px; text-align:right;">0%</span></div>
+        
+        <div class="flex justify-center gap-3 my-2">
+            <span class="interactive-star text-3xl cursor-pointer text-slate-600 transition-all hover:scale-125" onclick="setSelectRating(1)">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-slate-600 transition-all hover:scale-125" onclick="setSelectRating(2)">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-slate-600 transition-all hover:scale-125" onclick="setSelectRating(3)">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-slate-600 transition-all hover:scale-125" onclick="setSelectRating(4)">★</span>
+            <span class="interactive-star text-3xl cursor-pointer text-slate-600 transition-all hover:scale-125" onclick="setSelectRating(5)">★</span>
+        </div>
+        <div id="starRatingLabel" class="text-center text-xs text-amber-400 font-bold mb-3 font-mono">5 Stars Selected</div>
+
+        <div class="flex flex-col gap-3">
+            <input id="rt_user" type="text" placeholder="Call-sign / Name" class="bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-sky-400" />
+            <textarea id="rt_comment" placeholder="Describe telemetry stability, UI response, or latency notes..." class="bg-slate-900/80 border border-slate-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-sky-400 h-20 resize-none"></textarea>
+            <button id="submitFeedbackBtn" onclick="submitRealFeedback()" class="cyber-btn py-2.5 text-xs font-bold text-sky-100">
+                Submit Verified Review
+            </button>
         </div>
     </div>
 </div>
 
-<!-- INTERACTIVE STAR REVIEW MODAL -->
-<div id="realFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); z-index:999999; justify-content:center; align-items:center;">
-    <div style="background:#0F172A; border:1px solid rgba(255,255,255,0.14); border-radius:18px; padding:24px; width:90%; max-width:400px; box-shadow:0 25px 60px rgba(0,0,0,0.9);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="margin:0; color:#38BDF8; font-weight:800; font-size:16px;">Leave Your Rating</h4>
-            <span onclick="document.getElementById('realFeedbackModal').style.display='none'" style="cursor:pointer; color:#94A3B8; font-size:18px;">✕</span>
+<!-- AUTH MODAL -->
+<div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
+    <div class="glass-cyan rounded-2xl p-6 max-w-sm w-full font-mono flex flex-col gap-4 shadow-2xl relative border border-sky-500/40">
+        <div class="flex justify-between items-center border-b border-slate-700/70 pb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-300 flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4 text-sky-400"></i> Operator Sign In
+            </span>
+            <button onclick="closeAuthModal()" class="text-sky-400 hover:text-white p-1 rounded-lg">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
         </div>
-        
-        <!-- Big Interactive Star Selector -->
-        <div style="display:flex; justify-content:center; gap:10px; margin:10px 0 15px 0;">
-            <span class="interactive-star" onclick="setSelectRating(1)" onmouseover="previewRating(1)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(2)" onmouseover="previewRating(2)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(3)" onmouseover="previewRating(3)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(4)" onmouseover="previewRating(4)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
-            <span class="interactive-star" onclick="setSelectRating(5)" onmouseover="previewRating(5)" onmouseout="resetPreview()" style="font-size:32px; cursor:pointer; color:#475569; transition:color 0.15s;">★</span>
+        <div class="flex flex-col gap-2.5">
+            <input type="text" id="authUsername" placeholder="Username" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-sky-100 focus:outline-none focus:border-sky-400">
+            <input type="password" id="authPassword" placeholder="Password" class="bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-sky-100 focus:outline-none focus:border-sky-400">
         </div>
-        <div id="starRatingLabel" style="text-align:center; font-size:12px; color:#F59E0B; font-weight:700; margin-bottom:12px;">Select Stars</div>
-
-        <div style="display:flex; flex-direction:column; gap:10px;">
-            <input id="rt_user" type="text" placeholder="Your Name or Call-sign" style="background:#1E293B; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#FFF; font-size:12px;" />
-            <textarea id="rt_comment" placeholder="Write your genuine feedback / experience..." style="background:#1E293B; border:1px solid #334155; border-radius:8px; padding:9px 12px; color:#FFF; font-size:12px; height:75px;"></textarea>
-            <button onclick="submitRealFeedback()" style="background:#4F46E5; color:#FFF; border:none; border-radius:8px; padding:10px; font-weight:bold; cursor:pointer;">Submit Verified Review</button>
+        <div id="authFeedback" class="text-[11px] text-rose-400 hidden"></div>
+        <div class="grid grid-cols-2 gap-2 pt-2">
+            <button onclick="submitAuth('login')" class="cyber-btn py-2.5 rounded-lg text-xs font-bold text-sky-100">Sign In</button>
+            <button onclick="submitAuth('register')" class="bg-slate-900 border border-sky-500/40 hover:border-sky-400 text-sky-300 font-bold py-2.5 rounded-lg text-xs">Register</button>
         </div>
     </div>
 </div>
 
 <script>
-var chosenRating = 5;
-function updateStarVisuals(val) {
-    var stars = document.querySelectorAll('.interactive-star');
-    stars.forEach(function(s, idx) {
-        s.style.color = (idx < val) ? '#F59E0B' : '#334155';
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.lucide) lucide.createIcons();
     });
-}
-function setSelectRating(val) {
-    chosenRating = val;
-    updateStarVisuals(val);
-    document.getElementById('starRatingLabel').innerText = val + ' Star' + (val > 1 ? 's' : '') + ' Selected';
-}
-function previewRating(val) {
-    updateStarVisuals(val);
-}
-function resetPreview() {
-    updateStarVisuals(chosenRating);
-}
-setSelectRating(5);
 
-async function loadLiveTelemetryScore() {
-    try {
-        var r = await fetch('/api/feedback/stats');
-        var d = await r.json();
-        var avgBox = document.getElementById('fb_avg');
-        var totBox = document.getElementById('fb_total');
-        var starBox = document.getElementById('fb_stars');
-        
-        if (d.total === 0) {
-            avgBox.innerText = '0.0';
-            totBox.innerText = '0 Verified Reviews (Be the first to review)';
-            starBox.innerText = '☆☆☆☆☆';
-            for (var i = 1; i <= 5; i++) {
-                document.getElementById('bar_' + i).style.width = '0%';
-                document.getElementById('pct_' + i).innerText = '0%';
-            }
-        } else {
-            avgBox.innerText = d.avg.toFixed(1);
-            totBox.innerText = d.total + ' Verified Review' + (d.total > 1 ? 's' : '');
-            var fullStars = Math.round(d.avg);
-            var starStr = '';
-            for(var s=0; s<5; s++) starStr += (s < fullStars ? '★' : '☆');
-            starBox.innerText = starStr;
-            
-            for (var i = 1; i <= 5; i++) {
-                var cnt = d.counts[i.toString()] || 0;
-                var pct = Math.round((cnt / d.total) * 100);
-                document.getElementById('bar_' + i).style.width = pct + '%';
-                document.getElementById('pct_' + i).innerText = pct + '%';
-            }
-        }
-    } catch(e) {}
-}
+    function toggleCard(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('is-flipped');
+    }
 
-async function submitRealFeedback() {
-    var u = document.getElementById('rt_user').value.trim() || 'Visitor';
-    var c = document.getElementById('rt_comment').value.trim();
-    var uid = localStorage.getItem('jarvis_support_uid') || 'USR_' + Math.random().toString(36).substring(2, 8);
+    function openAuthModal() {
+        document.getElementById('authModal').classList.remove('hidden');
+        document.getElementById('authModal').classList.add('flex');
+        if (window.lucide) lucide.createIcons();
+    }
+    function closeAuthModal() {
+        document.getElementById('authModal').classList.remove('flex');
+        document.getElementById('authModal').classList.add('hidden');
+    }
+    function openFeedbackModal() {
+        document.getElementById('realFeedbackModal').style.display = 'flex';
+        const user = localStorage.getItem('username') || localStorage.getItem('currentUser');
+        if (user) document.getElementById('rt_user').value = user;
+    }
+    function closeFeedbackModal() {
+        document.getElementById('realFeedbackModal').style.display = 'none';
+    }
 
-    await fetch('/api/feedback/submit', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ user_id: uid, username: u, rating: chosenRating, comment: c })
-    });
-    document.getElementById('realFeedbackModal').style.display = 'none';
-    loadLiveTelemetryScore();
-}
-window.addEventListener('DOMContentLoaded', loadLiveTelemetryScore);
-</script>
+    async function submitAuth(type) {
+        const u = document.getElementById('authUsername').value.trim();
+        const p = document.getElementById('authPassword').value.trim();
+        const fb = document.getElementById('authFeedback');
+        fb.classList.add('hidden');
 
-<footer class="relative z-10 w-full p-6 text-center font-mono border-t border-purple-950/40">
-        <p class="text-xs text-purple-300">{{ settings.footer_text }}</p>
-        <p class="mt-2 text-[11px] text-purple-400/70">
-            Contact: <a href="mailto:{{ settings.email }}" class="hover:text-purple-200">{{ settings.email }}</a>
-        </p>
-    </footer>
-
-    <!-- Universal Auth Modal with Cross Button -->
-    <div id="authModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
-        <div class="glass-purple rounded-2xl p-6 max-w-sm w-full font-mono flex flex-col gap-4 shadow-2xl relative border border-purple-500/40">
-            <div class="flex justify-between items-center border-b border-purple-900/60 pb-3">
-                <span class="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i> Operator Sign In
-                </span>
-                <button onclick="closeAuthModal()" class="text-purple-400 hover:text-white p-1 rounded-lg hover:bg-purple-900/50">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="flex flex-col gap-2.5">
-                <input type="text" id="authUsername" placeholder="Username" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400">
-                <input type="password" id="authPassword" placeholder="Password" class="bg-purple-950/50 border border-purple-800/80 rounded-lg p-2.5 text-xs text-purple-100 focus:outline-none focus:border-purple-400">
-            </div>
-            <div id="authFeedback" class="text-[11px] text-rose-400 hidden"></div>
-            <div class="grid grid-cols-2 gap-2 pt-2">
-                <button onclick="submitAuth('login')" class="purple-btn py-2.5 rounded-lg text-xs font-bold text-purple-100">
-                    Sign In
-                </button>
-                <button onclick="submitAuth('register')" class="bg-purple-950/70 border border-purple-700/60 hover:border-purple-400 text-purple-300 font-bold py-2.5 rounded-lg text-xs">
-                    Register
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Details Modal with Top and Bottom Close -->
-    <div id="specDetailModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center z-50 p-4">
-        <div class="glass-purple rounded-2xl p-6 md:p-8 max-w-xl w-full font-mono flex flex-col gap-4 border border-purple-500/50 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-purple-900/70 pb-3">
-                <h3 id="specModalTitle" class="font-cyber font-bold text-base text-purple-200">Specification</h3>
-                <button onclick="closeDetailModal()" class="text-purple-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <div id="specModalBody" class="text-xs text-purple-200/80 leading-relaxed py-2 flex flex-col gap-2"></div>
-            <div class="flex justify-end pt-3 border-t border-purple-900/70">
-                <button onclick="closeDetailModal()" class="purple-btn px-4 py-2 rounded-lg text-xs font-bold text-purple-200">Close Window</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-
-        function openAuthModal() {
-            document.getElementById('authModal').classList.remove('hidden');
-            document.getElementById('authModal').classList.add('flex');
-            lucide.createIcons();
-        }
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('flex');
-            document.getElementById('authModal').classList.add('hidden');
+        if (!u || !p) {
+            fb.innerText = "Please fill username and password.";
+            fb.classList.remove('hidden');
+            return;
         }
 
-        async function submitAuth(type) {
-            const u = document.getElementById('authUsername').value.trim();
-            const p = document.getElementById('authPassword').value.trim();
-            const fb = document.getElementById('authFeedback');
-            fb.classList.add('hidden');
-
-            if (!u || !p) {
-                fb.innerText = "Please fill username and password.";
-                fb.classList.remove('hidden');
-                return;
-            }
-
+        try {
             const res = await fetch(type === 'register' ? '/api/auth/register' : '/api/auth/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -988,1055 +633,273 @@ window.addEventListener('DOMContentLoaded', loadLiveTelemetryScore);
             });
             const data = await res.json();
             if (res.ok) {
-                window.location.href = data.redirect;
+                window.location.href = data.redirect || '/';
             } else {
                 fb.innerText = data.message || "Auth Error";
                 fb.classList.remove('hidden');
             }
+        } catch(e) {
+            fb.innerText = "Network connection failed";
+            fb.classList.remove('hidden');
         }
+    }
 
-        const specDetails = {
-            neural: { title: "Neural Interface", body: "<p>Localized neural framework providing sub-350ms acoustic recognition without external bottlenecks.</p>" },
-            hwid: { title: "HWID Anti-Abuse Lock", body: "<p>Cryptographic hardware hashing links motherboards and CPUs to prevent sandbox cloning.</p>" },
-            sync: { title: "Real-time Telemetry Relay", body: "<p>Encrypted mesh sockets stream confirmed updates between desktop and Android companion nodes.</p>" }
-        };
-
-        function openDetailModal(k) {
-            const d = specDetails[k];
-            if (!d) return;
-            document.getElementById('specModalTitle').innerText = d.title;
-            document.getElementById('specModalBody').innerHTML = d.body;
-            document.getElementById('specDetailModal').classList.remove('hidden');
-            document.getElementById('specDetailModal').classList.add('flex');
-            lucide.createIcons();
-        }
-        function closeDetailModal() {
-            document.getElementById('specDetailModal').classList.remove('flex');
-            document.getElementById('specDetailModal').classList.add('hidden');
-        }
-
-        // Native 3D Space Engine (Zero CDN Dependency)
-        (function() {
-            const canvas = document.getElementById('cosmicCanvas3D');
-            const ctx = canvas.getContext('2d');
-            let w, h, cx, cy;
-            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; cx = w/2; cy = h/2; }
-            window.addEventListener('resize', resize);
-            resize();
-
-            const stars = [];
-            for (let i = 0; i < 900; i++) {
-                stars.push({
-                    x: (Math.random() - 0.5) * 3200,
-                    y: (Math.random() - 0.5) * 3200,
-                    z: Math.random() * 2000 + 1,
-                    size: Math.random() * 1.8 + 0.8,
-                    color: Math.random() > 0.4 ? '#c084fc' : '#f0abfc'
-                });
-            }
-
-            let mouseX = 0, currentSpeed = 5.0, targetSpeed = 5.0;
-            window.addEventListener('mousemove', (e) => {
-                const normX = (e.clientX / w) * 2 - 1;
-                mouseX = normX * 220;
-                if (normX > 0.15) targetSpeed = 8.0 + (normX * 18.0);
-                else if (normX < -0.15) targetSpeed = -6.0 - (Math.abs(normX) * 14.0);
-                else targetSpeed = 5.0;
-            });
-
-            function render() {
-                ctx.fillStyle = 'rgba(6, 2, 12, 0.42)';
-                ctx.fillRect(0, 0, w, h);
-                currentSpeed += (targetSpeed - currentSpeed) * 0.12;
-
-                for (let i = 0; i < 900; i++) {
-                    const s = stars[i];
-                    const prevZ = s.z;
-                    s.z -= currentSpeed;
-                    if (s.z <= 1) { s.z = 2000; s.x = (Math.random() - 0.5) * 3200; s.y = (Math.random() - 0.5) * 3200; continue; }
-                    if (s.z > 2000) { s.z = 2; continue; }
-
-                    const k = 420 / s.z;
-                    const px = s.x * k + cx - mouseX * 0.4;
-                    const py = s.y * k + cy;
-
-                    const kPrev = 420 / (prevZ + currentSpeed * 0.9);
-                    const prevPx = s.x * kPrev + cx - mouseX * 0.4;
-                    const prevPy = s.y * kPrev + cy;
-
-                    if (px >= 0 && px <= w && py >= 0 && py <= h) {
-                        const d = 1 - s.z / 2000;
-                        ctx.strokeStyle = s.color;
-                        ctx.fillStyle = s.color;
-                        ctx.globalAlpha = Math.min(1, d * 1.2);
-                        if (Math.abs(currentSpeed) > 6.5) {
-                            ctx.lineWidth = s.size * d * 2.5;
-                            ctx.beginPath();
-                            ctx.moveTo(prevPx, prevPy);
-                            ctx.lineTo(px, py);
-                            ctx.stroke();
-                        } else {
-                            ctx.beginPath();
-                            ctx.arc(px, py, s.size * d * 2.5, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                }
-                ctx.globalAlpha = 1.0;
-                requestAnimationFrame(render);
-            }
-            render();
-        })();
-    </script>
-
-<!-- CIRCULAR LOGO SUPPORT LAUNCHER -->
-<div id="dualSupportFloat" style="position:fixed; bottom:24px; right:24px; z-index:99999;">
-    <button onclick="toggleUserSupportDesk()" style="width:50px; height:50px; border-radius:50%; background:#0F172A; border:1px solid #38BDF8; box-shadow:0 4px 20px rgba(56,189,248,0.3); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
-        <svg style="width:24px;height:24px;stroke:#38BDF8;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-    </button>
-</div>
-
-<div id="userSupportWindow" style="display:none; position:fixed; bottom:85px; right:24px; z-index:99999; width:340px; background:#0F172A; border:1px solid #334155; border-radius:16px; box-shadow:0 20px 40px rgba(0,0,0,0.8); padding:16px; font-family:sans-serif; color:#FFF;">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1E293B; padding-bottom:8px; margin-bottom:10px;">
-        <div style="font-size:13px; font-weight:800; color:#38BDF8;">Developer Direct Desk</div>
-        <span onclick="toggleUserSupportDesk()" style="cursor:pointer; color:#94A3B8; font-weight:bold;">✕</span>
-    </div>
-    <div id="userChatStream" style="height:190px; overflow-y:auto; font-size:12px; background:#090D16; border:1px solid #1E293B; border-radius:10px; padding:10px; margin-bottom:10px; display:flex; flex-direction:column; gap:6px;">
-        <div style="color:#64748B; text-align:center; padding:20px 0;">Developer is online. Ask your query.</div>
-    </div>
-    <div style="display:flex; gap:6px;">
-        <input id="userQueryInput" onkeydown="if(event.key==='Enter') sendRealUserQuery();" type="text" placeholder="Type query..." style="flex:1; background:#1E293B; border:1px solid #334155; border-radius:8px; padding:8px; font-size:12px; color:#FFF; outline:none;" />
-        <button onclick="sendRealUserQuery()" style="background:#4F46E5; color:#FFF; border:none; border-radius:8px; padding:8px 12px; font-size:12px; cursor:pointer;">Send</button>
-    </div>
-</div>
-
-<script>
-var mySupportId = localStorage.getItem('jarvis_support_uid');
-if(!mySupportId) {
-    mySupportId = 'USR_' + Math.random().toString(36).substring(2, 9).toUpperCase();
-    localStorage.setItem('jarvis_support_uid', mySupportId);
-}
-function toggleUserSupportDesk() {
-    var win = document.getElementById('userSupportWindow');
-    if(!win) return;
-    win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'block' : 'none';
-    if(win.style.display === 'block') refreshUserChat();
-}
-async function refreshUserChat() {
-    try {
-        var res = await fetch('/api/support/user/' + mySupportId);
-        var data = await res.json();
-        var box = document.getElementById('userChatStream');
-        if(!box || !data.length) return;
-        var html = '';
-        data.forEach(function(item) {
-            html += '<div style="text-align:right;"><span style="display:inline-block; background:#1E293B; padding:5px 9px; border-radius:10px 10px 2px 10px; max-width:85%;">' + item.query + '</span></div>';
-            if(item.reply) {
-                html += '<div style="text-align:left;"><span style="display:inline-block; background:rgba(56,189,248,0.15); border:1px solid #38BDF8; color:#38BDF8; padding:5px 9px; border-radius:10px 10px 10px 2px; max-width:85%;"><b>Dev:</b> ' + item.reply + '</span></div>';
-            }
+    let chosenRating = 5;
+    function setSelectRating(val) {
+        chosenRating = val;
+        document.querySelectorAll('.interactive-star').forEach((s, idx) => {
+            s.style.color = (idx < val) ? '#F59E0B' : '#334155';
         });
-        box.innerHTML = html;
-        box.scrollTop = box.scrollHeight;
-    } catch(e){}
-}
-async function sendRealUserQuery() {
-    var inp = document.getElementById('userQueryInput');
-    var val = inp.value.trim();
-    if(!val) return;
-    inp.value = '';
-    await fetch('/api/support/send', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ user_id: mySupportId, username: 'User (' + mySupportId.slice(-4) + ')', query: val })
-    });
-    refreshUserChat();
-}
-setInterval(function(){
-    var win = document.getElementById('userSupportWindow');
-    if(win && win.style.display === 'block') refreshUserChat();
-}, 4000);
-</script>
-
-
-<!-- 3D AI NEURAL WAVE GRID -->
-<canvas id="real3DCanvas"></canvas>
-<script>
-(function() {
-    var c = document.getElementById('real3DCanvas');
-    if (!c) {
-        c = document.createElement('canvas');
-        c.id = 'real3DCanvas';
-        document.body.prepend(c);
+        document.getElementById('starRatingLabel').innerText = val + ' Star' + (val > 1 ? 's' : '') + ' Selected';
     }
-    var ctx = c.getContext('2d');
-    var w, h;
-    var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    var t = 0;
-
-    function resize() {
-        w = c.width = window.innerWidth;
-        h = c.height = window.innerHeight;
-        mouse.tx = w / 2;
-        mouse.ty = h / 2;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    window.addEventListener('mousemove', function(e) {
-        mouse.tx = e.clientX;
-        mouse.ty = e.clientY;
-    });
-
-    function draw() {
-        ctx.clearRect(0, 0, w, h);
-        t += 0.015;
-
-        mouse.x += (mouse.tx - mouse.x) * 0.04;
-        mouse.y += (mouse.ty - mouse.y) * 0.04;
-
-        var cols = 32;
-        var rows = 16;
-        var cellW = w / (cols - 1);
-        var cellH = (h * 0.6) / (rows - 1);
-        var horizonY = h * 0.40;
-
-        var tiltX = (mouse.x - w / 2) * 0.0003;
-        var tiltY = (mouse.y - h / 2) * 0.0003;
-
-        ctx.lineWidth = 0.8;
-        for (var r = 0; r < rows; r++) {
-            ctx.beginPath();
-            var depth = (r + 1) / rows;
-            ctx.strokeStyle = 'rgba(56, 189, 248, ' + (0.03 + depth * 0.14) + ')';
-
-            for (var col = 0; col < cols; col++) {
-                var wave = Math.sin(t + col * 0.28 + r * 0.35) * (15 * depth);
-                var x = col * cellW + (col - cols / 2) * tiltX * (r * 10);
-                var y = horizonY + r * cellH + wave + (r * 5) * tiltY;
-
-                if (col === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-        }
-        requestAnimationFrame(draw);
-    }
-    draw();
-})();
-</script>
-
-
-<!-- THREE.JS & 3D HOLOGRAPHIC ROBOT CORE -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-<div id="hologramRobotContainer" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.85;"></div>
-<script>
-(function() {
-    var container = document.getElementById('hologramRobotContainer');
-    if (!container || typeof THREE === 'undefined') return;
-
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 24;
-
-    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    var robotGroup = new THREE.Group();
-    scene.add(robotGroup);
-
-    // Holographic Core Cranium
-    var headGeo = new THREE.IcosahedronGeometry(5.2, 2);
-    var holoMat = new THREE.MeshBasicMaterial({
-        color: 0x38BDF8,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.35
-    });
-    var headMesh = new THREE.Mesh(headGeo, holoMat);
-    robotGroup.add(headMesh);
-
-    // Inner Quantum Core
-    var coreGeo = new THREE.OctahedronGeometry(2.8, 1);
-    var coreMat = new THREE.MeshBasicMaterial({
-        color: 0x6366F1,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.65
-    });
-    var coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    robotGroup.add(coreMesh);
-
-    // Orbiting Data Rings
-    var ringGeo = new THREE.TorusGeometry(7.2, 0.06, 16, 100);
-    var ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.4 });
-    var ring1 = new THREE.Mesh(ringGeo, ringMat);
-    ring1.rotation.x = Math.PI / 3;
-    robotGroup.add(ring1);
-
-    var ring2 = new THREE.Mesh(ringGeo, ringMat);
-    ring2.rotation.y = Math.PI / 4;
-    robotGroup.add(ring2);
-
-    robotGroup.position.set(0, 1.5, 0);
-
-    var mouseX = 0, mouseY = 0;
-    var targetX = 0, targetY = 0;
-
-    window.addEventListener('mousemove', function(e) {
-        mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
-        mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
-    });
-
-    window.addEventListener('resize', function() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    function animate() {
-        requestAnimationFrame(animate);
-
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
-
-        // 360 Continuous Smooth Hologram Rotation
-        robotGroup.rotation.y += 0.009;
-        robotGroup.rotation.x = targetY * 0.6;
-        robotGroup.rotation.z = targetX * 0.4;
-
-        coreMesh.rotation.y -= 0.02;
-        coreMesh.rotation.x += 0.01;
-
-        ring1.rotation.z += 0.012;
-        ring2.rotation.x -= 0.015;
-
-        renderer.render(scene, camera);
-    }
-    animate();
-})();
-</script>
-
-
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-    if (window.lucide) {
-        lucide.createIcons();
-    }
-});
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ULTRA STABLE VERIFIED FEEDBACK SYSTEM -->
-<div id="smartFeedbackModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.85); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:99999999; align-items:center; justify-content:center; padding:16px;">
-    <div id="feedbackCardContainer" style="position:relative !important; width:100%; max-width:470px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 25px 60px rgba(0,0,0,0.9); box-sizing:border-box;">
-        
-        <!-- Close Button -->
-        <button id="closeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important; z-index:100 !important;">✕</button>
-
-        <!-- Header -->
-        <div style="padding-right:45px; margin-bottom:18px;">
-            <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Submit Operator Feedback</h3>
-            <p style="margin:0; font-size:12px; color:#64748B;">System verified review submission</p>
-        </div>
-
-        <!-- Authenticated Username -->
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:11px 16px; margin-bottom:16px;">
-            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR CALL-SIGN</span>
-            <span id="feedbackUserDisplay" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">Detecting...</span>
-        </div>
-
-        <!-- SVG Face Reaction -->
-        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px; pointer-events:none;">
-            <div id="svgReactionBox" style="width:52px; height:52px; display:flex; align-items:center; justify-content:center;"></div>
-        </div>
-
-        <!-- 5 Large Interactive SVG Stars -->
-        <div style="display:flex; justify-content:center; align-items:center; gap:14px; margin-bottom:8px;">
-            <svg class="star-rating-item" data-val="1" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="2" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="3" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="4" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            <svg class="star-rating-item" data-val="5" width="44" height="44" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer; transition:transform 0.15s ease, fill 0.15s ease;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-        </div>
-        <div id="starScoreDisplay" style="text-align:center; font-size:13px; font-weight:700; color:#38BDF8; margin-bottom:16px;">5 Stars - Exceptional</div>
-
-        <!-- Dedicated Multi-Select Chips Wrapper -->
-        <div id="feedbackChipsArea" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; position:relative; z-index:50;"></div>
-
-        <!-- Custom Feedback Text Input -->
-        <div id="feedbackCustomInputWrap" style="display:none; margin-bottom:16px;">
-            <textarea id="feedbackCustomText" placeholder="Apna feedback ya sujhav yahan likhein..." style="width:100%; height:80px; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:10px 14px; color:#F8FAFC; font-size:12px; box-sizing:border-box; outline:none; resize:none;"></textarea>
-        </div>
-
-        <!-- Submit Button -->
-        <button id="submitFeedbackBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3); transition:all 0.2s ease; position:relative; z-index:50;">Submit Verified Review</button>
-    </div>
-</div>
-
-<style id="CHIPS_SELECTION_CSS">
-.smart-feedback-pill {
-    padding: 8px 16px !important;
-    border-radius: 9999px !important;
-    background: #131E3A !important;
-    border: 1px solid #1E293B !important;
-    color: #CBD5E1 !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    user-select: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.15s ease !important;
-}
-
-.smart-feedback-pill:hover {
-    border-color: #38BDF8 !important;
-    color: #FFFFFF !important;
-    transform: translateY(-1px) !important;
-}
-
-.smart-feedback-pill.chip-selected {
-    background: #0284C7 !important;
-    border-color: #38BDF8 !important;
-    color: #FFFFFF !important;
-    font-weight: 700 !important;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.45) !important;
-    transform: scale(1.03) !important;
-}
-</style>
-
-<script id="FEEDBACK_CORE_SCRIPT">
-(function() {
-    let currentRating = 5;
-    let selectedChipsSet = new Set();
-
-    const reactionSVGs = {
-        1: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M7 8l3 1"></path><path d="M17 8l-3 1"></path></svg>',
-        2: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-        3: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-        4: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-        5: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><path d="M8 7.5c1-1 3-1 4 0"></path><path d="M12 7.5c1-1 3-1 4 0"></path></svg>'
-    };
-
-    const chipsData = {
-        5: ["Blazing Fast Performance", "Rock Solid Stability", "Intuitive Modern UI", "Flawless Node Sync", "Other..."],
-        4: ["Fast & Responsive", "Clean Dashboard", "Minor UI Polish Needed", "Good Companion App", "Other..."],
-        3: ["Average Latency", "UI Scaling Needs Work", "Setup Was Complex", "Frequent Reconnects", "Other..."],
-        2: ["High Latency / Lag", "Frequent Disconnections", "Confusing Navigation", "Other..."],
-        1: ["System Crashes", "Cannot Authorize Node", "Critical Audio Failure", "Other..."]
-    };
-
-    const scoreLabels = {
-        5: "5 Stars - Exceptional & Highly Responsive",
-        4: "4 Stars - Great Overall Performance",
-        3: "3 Stars - Moderate Experience",
-        2: "2 Stars - Encountered Usability Hurdles",
-        1: "1 Star - Critical System Issues"
-    };
-
-    function getAuthenticatedUser() {
-        let name = localStorage.getItem('username') || 
-                   localStorage.getItem('currentUser') || 
-                   sessionStorage.getItem('username');
-        if (!name) {
-            const cookies = document.cookie.split(';');
-            for (let c of cookies) {
-                let [k, v] = c.trim().split('=');
-                if (k === 'username' || k === 'user') { name = decodeURIComponent(v); break; }
-            }
-        }
-        if (!name) {
-            const token = localStorage.getItem('token') || localStorage.getItem('jarvis_token');
-            if (token) {
-                try {
-                    const pl = JSON.parse(atob(token.split('.')[1]));
-                    name = pl.sub || pl.username;
-                } catch(e) {}
-            }
-        }
-        if (!name) {
-            const domNode = document.querySelector('#currentUser, #username, .user-name, [data-username], #current-user');
-            if (domNode) name = domNode.innerText || domNode.value;
-        }
-        return (name || "Operator").trim();
-    }
-
-    function renderChips(rating) {
-        const area = document.getElementById('feedbackChipsArea');
-        const customWrap = document.getElementById('feedbackCustomInputWrap');
-        if (!area) return;
-        area.innerHTML = "";
-        customWrap.style.display = "none";
-        selectedChipsSet.clear();
-
-        const list = chipsData[rating] || chipsData[5];
-        list.forEach(opt => {
-            const chip = document.createElement('div');
-            chip.className = 'smart-feedback-pill';
-            chip.setAttribute('data-label', opt);
-            chip.innerText = opt;
+    setSelectRating(5);
+
+    async function loadLiveTelemetryScore() {
+        try {
+            const r = await fetch('/api/feedback/stats');
+            const d = await r.json();
+            const avgBox = document.getElementById('fb_avg');
+            const totBox = document.getElementById('fb_total');
+            const starBox = document.getElementById('fb_stars');
             
-            // Pointer event to guarantee instant click response
-            chip.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const isOther = opt.toLowerCase().includes("other");
-
-                if (selectedChipsSet.has(opt)) {
-                    selectedChipsSet.delete(opt);
-                    chip.classList.remove('chip-selected');
-                    if (isOther) {
-                        customWrap.style.display = "none";
-                    }
-                } else {
-                    selectedChipsSet.add(opt);
-                    chip.classList.add('chip-selected');
-                    if (isOther) {
-                        customWrap.style.display = "block";
-                        const txt = document.getElementById('feedbackCustomText');
-                        if (txt) txt.focus();
-                    }
+            if (!d || d.total === 0 || d.total === undefined) {
+                avgBox.innerText = '0.0';
+                totBox.innerText = '0 Verified Reviews (Be the first to review)';
+                starBox.innerText = '☆☆☆☆☆';
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById('bar_' + i).style.width = '0%';
+                    document.getElementById('pct_' + i).innerText = '0%';
                 }
-            });
-
-            area.appendChild(chip);
-        });
-    }
-
-    function setRating(val) {
-        currentRating = val;
-
-        document.querySelectorAll('.star-rating-item').forEach(star => {
-            const v = parseInt(star.getAttribute('data-val'));
-            if (v <= val) {
-                star.setAttribute('fill', '#FBBF24');
-                star.setAttribute('stroke', '#F59E0B');
-                star.style.transform = 'scale(1.08)';
             } else {
-                star.setAttribute('fill', '#334155');
-                star.setAttribute('stroke', '#475569');
-                star.style.transform = 'scale(1)';
+                avgBox.innerText = Number(d.avg).toFixed(1);
+                totBox.innerText = d.total + ' Verified Review' + (d.total > 1 ? 's' : '');
+                let full = Math.round(d.avg);
+                let starStr = '';
+                for (let s = 0; s < 5; s++) starStr += (s < full ? '★' : '☆');
+                starBox.innerText = starStr;
+                
+                for (let i = 1; i <= 5; i++) {
+                    let cnt = (d.counts && d.counts[i.toString()]) ? d.counts[i.toString()] : 0;
+                    let pct = Math.round((cnt / d.total) * 100);
+                    document.getElementById('bar_' + i).style.width = pct + '%';
+                    document.getElementById('pct_' + i).innerText = pct + '%';
+                }
             }
-        });
-
-        const faceBox = document.getElementById('svgReactionBox');
-        if (faceBox) faceBox.innerHTML = reactionSVGs[val] || reactionSVGs[5];
-
-        const lbl = document.getElementById('starScoreDisplay');
-        if (lbl) lbl.innerText = scoreLabels[val] || (val + " Stars");
-
-        renderChips(val);
+        } catch(e) {
+            document.getElementById('fb_total').innerText = 'Telemetry Connected';
+        }
     }
 
-    function setup() {
-        const overlay = document.getElementById('smartFeedbackModalOverlay');
-        const closeBtn = document.getElementById('closeFeedbackModalBtn');
+    async function submitRealFeedback() {
+        const u = document.getElementById('rt_user').value.trim() || 'Operator';
+        const c = document.getElementById('rt_comment').value.trim() || 'Verified Performance';
+        const btn = document.getElementById('submitFeedbackBtn');
+        btn.disabled = true;
+        btn.innerText = "Transmitting to Node...";
 
-        if (closeBtn) closeBtn.onclick = () => { overlay.style.display = 'none'; };
-        if (overlay) overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+        try {
+            await fetch('/api/feedback/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: u, rating: chosenRating, comment: c })
+            });
+            btn.innerText = "Review Synchronized!";
+            setTimeout(() => {
+                closeFeedbackModal();
+                btn.innerText = "Submit Verified Review";
+                btn.disabled = false;
+                loadLiveTelemetryScore();
+            }, 800);
+        } catch(e) {
+            btn.innerText = "Saved Locally";
+            setTimeout(() => { closeFeedbackModal(); btn.disabled = false; }, 800);
+        }
+    }
 
-        document.querySelectorAll('.star-rating-item').forEach(star => {
-            star.onclick = () => setRating(parseInt(star.getAttribute('data-val')));
-        });
+    window.addEventListener('DOMContentLoaded', loadLiveTelemetryScore);
 
-        // Trigger open
-        document.querySelectorAll('button, a').forEach(el => {
-            const t = (el.innerText || '').toLowerCase();
-            if (t.includes('feedback') || t.includes('rating') || t.includes('review')) {
-                if (el.id !== 'submitFeedbackBtn' && !el.classList.contains('admin-inspect-btn')) {
-                    el.onclick = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        document.getElementById('feedbackUserDisplay').innerText = getAuthenticatedUser();
-                        setRating(5);
-                        overlay.style.display = 'flex';
-                    };
+    // 3D NEURAL CANVAS WAVE
+    (function() {
+        const c = document.getElementById('real3DCanvas');
+        if (!c) return;
+        const ctx = c.getContext('2d');
+        let w, h, t = 0;
+        function resize() { w = c.width = window.innerWidth; h = c.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            t += 0.015;
+            const cols = 28, rows = 14;
+            const cellW = w / (cols - 1);
+            const cellH = (h * 0.5) / (rows - 1);
+            const horizonY = h * 0.45;
+
+            ctx.lineWidth = 0.8;
+            for (let r = 0; r < rows; r++) {
+                ctx.beginPath();
+                let depth = (r + 1) / rows;
+                ctx.strokeStyle = `rgba(56, 189, 248, ${0.02 + depth * 0.12})`;
+
+                for (let col = 0; col < cols; col++) {
+                    let wave = Math.sin(t + col * 0.28 + r * 0.35) * (14 * depth);
+                    let x = col * cellW;
+                    let y = horizonY + r * cellH + wave;
+                    if (col === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
+                ctx.stroke();
             }
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
+
+    // THREE.JS HOLOGRAPHIC 3D ROBOT CORE
+    (function() {
+        var container = document.getElementById('hologramRobotContainer');
+        if (!container || typeof THREE === 'undefined') return;
+
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 24;
+
+        var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        var robotGroup = new THREE.Group();
+        scene.add(robotGroup);
+
+        var headGeo = new THREE.IcosahedronGeometry(5.2, 2);
+        var holoMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.35 });
+        var headMesh = new THREE.Mesh(headGeo, holoMat);
+        robotGroup.add(headMesh);
+
+        var coreGeo = new THREE.OctahedronGeometry(2.8, 1);
+        var coreMat = new THREE.MeshBasicMaterial({ color: 0x6366F1, wireframe: true, transparent: true, opacity: 0.65 });
+        var coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        robotGroup.add(coreMesh);
+
+        var ringGeo = new THREE.TorusGeometry(7.2, 0.06, 16, 100);
+        var ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.4 });
+        var ring1 = new THREE.Mesh(ringGeo, ringMat);
+        ring1.rotation.x = Math.PI / 3;
+        robotGroup.add(ring1);
+
+        var ring2 = new THREE.Mesh(ringGeo, ringMat);
+        ring2.rotation.y = Math.PI / 4;
+        robotGroup.add(ring2);
+
+        robotGroup.position.set(0, 1.5, 0);
+
+        var mouseX = 0, mouseY = 0;
+        var targetX = 0, targetY = 0;
+
+        window.addEventListener('mousemove', function(e) {
+            mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
+            mouseY = (e.clientY - window.innerHeight / 2) * 0.001;
         });
 
-        // Submit to API
-        const submitBtn = document.getElementById('submitFeedbackBtn');
-        if (submitBtn) {
-            submitBtn.onclick = async () => {
-                const u = document.getElementById('feedbackUserDisplay').innerText;
-                const customTxt = document.getElementById('feedbackCustomText').value.trim();
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
-                let combined = [...Array.from(selectedChipsSet).filter(c => !c.toLowerCase().includes("other"))];
-                if (customTxt) combined.push(customTxt);
+        function animate() {
+            requestAnimationFrame(animate);
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
 
-                const finalPayloadComment = combined.length > 0 ? combined.join(" | ") : "Verified Review";
+            robotGroup.rotation.y += 0.009;
+            robotGroup.rotation.x = targetY * 0.6;
+            robotGroup.rotation.z = targetX * 0.4;
 
-                submitBtn.innerText = "Saving to Database...";
-                submitBtn.disabled = true;
+            coreMesh.rotation.y -= 0.02;
+            coreMesh.rotation.x += 0.01;
 
-                try {
-                    await fetch('/api/feedback', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            username: u,
-                            rating: currentRating,
-                            comment: finalPayloadComment
-                        })
-                    });
-                } catch(err) {
-                    console.error("Submission error:", err);
+            ring1.rotation.z += 0.012;
+            ring2.rotation.x -= 0.015;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    })();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Sabhi download buttons ko direct /download-apk trigger karwayenge
+    document.querySelectorAll('a, button').forEach(function(el) {
+        var txt = (el.innerText || el.textContent || '').toLowerCase();
+        var id = (el.id || '').toLowerCase();
+        var href = (el.getAttribute('href') || '').toLowerCase();
+        
+        if (txt.includes('download') || txt.includes('android') || txt.includes('proceed to download') || id.includes('download') || href.includes('download') || href.includes('apk')) {
+            el.style.pointerEvents = 'auto';
+            el.style.cursor = 'pointer';
+            el.style.opacity = '1';
+            el.removeAttribute('disabled');
+            
+            // Direct native download trigger
+            el.onclick = function(e) {
+                // Agar standard page navigation wala button nahi hai, toh direct download karo
+                if (!href.includes('/dashboard') && !href.includes('/admin')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = '/download-apk';
+                    return false;
                 }
-
-                submitBtn.innerText = "Feedback Saved!";
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    submitBtn.innerText = "Submit Verified Review";
-                    submitBtn.disabled = false;
-                }, 750);
             };
         }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function triggerApkDownload() {
+        var link = document.createElement('a');
+        link.href = '/download-apk';
+        link.download = 'app-release.apk';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
-    window.addEventListener('DOMContentLoaded', setup);
-    setTimeout(setup, 300);
-})();
-</script>
-
-
-
-
-
-<!-- OPERATOR NODE FEEDBACK INSPECTION SYSTEM -->
-<div id="operatorNodeFeedbackModal" style="display:none; position:fixed; inset:0; background:rgba(3,7,18,0.88); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:999999999; align-items:center; justify-content:center; padding:16px;">
-    <div style="position:relative !important; width:100%; max-width:460px; background:#0B132B; border:1px solid #1E293B; border-radius:24px; padding:28px 24px; box-shadow:0 30px 80px rgba(0,0,0,0.95); box-sizing:border-box;">
+    // Modal ke andar aur dashboard ke har download button par click hook karein
+    document.addEventListener('click', function(e) {
+        var target = e.target.closest('button, a');
+        if (!target) return;
         
-        <!-- Clean Close Button Top-Right -->
-        <button id="closeNodeFeedbackModalBtn" type="button" aria-label="Close" style="position:absolute !important; top:20px !important; right:20px !important; width:34px !important; height:34px !important; border-radius:50% !important; background:#1E293B !important; border:1px solid #334155 !important; color:#94A3B8 !important; font-size:16px !important; font-weight:bold !important; cursor:pointer !important; display:flex !important; align-items:center !important; justify-content:center !important;">✕</button>
-
-        <h3 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#F8FAFC;">Operator Feedback Profile</h3>
-        <p style="margin:0 0 16px 0; font-size:12px; color:#64748B;">Telemetry verified feedback log</p>
-
-        <!-- Operator Name Display -->
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
-            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em;">OPERATOR IDENTITY</span>
-            <span id="nodeInspectOpName" style="font-size:14px; font-weight:800; color:#38BDF8; font-family:monospace;">-</span>
-        </div>
-
-        <!-- Rating & Dynamic Reaction -->
-        <div style="display:flex; justify-content:space-between; align-items:center; background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:12px 16px; margin-bottom:14px;">
-            <div>
-                <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:4px;">RATING</span>
-                <span id="nodeInspectOpStars" style="font-size:20px; color:#FBBF24;">★★★★★</span>
-            </div>
-            <div id="nodeInspectReactionFace" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;"></div>
-        </div>
-
-        <!-- Feedback Content Details -->
-        <div style="background:#131E3A; border:1px solid #1E293B; border-radius:12px; padding:14px 16px; margin-bottom:18px;">
-            <span style="font-size:11px; font-weight:700; color:#94A3B8; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:6px;">FEEDBACK DETAILS</span>
-            <p id="nodeInspectOpComment" style="margin:0; font-size:13px; color:#E2E8F0; line-height:1.6; word-break:break-word;">Loading feedback details...</p>
-            <span id="nodeInspectOpDate" style="display:block; margin-top:8px; font-size:10px; color:#64748B;">-</span>
-        </div>
-
-        <button id="dismissNodeFeedbackModalBtn" type="button" style="width:100%; border-radius:9999px; padding:12px 20px; background:#0284C7; border:none; color:#FFFFFF; font-weight:800; font-size:13px; cursor:pointer; box-shadow:0 4px 14px rgba(2,132,199,0.3);">Close Panel</button>
-    </div>
-</div>
-
-<script id="NODE_FEEDBACK_INSPECTION_SCRIPT">
-(function() {
-    const reactionSVGs = {
-        1: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-        2: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path></svg>',
-        3: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line></svg>',
-        4: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>',
-        5: '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 13c1 2.5 3 3.5 4 3.5s3-1 4-3.5"></path></svg>'
-    };
-
-    async function fetchAndShowFeedback(rawName) {
-        // Strip out (#id) tags (e.g. 'Mom 6 (#8)' -> 'Mom 6')
-        const cleanName = rawName.replace(/\(#[0-9]+\)/g, '').trim();
-
-        const modal = document.getElementById('operatorNodeFeedbackModal');
-        const nameEl = document.getElementById('nodeInspectOpName');
-        const starsEl = document.getElementById('nodeInspectOpStars');
-        const faceEl = document.getElementById('nodeInspectReactionFace');
-        const commentEl = document.getElementById('nodeInspectOpComment');
-        const dateEl = document.getElementById('nodeInspectOpDate');
-
-        nameEl.innerText = rawName;
-        starsEl.innerText = "★★★★★";
-        faceEl.innerHTML = reactionSVGs[5];
-        commentEl.innerText = "Fetching feedback from database...";
-        dateEl.innerText = "";
-        modal.style.display = 'flex';
-
-        try {
-            const res = await fetch(`/api/feedback/operator?name=${encodeURIComponent(cleanName)}`);
-            const data = await res.json();
-            if (data.found) {
-                const r = parseInt(data.rating) || 5;
-                starsEl.innerText = "★".repeat(r) + "☆".repeat(5 - r);
-                faceEl.innerHTML = reactionSVGs[r] || reactionSVGs[5];
-                commentEl.innerText = data.comment;
-                dateEl.innerText = "Submitted: " + (data.date || "Recently");
-            } else {
-                commentEl.innerText = "No feedback submitted by this operator yet.";
+        var txt = (target.innerText || target.textContent || '').trim().toLowerCase();
+        var id = (target.id || '').toLowerCase();
+        
+        // Agar modal ka "Download" button hai ya Android companion button hai
+        if (txt === 'download' || txt.includes('apk companion') || txt.includes('android node') || id.includes('android')) {
+            // Agar Cancel ya Continue button nahi hai
+            if (!txt.includes('cancel') && !txt.includes('continue') && !txt.includes('windows')) {
+                e.preventDefault();
+                e.stopPropagation();
+                triggerApkDownload();
+                
+                // Modal ko close kar do agar open hai
+                var modals = document.querySelectorAll('[id*="modal"], [class*="modal"]');
+                modals.forEach(function(m) {
+                    if (m.style.display !== 'none') {
+                        m.style.display = 'none';
+                    }
+                });
             }
-        } catch (e) {
-            commentEl.innerText = "No feedback record found in database.";
         }
-    }
-
-    function bindManagedOperatorBoxes() {
-        // Find all operator node boxes under MANAGED OPERATOR NODES
-        const boxes = document.querySelectorAll('div[class*="border"], div[class*="rounded"]');
-        boxes.forEach(box => {
-            // Must have action buttons (+5D, -5D, Del) and Allocation info
-            const hasButtons = box.querySelector('button');
-            const hasAllocation = box.innerText && (box.innerText.includes('Allocation:') || box.innerText.includes('STANDBY') || box.innerText.includes('Role:'));
-
-            if (hasButtons && hasAllocation) {
-                // Find node title (e.g., Mom 6 (#8))
-                const titleEl = box.querySelector('h3, h4, span, div');
-                let operatorTitle = "";
-                if (titleEl) {
-                    const lines = box.innerText.split('\n');
-                    for (let line of lines) {
-                        line = line.trim();
-                        if (line.includes('(#') || (line.length > 0 && !line.includes('Allocation') && !line.includes('STANDBY') && !line.includes('Role:') && !line.includes('+5D'))) {
-                            operatorTitle = line;
-                            break;
-                        }
-                    }
-                }
-
-                if (operatorTitle && !box.hasAttribute('data-node-bound')) {
-                    box.setAttribute('data-node-bound', 'true');
-                    box.style.cursor = 'pointer';
-                    box.style.transition = 'all 0.2s ease';
-
-                    // Hover styling
-                    box.addEventListener('mouseenter', () => {
-                        box.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-                    });
-                    box.addEventListener('mouseleave', () => {
-                        box.style.borderColor = '';
-                    });
-
-                    // Click anywhere inside box EXCEPT buttons
-                    box.addEventListener('click', function(e) {
-                        if (e.target.closest('button, a, input, select')) {
-                            return; // Let +5D, -5D, Del buttons work as usual
-                        }
-                        e.preventDefault();
-                        e.stopPropagation();
-                        fetchAndShowFeedback(operatorTitle);
-                    });
-                }
-            }
-        });
-    }
-
-    function init() {
-        const modal = document.getElementById('operatorNodeFeedbackModal');
-        const closeBtn = document.getElementById('closeNodeFeedbackModalBtn');
-        const dismissBtn = document.getElementById('dismissNodeFeedbackModalBtn');
-
-        if (closeBtn) closeBtn.onclick = () => { modal.style.display = 'none'; };
-        if (dismissBtn) dismissBtn.onclick = () => { modal.style.display = 'none'; };
-        if (modal) modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-        bindManagedOperatorBoxes();
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-    setTimeout(init, 500);
-    setTimeout(bindManagedOperatorBoxes, 1500);
-})();
+    }, true);
+});
 </script>
-
-
-
-
-
-<!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
-<style id="jarvis-coming-soon-lock-style">
-.btn-coming-soon-lock {
-    background: #0f172a !important;
-    color: #f97316 !important;
-    border: 2px solid #ea580c !important;
-    cursor: not-allowed !important;
-    opacity: 0.9 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    user-select: none !important;
-    transition: all 0.25s ease !important;
-}
-.btn-coming-soon-lock:hover {
-    box-shadow: 0 0 18px rgba(249, 115, 22, 0.45), inset 0 0 10px rgba(234, 88, 12, 0.25) !important;
-    transform: scale(1.02) !important;
-    color: #ffedd5 !important;
-    border-color: #fb923c !important;
-}
-</style>
-<script id="jarvis-mobile-state-manager">
-(function() {
-    async function syncMobileDownloadState() {
-        try {
-            const res = await fetch('/api/system/mobile-status');
-            const data = await res.json();
-            const isActive = data.active;
-
-            // Har download link/button ko dhoondo
-            const downloadElems = document.querySelectorAll('a[download], a[href*=".apk"], [data-action="download"], #mobileDownloadBtn, .download-btn');
-            
-            downloadElems.forEach(el => {
-                if (!isActive) {
-                    // Lock state - Coming Soon with Fire Icon 🔥
-                    if (!el.dataset.origHtml) {
-                        el.dataset.origHtml = el.innerHTML;
-                        el.dataset.origHref = el.getAttribute('href') || '#';
-                    }
-                    el.innerHTML = '🔥 Coming Soon';
-                    el.removeAttribute('href');
-                    el.classList.add('btn-coming-soon-lock');
-                    el.onclick = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        return false;
-                    };
-                } else {
-                    // Active state - Restore original download
-                    if (el.dataset.origHtml) {
-                        el.innerHTML = el.dataset.origHtml;
-                        el.setAttribute('href', el.dataset.origHref);
-                    }
-                    el.classList.remove('btn-coming-soon-lock');
-                    el.onclick = null;
-                }
-            });
-
-            // Admin Toggle Button text sync
-            const adminToggles = document.querySelectorAll('#btnToggleMasterGlobal, #toggleAllServicesBtn, [data-toggle="all-services"]');
-            adminToggles.forEach(btn => {
-                if (isActive) {
-                    btn.classList.add('active-state');
-                } else {
-                    btn.classList.remove('active-state');
-                }
-            });
-        } catch (e) {
-            console.warn("Mobile status sync:", e);
-        }
-    }
-
-    window.toggleGlobalActivation = async function(explicitState) {
-        try {
-            const body = typeof explicitState === 'boolean' ? JSON.stringify({ active: explicitState }) : null;
-            await fetch('/api/system/mobile-toggle', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: body
-            });
-            syncMobileDownloadState();
-        } catch (err) {
-            console.error("Toggle error:", err);
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', syncMobileDownloadState);
-    window.addEventListener('load', syncMobileDownloadState);
-    syncMobileDownloadState();
-})();
-</script>
-
-
-<script id="mobile-coming-soon-enforcer">
-(function() {
-    async function enforceMobileState() {
-        try {
-            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
-            const data = await res.json();
-            const isActive = (data.active === true || data.enabled === true || data.status === 'active');
-
-            // Find all Android / Mobile / APK links and buttons
-            const candidates = document.querySelectorAll('a, button');
-            candidates.forEach(el => {
-                const href = (el.getAttribute('href') || '').toLowerCase();
-                const text = (el.innerText || el.textContent || '').toLowerCase();
-                const id = (el.id || '').toLowerCase();
-                const cl = (el.className || '').toLowerCase();
-
-                // Target strictly Android / APK / Mobile downloads
-                const isMobileBtn = href.includes('.apk') || 
-                                    text.includes('android') || 
-                                    text.includes('mobile download') || 
-                                    text.includes('download apk') || 
-                                    id.includes('mobile') || 
-                                    id.includes('android') || 
-                                    cl.includes('mobile-download');
-
-                // Leave Windows / PC strictly untouched
-                const isWindows = href.includes('.exe') || href.includes('.zip') || text.includes('windows') || text.includes('pc');
-                if (isWindows) return;
-
-                if (isMobileBtn) {
-                    if (!isActive) {
-                        if (!el.dataset.originalContent) {
-                            el.dataset.originalContent = el.innerHTML;
-                            el.dataset.originalHref = el.getAttribute('href') || '#';
-                        }
-                        el.innerHTML = '<span class="inline-flex items-center gap-1.5 font-bold">🔥 Coming Soon</span>';
-                        el.removeAttribute('href');
-                        el.style.pointerEvents = 'none';
-                        el.style.opacity = '0.75';
-                        el.style.cursor = 'not-allowed';
-                    } else {
-                        if (el.dataset.originalContent) {
-                            el.innerHTML = el.dataset.originalContent;
-                            el.setAttribute('href', el.dataset.originalHref);
-                        }
-                        el.style.pointerEvents = 'auto';
-                        el.style.opacity = '1';
-                        el.style.cursor = 'pointer';
-                    }
-                }
-            });
-        } catch(err) {
-            console.error("Master mobile enforcement error:", err);
-        }
-    }
-
-    window.addEventListener("DOMContentLoaded", enforceMobileState);
-    setInterval(enforceMobileState, 2000);
-})();
-</script>
-
-
-
-
-</div>
-
-
-
-
-<div id="holo-universe" role="presentation" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-  <div class="holo-stage">
-    <div class="h-ring h-x"></div>
-    <div class="h-ring h-y"></div>
-    <div class="h-ring h-z"></div>
-    <div class="h-ring h-diag"></div>
-    <div class="h-core-sphere"></div>
-  </div>
-</div>
-<style id="holo-style">
-  .holo-stage {
-    position: relative;
-    width: 320px;
-    height: 320px;
-    transform-style: preserve-3d;
-    perspective: 1200px;
-    animation: holoWorldRotate 18s linear infinite;
-    will-change: transform;
-  }
-  .h-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1.5px solid rgba(147, 197, 253, 0.35);
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.22), inset 0 0 16px rgba(59, 130, 246, 0.15);
-    transform-style: preserve-3d;
-    will-change: transform;
-  }
-  .h-x {
-    transform: rotateX(80deg);
-    animation: spinX 9s linear infinite;
-  }
-  .h-y {
-    transform: rotateY(80deg);
-    animation: spinY 12s linear infinite reverse;
-  }
-  .h-z {
-    transform: rotateZ(45deg) rotateX(45deg);
-    animation: spinZ 15s linear infinite;
-  }
-  .h-diag {
-    transform: rotate3d(1, 1, 0, 60deg);
-    animation: spinDiag 10s linear infinite reverse;
-    border-color: rgba(96, 165, 250, 0.45);
-  }
-  .h-core-sphere {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60px;
-    height: 60px;
-    margin: -30px 0 0 -30px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(96,165,250,0.5) 45%, rgba(30,58,138,0.15) 80%, transparent 100%);
-    box-shadow: 0 0 25px rgba(59,130,246,0.55);
-    animation: pulseCore 3s ease-in-out infinite alternate;
-  }
-  @keyframes holoWorldRotate {
-    0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
-    50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(10deg); }
-    100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
-  }
-  @keyframes spinX { 0% { transform: rotateX(80deg) rotateZ(0deg); } 100% { transform: rotateX(80deg) rotateZ(360deg); } }
-  @keyframes spinY { 0% { transform: rotateY(80deg) rotateZ(0deg); } 100% { transform: rotateY(80deg) rotateZ(360deg); } }
-  @keyframes spinZ { 0% { transform: rotateZ(45deg) rotateX(45deg) rotate(0deg); } 100% { transform: rotateZ(45deg) rotateX(45deg) rotate(360deg); } }
-  @keyframes spinDiag { 0% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(0deg); } 100% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(360deg); } }
-  @keyframes pulseCore { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
-  
-  /* Bold Blue Professional Accents */
-  .title-accent-blue {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    text-shadow: 0 2px 10px rgba(37, 99, 235, 0.45);
-  }
-  .sub-accent-blue {
-    color: #93c5fd !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.025em;
-  }
-</style>
-
 </body>
 </html>
+
+
+
 

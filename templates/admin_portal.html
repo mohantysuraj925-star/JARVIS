@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -925,7 +925,7 @@ async function downloadAdminAndroid() {
     try {
         const response = await fetch('/get-package/android');
         if (!response.ok) {
-            let message = 'PWA is ready to use. Android APK is building via GitHub Actions.';
+            let message = 'PWA is ready to use. Downloading APK....';
             try {
                 const result = await response.json();
                 if (response.status !== 503 && result.message) message = result.message;
@@ -1182,7 +1182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div id="adminMobileNoticeModal" class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4" role="alertdialog" aria-modal="true" aria-labelledby="adminMobileNoticeTitle" aria-describedby="adminMobileNoticeMessage">
     <div class="glass-purple w-full max-w-md rounded-2xl border border-purple-500/50 p-6 text-center shadow-2xl">
         <h2 id="adminMobileNoticeTitle" class="font-cyber text-base font-bold text-purple-100 sub-accent-blue">Android APK</h2>
-        <p id="adminMobileNoticeMessage" class="mt-3 text-sm leading-relaxed text-purple-200">PWA is ready to use. Android APK is building via GitHub Actions.</p>
+        <p id="adminMobileNoticeMessage" class="mt-3 text-sm leading-relaxed text-purple-200">PWA is ready to use. Downloading APK....</p>
         <button id="adminMobileNoticeClose" type="button" onclick="closeAdminMobileNotice()" class="purple-btn mt-6 min-h-11 w-full rounded-xl px-4 py-3 text-sm font-bold text-purple-100">Continue using dashboard</button>
     </div>
 </div>
@@ -2409,5 +2409,46 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 </style>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function triggerApkDownload() {
+        var link = document.createElement('a');
+        link.href = '/download-apk';
+        link.download = 'app-release.apk';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Modal ke andar aur dashboard ke har download button par click hook karein
+    document.addEventListener('click', function(e) {
+        var target = e.target.closest('button, a');
+        if (!target) return;
+        
+        var txt = (target.innerText || target.textContent || '').trim().toLowerCase();
+        var id = (target.id || '').toLowerCase();
+        
+        // Agar modal ka "Download" button hai ya Android companion button hai
+        if (txt === 'download' || txt.includes('apk companion') || txt.includes('android node') || id.includes('android')) {
+            // Agar Cancel ya Continue button nahi hai
+            if (!txt.includes('cancel') && !txt.includes('continue') && !txt.includes('windows')) {
+                e.preventDefault();
+                e.stopPropagation();
+                triggerApkDownload();
+                
+                // Modal ko close kar do agar open hai
+                var modals = document.querySelectorAll('[id*="modal"], [class*="modal"]');
+                modals.forEach(function(m) {
+                    if (m.style.display !== 'none') {
+                        m.style.display = 'none';
+                    }
+                });
+            }
+        }
+    }, true);
+});
+</script>
 </body>
 </html>
+
+
