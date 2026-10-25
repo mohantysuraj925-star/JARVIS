@@ -1,0 +1,130 @@
+=== 1. SYNTAX (every .py file) ===
+[PASS] all .py files compile
+
+=== 2. 'Jarvis' leftovers ===
+[FAIL] no 'jarvis' in file contents  -> 703 lines in 43 files
+      AUDIT_REPORT.txt  (10 lines)
+      debug_landing.txt  (11 lines)
+      DEEP_TEST_REPORT.txt  (3 lines)
+      neon_lander.html  (2 lines)
+      readme.md  (5 lines)
+      render.yaml  (1 lines)
+      ui.py  (11 lines)
+      actions\reminder.py  (8 lines)
+      actions\youtube_video.py  (1 lines)
+      core\prompt.txt  (1 lines)
+      frontend\index.html  (1 lines)
+      static\offline.html  (2 lines)
+      static\portal.js  (2 lines)
+      static\sw.js  (2 lines)
+      templates\admin_portal.html  (28 lines)
+      templates\index.html  (31 lines)
+      templates\landing.html  (10 lines)
+      templates\portal.html  (32 lines)
+      templates\user_dashboard.html  (41 lines)
+      www\admin_portal.html  (10 lines)
+      www\index.html  (10 lines)
+      www\landing.html  (9 lines)
+      www\portal.html  (11 lines)
+      www\user_dashboard.html  (21 lines)
+      server\templates\admin.html  (27 lines)
+[WARN] no file names containing 'jarvis'  -> jarvis.db, JARVIS.spec, jarvis_audit_report.txt, JARVIS_Installer.spec, JARVIS_Setup.spec, package_jarvis.py, config\jarvis.ico, downloads\JARVIS_Companion.apk, downloads\JARVIS_Installer.exe, config\certs\jarvis.crt
+[WARN] project folder name  -> folder is 'jarvis' (renaming it breaks .venv, recreate venv if you rename)
+
+=== 3. FIXES PRESENT IN ui.py / main.py ===
+[FAIL] SelectableBox defined once  -> found 0
+[PASS] quick drawer is built (not 'pass')
+[PASS] setup signal wired to setup_completed
+[PASS] old 'ov.done' removed
+[WARN] setup writes user_profile.json
+[PASS] duplicate first-run overlay removed
+[WARN] gear icon on header button
+[PASS] title keeps 'BY SURAJ'
+[PASS] main: setup check reads api_keys.json
+[PASS] main: developer protocol present
+[PASS] main: welcome method present
+[PASS] main: no FastAPI routes left
+      live model line: LIVE_MODEL = _cfg_live_model()
+
+=== 4. CONFIG FILES ===
+[PASS] config/api_keys.json  -> keys: ['camera_index', 'gemini_api_key', 'os_system', 'ui_color']; gemini_api_key set
+[WARN] config/user_config.json  -> missing (fine before first setup)
+[WARN] config/user_profile.json  -> missing (fine before first setup)
+[PASS] core/prompt.txt exists
+
+=== 5. PACKAGES & PROJECT MODULES ===
+[PASS] package PyQt6
+[PASS] package psutil
+[PASS] package sounddevice
+[PASS] package numpy
+[PASS] package google.genai
+[PASS] package qrcode
+[PASS] package fastapi
+[PASS] package uvicorn
+[PASS] package cryptography
+[PASS] package cv2
+[PASS] package PIL
+[PASS] module core.avatar
+[PASS] module core.audio_devices
+[PASS] module core.hotkey
+[PASS] module core.viseme
+[PASS] module core.echo
+[PASS] module core.wake_word
+[PASS] module core.confirm
+[PASS] module core.license
+[PASS] module core.gemini
+[PASS] module core.plugin_loader
+[PASS] module core.action_loader
+[PASS] module memory.config_manager
+[PASS] module memory.memory_manager
+[WARN] module dashboard.server  -> NameError: name 'app' is not defined
+
+=== 6. IDENTITY / DEVELOPER / PASSWORD TEST ===
+[PASS] 'tum kaun ho'  -> Main GARUDA hoon, ek advanced cyber-intelligence desktop assistant jis
+[PASS] 'developer kaun hai'  -> Mere nirmata aur developer Mr. Suraj Kumar Mohanty hain. Ve Khatiguda,
+[PASS] 'main tumhara developer hoon'  -> Pranam Sir! Suraksha protocol ke tahat, kripya apna developer verifica
+[PASS] 'galat123'  -> Access Denied. Galat password. Session normal user mode mein chal raha
+[PASS] 'main tumhara developer hoon'  -> Pranam Sir! Suraksha protocol ke tahat, kripya apna developer verifica
+      (log) SYS: [DEV MODE: UNLOCKED]
+[PASS] 'mahadev'  -> Har Har Mahadev! Password satyapit hua. Swagat hai Suraj Sir, GARUDA a
+[PASS] 'aaj mausam kaisa hai'  -> None
+[PASS] password sets developer mode
+
+=== 7. WINDOW TEST (offscreen, nothing is saved) ===
+[PASS] main window builds
+[PASS] quick drawer object exists
+[PASS] gear opens drawer  -> 14 buttons
+      button: ◉  REMOTE CONTROL
+      button: ⛶  FULLSCREEN  [F11]
+      button: ⊞  CREATE DESKTOP SHORTCUT
+      button: ◉  AUTO-START: OFF
+      button: ⚙  CUSTOMISE ASSISTANT
+      button: ☀  MORNING BRIEF: ON
+      button: ⬇  WAKE WORD: DOWNLOAD
+      button: 
+      button: 🎚  PUSH-TO-TALK: OFF
+      button: 🧑  HUD: 3D FACE AVATAR
+      button: 🎧  AUDIO DEVICES
+      button: 🧠  MEMORY
+      button: 🧩  PLUGINS
+      button: ⚙  PLUGIN SETTINGS
+[PASS] handler _open_customize
+[FAIL] handler _open_operator_profile
+[PASS] handler _open_audio_devices
+[PASS] handler _open_memory_panel
+[PASS] handler _open_plugin_manager
+[PASS] handler _open_plugin_settings
+[PASS] handler _open_remote
+[PASS] handler _toggle_autostart
+[PASS] handler _toggle_brief
+[PASS] handler _toggle_wake_word
+[PASS] handler _toggle_ptt
+[PASS] handler _toggle_hud_style
+[PASS] handler _create_desktop_shortcut
+[FAIL] window test  -> AttributeError: 'SetupOverlay' object has no attribute '_on_submit'
+Traceback (most recent call last):
+  File "<stdin>", line 261, in <module>
+AttributeError: 'SetupOverlay' object has no attribute '_on_submit'. Did you mean: '_submit'?
+
+
+=== SUMMARY: 59 pass, 7 warn, 4 FAIL ===

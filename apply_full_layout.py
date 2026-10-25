@@ -16,7 +16,7 @@ new_download_section = """
         <ul class="text-xs text-purple-100/90 space-y-2 list-none pl-0">
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">1.</span>
-                <span>Click the button to download <b>JARVIS_Desktop_Setup.exe</b>.</span>
+                <span>Click the button to download <b>GARUDA_Desktop_Setup.exe</b>.</span>
             </li>
             <li class="flex items-start gap-2">
                 <span class="text-purple-400 font-bold">2.</span>

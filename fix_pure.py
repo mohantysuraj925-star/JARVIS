@@ -5,7 +5,7 @@ with open(path, "r", encoding="utf-8") as f:
     text = f.read()
 
 # Auto assemble split installer on startup
-startup_code = """target_exe = os.path.join(DOWNLOADS_DIR, "JARVIS_Installer.exe")
+startup_code = """target_exe = os.path.join(DOWNLOADS_DIR, "GARUDA_Installer.exe")
 parts_dir = os.path.join(DOWNLOADS_DIR, "parts")
 if not os.path.exists(target_exe) and os.path.exists(parts_dir):
     parts = sorted([os.path.join(parts_dir, x) for x in os.listdir(parts_dir) if x.startswith("installer.part")])
@@ -50,11 +50,11 @@ if "/api/track-download" not in text:
         text = text[:pos] + extra_api + "\n" + text[pos:]
 
 # Real Companion APK Binary
-old_apk = 'with open(target, "wb") as f: f.write(b"JARVIS Mobile Companion Node")'
+old_apk = 'with open(target, "wb") as f: f.write(b"GARUDA Mobile Companion Node")'
 new_apk = '''import zipfile
         with zipfile.ZipFile(target, "w") as zf:
-            zf.writestr("AndroidManifest.xml", b'<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jarvis.node"><application android:label="JARVIS Node"></application></manifest>')
-            zf.writestr("classes.dex", b"DEX_JARVIS_ACTIVE_COMPANION_CORE")'''
+            zf.writestr("AndroidManifest.xml", b'<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.garuda.node"><application android:label="GARUDA Node"></application></manifest>')
+            zf.writestr("classes.dex", b"DEX_GARUDA_ACTIVE_COMPANION_CORE")'''
 text = text.replace(old_apk, new_apk)
 
 # Remove 'f' prefix from LANDER_HTML so JS braces never break Python
@@ -66,7 +66,7 @@ new_fetch = """fetch('/api/track-download', { method: 'POST' }).catch(() => {});
             const dl = '/get-package/' + platform;
             const a = document.createElement('a');
             a.href = dl;
-            a.download = (platform === 'windows') ? 'JARVIS_Installer.exe' : 'JARVIS_Mobile.apk';
+            a.download = (platform === 'windows') ? 'GARUDA_Installer.exe' : 'GARUDA_Mobile.apk';
             document.body.appendChild(a);
             a.click();
             setTimeout(() => a.remove(), 300);

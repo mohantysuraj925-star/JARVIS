@@ -3,7 +3,7 @@ import sqlite3
 import re
 
 # 1. Sabhi DBs me tables ensure karein bina data wipe kiye
-db_files = ["portal.db", "jarvis.db", "server/portal.db"]
+db_files = ["portal.db", "garuda.db", "server/portal.db"]
 for db in db_files:
     os.makedirs(os.path.dirname(db) if os.path.dirname(db) else ".", exist_ok=True)
     conn = sqlite3.connect(db)
@@ -99,7 +99,7 @@ async def download_package_tracker(platform_name: str, req: Request):
     
     file_path = f"downloads/{plat}_installer.zip"
     if os.path.exists(file_path):
-        return FileResponse(file_path, filename=f"jarvis_{plat}.zip")
+        return FileResponse(file_path, filename=f"garuda_{plat}.zip")
     return {"status": "success", "platform": plat, "recorded_for": uname}
 """
 

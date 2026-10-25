@@ -33,7 +33,7 @@ async def download_package_tracker(platform_name: str, req: Request):
     # Serve real package file
     file_path = f"downloads/{plat}_installer.zip"
     if os.path.exists(file_path):
-        return FileResponse(file_path, filename=f"jarvis_{plat}.zip")
+        return FileResponse(file_path, filename=f"garuda_{plat}.zip")
     return {"status": "success", "message": f"{platform_name} build recorded", "timestamp": now_time}
 """
 

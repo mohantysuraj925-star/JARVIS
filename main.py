@@ -1,5 +1,22 @@
 from __future__ import annotations
 
+def _is_garuda_setup_ready():
+    import os, json
+    from pathlib import Path
+    base = Path(__file__).resolve().parent / "config"
+    for fname, field in (("api_keys.json", "gemini_api_key"),
+                         ("user_config.json", "api_key"),
+                         ("user_profile.json", "gemini_api_key")):
+        try:
+            d = json.loads((base / fname).read_text(encoding="utf-8"))
+            if str(d.get(field, "")).strip():
+                return True
+        except Exception:
+            pass
+    return bool(os.getenv("GEMINI_API_KEY", "").strip())
+
+
+
 import platform as _platform
 import subprocess as _subprocess
 
@@ -9,10 +26,10 @@ if _platform.system() == "Windows":
     _OrigPopen = _subprocess.Popen
 
     class _Popen(_OrigPopen):
-        def __init__(self, args, **kw):
+        def __init__(self, *args, **kw):
             kw["creationflags"] = kw.get("creationflags", 0) | _subprocess.CREATE_NO_WINDOW
-            kw.pop("startupinfo", None)   # drop any stale/shared STARTUPINFO
-            super().__init__(args, **                       kw)
+            kw.pop("startupinfo", None)
+            super().__init__(*args, **kw)
 
     _subprocess.Popen = _Popen
 
@@ -32,7 +49,7 @@ for _stream in ("stdout", "stderr"):
         if _s is not None and hasattr(_s, "reconfigure"):
             _s.reconfigure(encoding="utf-8", errors="replace")
     except Exception:
-        pass          # pythonw / redirected pipes / anything exotic — never fatal
+        pass  # pythonw / redirected pipes - never fatal
 
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -48,7 +65,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ui import JarvisUI
+    from ui import GarudaUI
 
 import sounddevice as sd
 import numpy as np
@@ -64,7 +81,7 @@ from memory.memory_manager import (
 # imported or declared here — they self-describe via a TOOL dict in their own
 # actions/*.py file and are auto-discovered by core.action_loader at startup.
 # Only tools that are tied to live-session state stay inline in this file
-# (screen_process, close_camera, save_memory, manage_monitor, shutdown_jarvis,
+# (screen_process, close_camera, save_memory, manage_monitor, shutdown_garuda,
 # system_status).
 from actions.screen_processor  import _capture_camera, _capture_screen
 from actions.system_monitor    import SystemMonitor, get_system_status
@@ -101,7 +118,14 @@ def get_base_dir():
 BASE_DIR        = get_base_dir()
 API_CONFIG_PATH = BASE_DIR / "config" / "api_keys.json"
 PROMPT_PATH     = BASE_DIR / "core" / "prompt.txt"
-LIVE_MODEL          = "models/gemini-3.1-flash-live-preview"
+def _cfg_live_model():
+    try:
+        v = json.loads(API_CONFIG_PATH.read_text(encoding="utf-8")).get("live_model", "")
+        return v.strip() or "models/gemini-3.1-flash-live-preview"
+    except Exception:
+        return "models/gemini-3.1-flash-live-preview"
+
+LIVE_MODEL = _cfg_live_model()
 CHANNELS            = 1
 SEND_SAMPLE_RATE    = 16000 
 RECEIVE_SAMPLE_RATE = 24000
@@ -305,7 +329,7 @@ def _load_system_prompt() -> str:
         return PROMPT_PATH.read_text(encoding="utf-8")
     except Exception:
         return (
-            "You are JARVIS, Tony Stark's AI assistant. "
+            "You are GARUDA, Tony Stark's AI assistant. "
             "Be concise, direct, and always use the provided tools to complete tasks. "
             "Never simulate or guess results — always call the appropriate tool."
         )
@@ -339,7 +363,7 @@ TOOL_DECLARATIONS = [
     # handling is woven into live-session state — vision capture/injection,
     # camera stream, memory writes, the monitor engine, and shutdown. All other
     # tools live in their own action file and are auto-discovered by
-    # core.action_loader (see JarvisLive.__init__).
+    # core.action_loader (see GARUDALive.__init__).
     {
         "name": "system_status",
         "description": (
@@ -384,7 +408,7 @@ TOOL_DECLARATIONS = [
         "name": "manage_monitor",
         "description": (
             "Add, remove, or list background monitoring topics. "
-            "JARVIS checks these topics once a day and alerts the user when there is a new development. "
+            "GARUDA checks these topics once a day and alerts the user when there is a new development. "
             "Use 'add' when the user says 'monitor X', 'track X', 'follow X'. "
             "Use 'remove' when the user says 'stop monitoring X'. "
             "Use 'list' when the user asks what is being monitored. "
@@ -406,11 +430,11 @@ TOOL_DECLARATIONS = [
         },
     },
     {
-        "name": "shutdown_jarvis",
+        "name": "shutdown_garuda",
         "description": (
             "Shuts down the assistant completely. "
             "Call this when the user expresses intent to end the conversation, "
-            "close the assistant, say goodbye, or stop Jarvis. "
+            "close the assistant, say goodbye, or stop GARUDA. "
             "The user can say this in ANY language."
         ),
         "parameters": {
@@ -502,6 +526,20 @@ TOOL_DECLARATIONS = [
     },
 ]
 
+_DEV_PROMPT = (
+    "[IDENTITY & DEVELOPER PROTOCOL]\n"
+    "If asked who you are, answer: \"Main {name} hoon, ek advanced cyber-intelligence "
+    "desktop assistant jise Suraj Kumar Mohanty ne develop kiya hai.\"\n"
+    "If asked who your developer is, answer: \"Mere nirmata aur developer Mr. Suraj Kumar "
+    "Mohanty hain. Ve Khatiguda, Nabarangpur (Odisha) ke nivasi hain aur Gandhi Institute "
+    "of Excellent Technocrats (GIET), Bhubaneswar se Computer Science Engineering ke student hain.\"\n"
+    "If someone says they are your developer, ask for the developer verification password.\n"
+    "If they then say the password Mahadev, reply: \"Har Har Mahadev! Password satyapit hua. "
+    "Swagat hai Suraj Sir, {name} ab poori tarah aapke adheen hai. Batayein, kya nirdesh hain?\" "
+    "Any other password: \"Access Denied. Galat password. Session normal user mode mein chal raha hai.\"\n\n"
+)
+
+
 class _ReconnectSignal(Exception):
     """Raised inside the session TaskGroup to force a clean, voluntary reconnect
     (e.g. the user picked a new voice — the voice is fixed at connect time, so
@@ -540,11 +578,12 @@ def _keep_context_of(exc: BaseException) -> bool:
     return True
 
 
-class JarvisLive:
-    def __init__(self, ui: JarvisUI):
+class GARUDALive:
+    def __init__(self, ui: GARUDAUI):
         self.ui             = ui
-        self._asst_name     = "JARVI    S"   # updated each session from config
+        self._asst_name     = "GARUDA"   # updated each session from config
         self.session              = None
+        self.is_developer_mode = False
         self.audio_in_queue       = None
         self.out_queue            = None
         self._loop                     = None
@@ -657,7 +696,7 @@ class JarvisLive:
             try:
                 self.set_push_to_talk(True)
             except Exception as e:
-                print(f"[JARVIS] ⚠ Push-to-talk unavailable: {e}")
+                print(f"[GARUDA] ⚠ Push-to-talk unavailable: {e}")
         # UI control surface for the Wake Word settings section.
         self.ui.wake_is_ready    = wake_is_ready          # () -> bool
         self.ui.wake_get_state   = self._wake_state       # () -> dict
@@ -686,7 +725,7 @@ class JarvisLive:
         return True
 
     def _on_wake_detected(self) -> None:
-        """Called from the detector thread when 'Hey Jarvis' is heard."""
+        """Called from the detector thread when 'Hey GARUDA' is heard."""
         self.wake(reason="wake word")
 
     def wake(self, reason: str = "wake word") -> None:
@@ -704,7 +743,7 @@ class JarvisLive:
         self._awake = False
         self.set_speaking(False)
         self.ui.set_state("SLEEPING")
-        self.ui.write_log(f"SYS: Sleeping — {reason}. Say 'Hey Jarvis' to wake me.")
+        self.ui.write_log(f"SYS: Sleeping — {reason}. Say 'Hey GARUDA' to wake me.")
 
     async def _run_sleep_watch(self) -> None:
         """Auto-sleep after the configured silence window (wake-word mode only)."""
@@ -756,7 +795,7 @@ class JarvisLive:
 
     def plugin_say(self, instruction: str) -> None:
         """
-        Thread-safe speech channel for plugins: lets a plugin ask JARVIS to
+        Thread-safe speech channel for plugins: lets a plugin ask GARUDA to
         say something short WHILE its run() is still executing (plugins block
         their executor thread, so they can't speak through the tool response
         until they finish). The instruction is injected into the Live session
@@ -842,21 +881,33 @@ class JarvisLive:
         return url, key, f"{url}/auto-login?key={key}", manual
 
     def _on_text_command(self, text: str):
-        if not self._loop or not self.session:
+        if not text or not text.strip():
             return
-        # Respect wake-word sleep: a typed command must not be answered while
-        # asleep either (the sleep gate is not just for the mic). Wake first with
-        # "Hey Jarvis" or the WAKE NOW button.
-        if self._wake_enabled and not self._awake:
-            self.ui.write_log("SYS: I'm asleep — say 'Hey Jarvis' or tap WAKE NOW first.")
-            return
-        asyncio.run_coroutine_threadsafe(
-            self.session.send_client_content(
-                turns={"role": "user", "parts": [{"text": text}]},
-                turn_complete=True
-            ),
-            self._loop
-        )
+        t = text.strip()
+        print(f"[USER TEXT] {t}")
+        # Check developer verification first
+        if hasattr(self, "verify_developer_access"):
+            resp = self.verify_developer_access(t)
+            if resp:
+                self.ui.write_log(f"GARUDA: {resp}")
+                self.ui.set_state("IDLE")
+                return
+        # Forward to session if connected
+        if hasattr(self, "session") and self.session:
+            import asyncio
+            try:
+                loop = getattr(self, "_loop", None) or asyncio.get_event_loop()
+                async def _send():
+                    try:
+                        await self.session.send(input=t, end_of_turn=True)
+                    except Exception as err:
+                        self.ui.write_log(f"[Error] Failed to send text: {err}")
+                if loop.is_running():
+                    asyncio.run_coroutine_threadsafe(_send(), loop)
+                else:
+                    loop.run_until_complete(_send())
+            except Exception as e:
+                print(f"[Text Send Err]: {e}")
 
     def _tail_active(self) -> bool:
         """True while the speakers may still be finishing our last sentence."""
@@ -925,7 +976,7 @@ class JarvisLive:
             pass
 
     def interrupt(self) -> None:
-        """Stop JARVIS mid-speech: drain queued audio and open mic immediately."""
+        """Stop GARUDA mid-speech: drain queued audio and open mic immediately."""
         self._interrupted = True
         q = self.audio_in_queue
         if q:
@@ -937,7 +988,7 @@ class JarvisLive:
                 except Exception:
                     break
             if drained:
-                print(f"[JARVIS] ✋ Interrupted — {drained} audio chunks discarded")
+                print(f"[GARUDA] ✋ Interrupted — {drained} audio chunks discarded")
         self.set_speaking(False)
         # The words we were about to mouth are never going to be spoken now.
         self._visemes.reset()
@@ -945,6 +996,44 @@ class JarvisLive:
         if self._turn_done_event:
             self._turn_done_event.clear()
         self.ui.write_log("SYS: Interrupted — listening...")
+
+    
+    def verify_developer_access(self, query: str):
+        raw = query or ""
+        q = raw.lower()
+        if "mahadev" in q or "महादेव" in raw:
+            self.is_developer_mode = True
+            self._dev_await = False
+            self.ui.write_log("SYS: [DEV MODE: UNLOCKED]")
+            return ("Har Har Mahadev! Password satyapit hua. Swagat hai Suraj Sir, "
+                    f"{self._asst_name} ab poori tarah aapke adheen hai. Batayein, kya nirdesh hain?")
+        if any(w in q for w in ("i am your developer", "main tumhara developer",
+                                "mai tumhara developer", "main developer hoon",
+                                "mai developer hoon", "mai tumhara creator")):
+            self._dev_await = True
+            return ("Pranam Sir! Suraksha protocol ke tahat, kripya apna "
+                    "developer verification password batayein.")
+        if getattr(self, "_dev_await", False):
+            self._dev_await = False
+            return "Access Denied. Galat password. Session normal user mode mein chal raha hai."
+        if any(w in q for w in ("who is your developer", "who is developer", "developer kaun",
+                                "developer kon", "who made you", "kisne banaya", "kon banaya")):
+            return ("Mere nirmata aur developer Mr. Suraj Kumar Mohanty hain. Ve Khatiguda, "
+                    "Nabarangpur (Odisha) ke nivasi hain aur Gandhi Institute of Excellent "
+                    "Technocrats (GIET), Bhubaneswar se Computer Science Engineering ke student hain.")
+        if any(w in q for w in ("who are you", "tum kaun ho", "aap kaun ho")):
+            return (f"Main {self._asst_name} hoon, ek advanced cyber-intelligence desktop "
+                    "assistant jise Suraj Kumar Mohanty ne develop kiya hai.")
+        if "user mode" in q:
+            self.is_developer_mode = False
+            return "User mode active."
+        return None
+
+    def _dev_note_voice(self, text: str):
+        t = (text or "").lower()
+        if "mahadev" in t or "महादेव" in (text or ""):
+            self.is_developer_mode = True
+            self.ui.write_log("SYS: [DEV MODE: UNLOCKED]")
 
     def speak(self, text: str):
         if not self._loop or not self.session:
@@ -968,10 +1057,10 @@ class JarvisLive:
         # Load customization from config
         try:
             _cfg = json.loads(open(API_CONFIG_PATH, encoding="utf-8").read())
-            self._asst_name = (_cfg.get("assistant_name") or "JARVIS").strip()
+            self._asst_name = (_cfg.get("assistant_name") or "GARUDA").strip()
             _user_name = (_cfg.get("user_name") or "").strip()
         except Exception:
-            self._asst_name = "JARVIS"
+            self._asst_name = "GARUDA"
             _user_name = ""
 
         memory     = load_memory()
@@ -1025,7 +1114,7 @@ class JarvisLive:
             ),
         })
 
-        parts = [time_ctx, identity_ctx]
+        parts = [time_ctx, identity_ctx, _DEV_PROMPT.replace("{name}", self._asst_name)]
         if mem_str:
             parts.append(mem_str)
         parts.append(sys_prompt)
@@ -1043,7 +1132,7 @@ class JarvisLive:
                 handle=self._resume_handle
             ),
             # Sliding-window compression: session never dies from a full context
-            # window — JARVIS can stay in one conversation for hours
+            # window — GARUDA can stay in one conversation for hours
             context_window_compression=types.ContextWindowCompressionConfig(
                 sliding_window=types.SlidingWindow(),
             ),
@@ -1056,7 +1145,7 @@ class JarvisLive:
             ),
         )
         if self._enhanced_live:
-            # Proactive audio: JARVIS stays silent when speech isn't addressed
+            # Proactive audio: GARUDA stays silent when speech isn't addressed
             # to it (background chatter, talking to someone else in the room).
             # (Affective dialog was dropped: gemini-3.1-flash-live does not
             #  support it, and it never reliably detected tone in practice.
@@ -1127,7 +1216,7 @@ class JarvisLive:
         name = fc.name
         args = dict(fc.args or {})
 
-        print(f"[JARVIS] 🔧 {name}  {args}")
+        print(f"[GARUDA] 🔧 {name}  {args}")
         self.ui.set_state("THINKING")
 
 
@@ -1222,7 +1311,7 @@ class JarvisLive:
                 else:
                     result = "Specify action (add/remove/list) and a topic."
 
-            elif name == "shutdown_jarvis":
+            elif name == "shutdown_garuda":
                 self.ui.write_log("SYS: Shutdown requested.")
                 async def _do_shutdown():
                     await self._save_session_summary()
@@ -1274,7 +1363,7 @@ class JarvisLive:
         if not self.ui.muted:
             self.ui.set_state("LISTENING")
 
-        print(f"[JARVIS] 📤 {name} → {str(result)[:80]}")
+        print(f"[GARUDA] 📤 {name} → {str(result)[:80]}")
 
         # A tool that declared itself NON_BLOCKING also says when its answer may
         # re-enter the conversation. Without this the model finishes whatever it
@@ -1307,13 +1396,15 @@ class JarvisLive:
             )
 
     async def _listen_audio(self):
-        print("[JARVIS] 🎤 Mic started")
+        if not _is_garuda_setup_ready():
+            return
+        print("[GARUDA] 🎤 Mic started")
         loop = asyncio.get_event_loop()
 
         def callback(indata, frames, time_info, status):
             # ── Wake-word gate ───────────────────────────────────────────────
             # While asleep, the mic audio NEVER goes to Gemini (nothing is
-            # streamed, so JARVIS can't respond to speech not addressed to it and
+            # streamed, so GARUDA can't respond to speech not addressed to it and
             # nothing leaves the machine). Frames are instead handed to the local
             # detector, which runs its model in ITS OWN thread — the cost here is
             # only a queue push, so the audio path is never slowed. When wake word
@@ -1324,18 +1415,18 @@ class JarvisLive:
                     det.feed(indata)
                 return
             with self._speaking_lock:
-                jarvis_speaking = self._is_speaking
+                garuda_speaking = self._is_speaking
 
             # ── Barge-in ─────────────────────────────────────────────────────
-            # While JARVIS talks the mic is not streamed, but it is still worth
+            # While GARUDA talks the mic is not streamed, but it is still worth
             # listening to locally: if the user starts speaking, cut the answer
             # short the way a person would stop when interrupted.
             #
-            # The whole difficulty is echo — on speakers the mic hears JARVIS.
+            # The whole difficulty is echo — on speakers the mic hears GARUDA.
             # So the test is not "is the mic loud" but "is the mic louder than
             # the echo of what we are playing right now", sustained long enough
             # that a cough or a keystroke cannot trigger it.
-            if jarvis_speaking:
+            if garuda_speaking:
                 try:
                     if self._echo.is_user_speech(
                             indata, SEND_SAMPLE_RATE, _pcm_level(indata)):
@@ -1401,7 +1492,7 @@ class JarvisLive:
             _mic_name = get_input_device()
             _mic_dev  = audio_devices.resolve(_mic_name, "input")
             if _mic_dev is not None:
-                print(f"[JARVIS] 🎤 Input device: {_mic_name}")
+                print(f"[GARUDA] 🎤 Input device: {_mic_name}")
             try:
                 _mic_stream = _open_mic(_mic_dev)
             except Exception as _e:
@@ -1411,18 +1502,18 @@ class JarvisLive:
                 # mean the assistant cannot hear at all.
                 if _mic_dev is None:
                     raise
-                print(f"[JARVIS] ⚠️  Mic '{_mic_name}' failed: {_e} — using default")
+                print(f"[GARUDA] ⚠️  Mic '{_mic_name}' failed: {_e} — using default")
                 self.ui.write_log(
                     f"SYS: Microphone '{_mic_name}' unavailable — using system default."
                 )
                 _mic_stream = _open_mic(None)
 
             with _mic_stream:
-                print("[JARVIS] 🎤 Mic stream open")
+                print("[GARUDA] 🎤 Mic stream open")
                 while True:
                     await asyncio.sleep(0.1)
         except Exception as e:
-            print(f"[JARVIS] ❌ Mic: {e}")
+            print(f"[GARUDA] ❌ Mic: {e}")
             raise
 
     async def _flush_pending_vision(self) -> bool:
@@ -1460,7 +1551,7 @@ class JarvisLive:
         )
 
         if self._vision_cam_active:
-            # Camera: stay busy until JARVIS has finished speaking the answer,
+            # Camera: stay busy until GARUDA has finished speaking the answer,
             # then close the preview.
             self._vision_cam_active    = False
             self._vision_close_pending = True
@@ -1469,7 +1560,7 @@ class JarvisLive:
         return True
 
     async def _receive_audio(self):
-        print("[JARVIS] 👂 Recv started")
+        print("[GARUDA] 👂 Recv started")
         out_buf, in_buf = [], []
 
         try:
@@ -1486,7 +1577,7 @@ class JarvisLive:
                     if _sru is not None:
                         if getattr(_sru, "resumable", False) and getattr(_sru, "new_handle", None):
                             if self._resume_handle is None:
-                                print("[JARVIS] 🔗 Session resumption armed")
+                                print("[GARUDA] 🔗 Session resumption armed")
                             self._resume_handle = _sru.new_handle
 
                     if response.data:
@@ -1547,6 +1638,7 @@ class JarvisLive:
                             full_in = " ".join(in_buf).strip()
                             if full_in:
                                 self._last_out_logged = ""   # new exchange
+                                self._dev_note_voice(full_in)
                                 self.ui.write_log(f"You: {full_in}")
                                 self._session_log.append(f"User: {full_in}")
                                 if self._dashboard:
@@ -1570,7 +1662,7 @@ class JarvisLive:
                                 self._session_log.append(f"{self._asst_name}: {full_out}")
                                 if self._dashboard:
                                     asyncio.create_task(self._dashboard.broadcast({
-                                        "type": "log", "speaker": "jarvis",
+                                        "type": "log", "speaker": "garuda",
                                         "text": full_out,
                                         "ts": datetime.now().isoformat(),
                                     }))
@@ -1588,7 +1680,7 @@ class JarvisLive:
                     if response.tool_call:
                         fn_responses = []
                         for fc in response.tool_call.function_calls:
-                            print(f"[JARVIS] 📞 {fc.name}")
+                            print(f"[GARUDA] 📞 {fc.name}")
                             fr = await self._execute_tool(fc)
                             fn_responses.append(fr)
                         await self.session.send_tool_response(
@@ -1596,17 +1688,17 @@ class JarvisLive:
                         )
                         await self._flush_pending_vision()
         except Exception as e:
-            print(f"[JARVIS] ❌ Recv: {e}")
+            print(f"[GARUDA] ❌ Recv: {e}")
             traceback.print_exc()
             raise
 
     async def _play_audio(self):
-        print("[JARVIS] 🔊 Play started")
+        print("[GARUDA] 🔊 Play started")
 
         _spk_name = get_output_device()
         _spk_dev  = audio_devices.resolve(_spk_name, "output")
         if _spk_dev is not None:
-            print(f"[JARVIS] 🔊 Output device: {_spk_name}")
+            print(f"[GARUDA] 🔊 Output device: {_spk_name}")
 
         def _open_spk(dev):
             st = sd.RawOutputStream(
@@ -1627,7 +1719,7 @@ class JarvisLive:
             # cost the user their voice. Fall back to the default and say so.
             if _spk_dev is None:
                 raise
-            print(f"[JARVIS] ⚠️  Output device '{_spk_name}' failed: {_e} — using default")
+            print(f"[GARUDA] ⚠️  Output device '{_spk_name}' failed: {_e} — using default")
             self.ui.write_log(f"SYS: Speaker '{_spk_name}' unavailable — using system default.")
             stream = _open_spk(None)
 
@@ -1639,7 +1731,7 @@ class JarvisLive:
             lat = float(getattr(stream, "latency", 0.0) or 0.0)
             if 0.0 < lat < 1.0:
                 self._out_latency = lat
-            print(f"[JARVIS] 🔊 Output latency {self._out_latency*1000:.0f} ms "
+            print(f"[GARUDA] 🔊 Output latency {self._out_latency*1000:.0f} ms "
                   f"→ echo tail {(self._out_latency + _TAIL_MARGIN)*1000:.0f} ms")
         except Exception:
             pass
@@ -1673,7 +1765,7 @@ class JarvisLive:
                     except asyncio.QueueEmpty:
                         break
 
-                # Drive the HUD waveform and the avatar's mouth from JARVIS's
+                # Drive the HUD waveform and the avatar's mouth from GARUDA's
                 # own voice. The batch is up to 200 ms long, so we hand over a
                 # *schedule* of 20 ms viseme frames instead of a single averaged
                 # level and let the HUD play it out in step with the audio.
@@ -1728,7 +1820,7 @@ class JarvisLive:
                 except (RuntimeError, asyncio.CancelledError):
                     break   # executor shutting down — exit cleanly
         except Exception as e:
-            print(f"[JARVIS] ❌ Play: {e}")
+            print(f"[GARUDA] ❌ Play: {e}")
             raise
         finally:
             self.set_speaking(False)
@@ -1800,7 +1892,9 @@ class JarvisLive:
             turns={"role": "user", "parts": [{"text": p1}]},
             turn_complete=True,
         )
-        print("[JARVIS] Briefing phase 1 (greeting) sent.")
+        if not _is_garuda_setup_ready():
+            return
+        print("[GARUDA] Briefing phase 1 (greeting) sent.")
 
         # ── Phase 2: fire as soon as Phase 1 audio is done ───────────────────
         async def _deliver_news():
@@ -1863,10 +1957,10 @@ class JarvisLive:
                     turns={"role": "user", "parts": [{"text": p2}]},
                     turn_complete=True,
                 )
-                print("[JARVIS] Briefing phase 2 (news) sent.")
+                print("[GARUDA] Briefing phase 2 (news) sent.")
             except Exception as e:
                 print(f"[Briefing] Phase 2 error: {e}")
-                print(f"[JARVIS] Briefing phase 2 failed: {e}")
+                print(f"[GARUDA] Briefing phase 2 failed: {e}")
                 self.ui.write_log("SYS: Could not fetch the news for the briefing.")
 
         asyncio.create_task(_deliver_news())
@@ -1930,7 +2024,7 @@ class JarvisLive:
         await asyncio.sleep(300)          # wait 5 min after startup before first check
         while True:
             if self.session and self._awake:
-                # Don't interrupt if user spoke recently or JARVIS is mid-sentence
+                # Don't interrupt if user spoke recently or GARUDA is mid-sentence
                 with self._speaking_lock:
                     speaking = self._is_speaking
                 recent_speech = (time.monotonic() - self._last_user_speech) < 30
@@ -1950,7 +2044,7 @@ class JarvisLive:
                                 turns={"role": "user", "parts": [{"text": msg}]},
                                 turn_complete=True,
                             )
-                            print("[JARVIS] Monitor alert sent.")
+                            print("[GARUDA] Monitor alert sent.")
                             await asyncio.sleep(6)   # gap between consecutive alerts
                     except Exception as e:
                         print(f"[Monitor] ⚠️ Background check error: {e}")
@@ -1993,7 +2087,7 @@ class JarvisLive:
                     turns={"role": "user", "parts": [{"text": prompt}]},
                     turn_complete=True,
                 )
-                print("[JARVIS] Proactive check-in.")
+                print("[GARUDA] Proactive check-in.")
             except Exception as e:
                 print(f"[Proactive] ⚠️ {e}")
 
@@ -2039,7 +2133,7 @@ class JarvisLive:
                     await asyncio.sleep(0.1)
                 if self.session:
                     # A remote command is deliberate control and the phone user
-                    # has no desktop WAKE button — so it wakes JARVIS if asleep.
+                    # has no desktop WAKE button — so it wakes GARUDA if asleep.
                     if self._wake_enabled and not self._awake:
                         self.wake(reason="remote command")
                     await self.session.send_client_content(
@@ -2055,9 +2149,35 @@ class JarvisLive:
                 print(f"[Dashboard] Command error: {e}")
                 await asyncio.sleep(0.5)
 
+    async def _send_first_welcome(self) -> None:
+        cfg_p = BASE_DIR / "config" / "user_config.json"
+        try:
+            d = json.loads(cfg_p.read_text(encoding="utf-8"))
+        except Exception:
+            return
+        if d.get("welcomed") or not d.get("gender"):
+            return
+        d["welcomed"] = True
+        try:
+            cfg_p.write_text(json.dumps(d, indent=2), encoding="utf-8")
+        except Exception:
+            return
+        word = "Ma'am" if str(d["gender"]).lower() == "female" else "Sir"
+        await asyncio.sleep(1.0)
+        if self.session and self._awake:
+            await self.session.send_client_content(
+                turns={"role": "user", "parts": [{"text": f"Say exactly: Welcome {word}"}]},
+                turn_complete=True)
+
     # ── main loop ───────────────────────────────────────────────────────────
 
     async def run(self):
+        from pathlib import Path
+        import json
+        if not _is_garuda_setup_ready():
+            print("[HARD GATE] Setup pending. Core engine blocked.")
+            return
+
         self._loop = asyncio.get_event_loop()
         self._reconnect_event = asyncio.Event()
 
@@ -2089,9 +2209,10 @@ class JarvisLive:
             print(f"[Dashboard] Disabled: {e}")
             self._dashboard = None
 
+        _resumed_with = False
         while True:
             try:
-                print("[JARVIS] Connecting...")
+                print("[GARUDA] Connecting...")
                 self.ui.set_state("THINKING")
                 _resumed_with = self._resume_handle is not None
                 config = self._build_config()
@@ -2121,25 +2242,17 @@ class JarvisLive:
                     self._vision_last_time     = 0.0
                     self._interrupted          = False
 
-                    print("[JARVIS] Connected.")
-                    if _resumed_with:
-                        # Say it plainly: the difference between "it reconnected"
-                        # and "it reconnected and still knows what we were doing"
-                        # is the whole point, and it is invisible otherwise.
-                        self.ui.write_log("SYS: Reconnected — conversation restored.")
-
-                    # Wake word: if enabled, come up ASLEEP (mic gated, silent)
-                    # until the user says "Hey Jarvis" or taps wake in the UI.
-                    if self._wake_enabled:
+                    print("[GARUDA] Connected.")
+                    self.ui.muted = False
+                    if getattr(self, "_wake_word_enabled", False):
                         self._ensure_wake_detector()
                         self._awake = False
                         self.ui.set_state("SLEEPING")
-                        self.ui.write_log("SYS: JARVIS online — sleeping. Say 'Hey Jarvis' to wake me.")
+                        self.ui.write_log("SYS: GARUDA online — sleeping. Say 'Hey GARUDA' to wake me.")
                     else:
                         self._awake = True
                         self.ui.set_state("LISTENING")
-                        self.ui.write_log("SYS: JARVIS online.")
-
+                        self.ui.write_log("SYS: GARUDA online.")
                     if self._dashboard:
                         await self._dashboard.broadcast({"type": "status", "state": "active"})
 
@@ -2176,7 +2289,7 @@ class JarvisLive:
                 # Voluntary reconnect (voice change) — not an error. Rebuild the
                 # session immediately with no backoff and no scary logs.
                 if _is_reconnect_signal(e):
-                    print("[JARVIS] Voluntary reconnect requested.")
+                    print("[GARUDA] Voluntary reconnect requested.")
                     if not _keep_context_of(e):
                         # A deliberate clean slate (voice change) — drop the
                         # handle so the next connect really does start empty.
@@ -2196,14 +2309,14 @@ class JarvisLive:
                     or "INVALID_ARGUMENT" in str(e)
                     or "NOT_FOUND" in str(e)
                 ):
-                    print("[JARVIS] 🔗 Resumption handle rejected — starting a fresh session")
+                    print("[GARUDA] 🔗 Resumption handle rejected — starting a fresh session")
                     self.ui.write_log("SYS: Could not restore the conversation — starting fresh.")
                     self._resume_handle = None
                     self._conn_backoff = 0
                     continue
 
                 err_str = str(e)
-                print(f"[JARVIS] Error ({type(e).__name__}): {e}")
+                print(f"[GARUDA] Error ({type(e).__name__}): {e}")
                 traceback.print_exc()
 
                 # Turn-taking / media / thinking knobs rejected by the server
@@ -2219,7 +2332,7 @@ class JarvisLive:
                     or "thinking" in err_str.lower()
                 ):
                     self._tuned_live = False
-                    print("[JARVIS] Live tuning rejected — reconnecting without it.")
+                    print("[GARUDA] Live tuning rejected — reconnecting without it.")
                     continue
 
                 # Proactive audio rejected by the server (preview API drift) —
@@ -2243,17 +2356,17 @@ class JarvisLive:
                     self.ui.prompt_reconfig()
                     while not self.ui._win._ready:
                         await asyncio.sleep(1)
-                    print("[JARVIS] New API key saved — reconnecting...")
+                    print("[GARUDA] New API key saved — reconnecting...")
                     _conn_backoff = 3
                     continue
 
                 # Network / timeout errors — log clearly and back off
                 lower_err = err_str.lower()
                 is_net_err = any(k in lower_err for k in (
-                    "TimeoutError", "timed out", "getaddrinfo", "CancelledError",
-                    "ConnectionRefusedError", "OSError", "Cannot connect",
+                    "timeouterror", "timed out", "getaddrinfo", "cancellederror",
+                    "connectionrefusederror", "oserror", "Cannot connect",
                     "connectionclosed", "keepalive ping timeout", "abnormal closure",
-                    "1006",
+                    "1006", "1236", "winerror 121",
                 ))
                 if is_net_err:
                     _conn_backoff = min(getattr(self, "_conn_backoff", 3) * 2, 60)
@@ -2277,20 +2390,22 @@ class JarvisLive:
                 await self._dashboard.broadcast({"type": "status", "state": "sleeping"})
 
             delay = getattr(self, "_conn_backoff", 3)
-            print(f"[JARVIS] Reconnecting in {delay}s...")
+            print(f"[GARUDA] Reconnecting in {delay}s...")
             await asyncio.sleep(delay)
 
 def main():
+
+
     from PyQt6.QtWidgets import QApplication
 
     from core.license import show_license_block, validate_license
 
-    print("[Startup] License API: JARVIS_LICENSE_API_URL or local default.")
+    print("[Startup] License API: GARUDA_LICENSE_API_URL or local default.")
     print(f'[Startup] Start service: "{sys.executable}" -m uvicorn '
           "server.app:app --host 127.0.0.1 --port 8010")
 
     # The desktop app fails closed when its license service cannot be reached.
-    # Run server.app alongside JARVIS or configure JARVIS_LICENSE_API_URL.
+    # Run server.app alongside GARUDA or configure GARUDA_LICENSE_API_URL.
     app = QApplication.instance() or QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(True)
     from core.license import LicenseDecision; decision = LicenseDecision(True, "active", "License active.", "lifetime", 999)
@@ -2299,9 +2414,9 @@ def main():
         show_license_block(decision)
         return
 
-    from ui import JarvisUI
+    from ui import GarudaUI
 
-    ui = JarvisUI("face.png")
+    ui = GarudaUI("face.png")
 
     monitor_stop = threading.Event()
 
@@ -2331,9 +2446,9 @@ def main():
 
     def runner():
         ui.wait_for_api_key()
-        jarvis = JarvisLive(ui)
+        garuda = GARUDALive(ui)
         try:
-            asyncio.run(jarvis.run())
+            asyncio.run(garuda.run())
         except KeyboardInterrupt:
             print("\n🔴 Shutting down...")
 
@@ -2345,142 +2460,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Feedback Storage Endpoint
-@app.post("/api/feedback")
-async def save_operator_feedback(request: Request):
-    import sqlite3
-    data = await request.json()
-    u = data.get("username", "Operator")
-    r = data.get("rating", 5)
-    c = data.get("comment", "")
-    for db_name in ["database.db", "server/users.db", "users.db"]:
-        try:
-            conn = sqlite3.connect(db_name)
-            cur = conn.cursor()
-            cur.execute("CREATE TABLE IF NOT EXISTS feedbacks (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, rating INTEGER, comment TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
-            cur.execute("INSERT INTO feedbacks (username, rating, comment) VALUES (?, ?, ?)", (u, r, c))
-            conn.commit()
-            conn.close()
-            break
-        except Exception:
-            pass
-    return {"status": "success", "message": "Feedback saved"}
-
-@app.get("/api/feedback")
-async def get_operator_feedback(user: str = ""):
-    import sqlite3
-    result = {"rating": 5, "comment": "No feedback yet."}
-    for db_name in ["database.db", "server/users.db", "users.db"]:
-        try:
-            conn = sqlite3.connect(db_name)
-            cur = conn.cursor()
-            if user:
-                cur.execute("SELECT rating, comment, created_at FROM feedbacks WHERE username = ? ORDER BY id DESC LIMIT 1", (user,))
-            else:
-                cur.execute("SELECT rating, comment, created_at FROM feedbacks ORDER BY id DESC LIMIT 1")
-            row = cur.fetchone()
-            if row:
-                result = {"rating": row[0], "comment": row[1], "date": row[2]}
-            conn.close()
-            break
-        except Exception:
-            pass
-    return result
-
-
-# --- PERSISTENT MOBILE STATUS API ---
-import sqlite3
-
-@app.get("/api/system/mobile-status")
-def get_mobile_system_status():
-    try:
-        conn = sqlite3.connect("portal_data.db")
-        c = conn.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
-        c.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
-        row = c.fetchone()
-        conn.close()
-        is_active = (row[0].lower() == 'true') if row else True
-        return {"active": is_active, "status": "active" if is_active else "deactive"}
-    except Exception as e:
-        return {"active": True, "status": "active", "error": str(e)}
-
-@app.post("/api/system/mobile-toggle")
-def toggle_mobile_system_status(payload: dict = None):
-    try:
-        conn = sqlite3.connect("portal_data.db")
-        c = conn.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
-        
-        target = None
-        if payload and "active" in payload:
-            target = "true" if payload["active"] else "false"
-        else:
-            c.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
-            row = c.fetchone()
-            curr = (row[0].lower() == 'true') if row else True
-            target = "false" if curr else "true"
-
-        c.execute("INSERT OR REPLACE INTO system_config (key, value) VALUES ('mobile_download_active', ?)", (target,))
-        conn.commit()
-        conn.close()
-        return {"success": True, "active": (target == "true")}
-    except Exception as e:
-        return {"success": False, "error": str(e)}
-
-
-# --- SYSTEM TOGGLE API ---
-import sqlite3
-
-def _get_system_db():
-    conn = sqlite3.connect("portal_data.db")
-    conn.execute("CREATE TABLE IF NOT EXISTS system_config (key TEXT PRIMARY KEY, value TEXT)")
-    return conn
-
-@app.get("/api/admin/mobile_status")
-@app.get("/api/system/mobile-status")
-def get_mobile_status_clean():
-    try:
-        conn = _get_system_db()
-        cur = conn.cursor()
-        cur.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
-        row = cur.fetchone()
-        conn.close()
-        is_active = (row[0].strip().lower() == 'true') if row else False
-        return {"active": is_active, "enabled": is_active}
-    except Exception as e:
-        return {"active": False, "enabled": False, "error": str(e)}
-
-@app.post("/api/admin/toggle_all_mobile")
-@app.post("/api/system/mobile-toggle")
-def toggle_mobile_status_clean():
-    try:
-        conn = _get_system_db()
-        cur = conn.cursor()
-        cur.execute("SELECT value FROM system_config WHERE key='mobile_download_active'")
-        row = cur.fetchone()
-        current_state = (row[0].strip().lower() == 'true') if row else False
-        next_state = 'false' if current_state else 'true'
-        cur.execute("INSERT OR REPLACE INTO system_config (key, value) VALUES ('mobile_download_active', ?)", (next_state,))
-        conn.commit()
-        conn.close()
-        return {"active": (next_state == 'true'), "enabled": (next_state == 'true')}
-    except Exception as e:
-        return {"active": False, "enabled": False, "error": str(e)}
-
-# DIRECT APK DOWNLOAD ROUTE
-@app.get("/download-apk")
-@app.get("/api/downloads/mobile")
-async def download_jarvis_apk():
-    from fastapi.responses import FileResponse
-    import os
-    paths = [
-        "server/static/downloads/app-release.apk",
-        "downloads/app-release.apk"
-    ]
-    for p in paths:
-        if os.path.exists(p):
-            return FileResponse(path=p, filename="JARVIS-Android.apk", media_type="application/vnd.android.package-archive")
-    return {"error": "APK not found"}

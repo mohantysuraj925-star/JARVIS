@@ -17,7 +17,7 @@ window.specDetails = {
         body: "<p style='margin-bottom:8px;'>• <strong>Network Bridge:</strong> Full-Duplex Bi-Directional WebSocket Mesh</p><p style='margin-bottom:8px;'>• <strong>Sync Target:</strong> Windows Desktop Core &lt;-&gt; Android Node Client</p><p style='margin-bottom:8px;'>• <strong>Stream Ping:</strong> 60Hz Telemetry Broadcast Loop</p><p>• <strong>Payload:</strong> Encrypted Real-Time Telemetry Frames</p>"
     },
     default: {
-        title: "JARVIS SYSTEM ARCHITECTURE",
+        title: "GARUDA SYSTEM ARCHITECTURE",
         body: "<p style='margin-bottom:8px;'>• <strong>Runtime:</strong> Python FastAPI Asynchronous Core</p><p style='margin-bottom:8px;'>• <strong>Interface:</strong> Reactive Glass Cyber HUD Matrix</p><p>• <strong>Developer:</strong> Suraj Kumar (Engineered from scratch)</p>"
     }
 };
@@ -48,7 +48,7 @@ window.jarvisSystemActive = false;
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS PORTAL</title>
+    <title>GARUDA PORTAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <style>
@@ -98,7 +98,7 @@ body {
 }
 
 /* Glassmorphism Surface with Click-Reaction */
-.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+.garuda-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
     background: rgba(13, 20, 36, 0.72) !important;
     backdrop-filter: blur(24px) !important;
     -webkit-backdrop-filter: blur(24px) !important;
@@ -110,18 +110,18 @@ body {
     z-index: 1;
 }
 
-.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+.garuda-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
     border-color: rgba(56, 189, 248, 0.4) !important;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.12) !important;
     transform: translateY(-2px);
 }
 
-.jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+.garuda-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
     transform: scale(0.995);
 }
 
 /* Interactive Glowing Action Buttons */
-button, .jarvis-btn-primary, .purple-btn {
+button, .garuda-btn-primary, .purple-btn {
     font-family: inherit !important;
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%) !important;
     backdrop-filter: blur(12px) !important;
@@ -140,7 +140,7 @@ button, .jarvis-btn-primary, .purple-btn {
     z-index: 2;
 }
 
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+button:hover, .garuda-btn-primary:hover, .purple-btn:hover {
     transform: translateY(-2px) scale(1.03) !important;
     background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
     border-color: #38BDF8 !important;
@@ -197,7 +197,7 @@ html, body {
 }
 
 /* 2. Organized Glass Containers & Cards */
-.jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+.garuda-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
 .bg-slate-900, .bg-slate-900\/80, div[class*="bg-black"], div[class*="bg-slate"] {
     background: var(--card-bg) !important;
     backdrop-filter: blur(20px) saturate(180%) !important;
@@ -208,7 +208,7 @@ html, body {
     transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
 }
 
-.jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
+.garuda-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover {
     background: var(--card-hover) !important;
     border-color: var(--accent-cyan) !important;
     transform: translateY(-3px) !important;
@@ -229,7 +229,7 @@ p, span, label, td {
 }
 
 /* 4. Elegant Interactive Buttons with Glow & Tactile Lift */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+button, .garuda-btn-primary, .purple-btn, .garuda-btn-cyan {
     background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%) !important;
     color: #FFFFFF !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -246,7 +246,7 @@ button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
     gap: 8px !important;
 }
 
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+button:hover, .garuda-btn-primary:hover, .purple-btn:hover {
     transform: translateY(-2px) scale(1.02) !important;
     background: linear-gradient(135deg, #1D4ED8 0%, #4338CA 100%) !important;
     border-color: var(--accent-cyan) !important;
@@ -309,14 +309,14 @@ input:focus, textarea:focus {
 
 <style id="BUTTON_ICON_SYNC_THEME">
 /* Uniform Button & Icon Styling */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+button, .garuda-btn-primary, .purple-btn, .garuda-btn-cyan {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
     border: 1px solid rgba(56, 189, 248, 0.4) !important;
     color: #F8FAFC !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
 }
 
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+button:hover, .garuda-btn-primary:hover, .purple-btn:hover {
     background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
     border-color: #38BDF8 !important;
     box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3) !important;
@@ -324,7 +324,7 @@ button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
 }
 
 /* Match all button SVGs/Icons to Theme */
-button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+button svg, .garuda-btn-primary svg, .purple-btn svg, .garuda-btn-cyan svg {
     stroke: #38BDF8 !important;
     fill: none !important;
     transition: transform 0.2s ease, stroke 0.2s ease !important;
@@ -428,7 +428,7 @@ button:hover svg.lucide, button:hover [data-lucide] {
 }
 
 /* 4. Tactile Buttons & Click Wave Ripple */
-button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+button, .garuda-btn-primary, .purple-btn, .garuda-btn-cyan {
     position: relative !important;
     overflow: hidden !important;
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
@@ -442,7 +442,7 @@ button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
     cursor: pointer !important;
 }
 
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+button:hover, .garuda-btn-primary:hover, .purple-btn:hover {
     transform: translateY(-3px) scale(1.02) !important;
     border-color: #38BDF8 !important;
     background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
@@ -450,7 +450,7 @@ button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
     color: #38BDF8 !important;
 }
 
-button:active, .jarvis-btn-primary:active {
+button:active, .garuda-btn-primary:active {
     transform: translateY(1px) scale(0.96) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
 }
@@ -475,7 +475,7 @@ button:active, .jarvis-btn-primary:active {
 
 <script>
 document.addEventListener('click', function(e) {
-    var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+    var btn = e.target.closest('button, .garuda-btn-primary, .purple-btn');
     if (!btn) return;
     
     var circle = document.createElement('span');
@@ -521,7 +521,7 @@ input:focus, textarea:focus {
 }
 
 /* 3. All Cards, Nodes & Telemetry Blocks */
-.jarvis-card, [class*="rounded-"], div[style*="background"] {
+.garuda-card, [class*="rounded-"], div[style*="background"] {
     border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -583,7 +583,7 @@ button:has(svg.lucide-trash):hover, button:contains("Del"):hover {
 
 <style id="FEEDBACK_RAINBOW_TACTILE_ENGINE">
 /* 1. Curved Buttons & Lift Hover */
-button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+button, .garuda-btn-primary, .purple-btn, a.purple-btn,
 input[type="submit"], input[type="button"], #supportLauncherBtn {
     border-radius: 9999px !important;
     transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -594,14 +594,14 @@ input[type="submit"], input[type="button"], #supportLauncherBtn {
     cursor: pointer !important;
 }
 
-button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+button:hover, .garuda-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
     transform: translateY(-3px) scale(1.02) !important;
     border-color: #38BDF8 !important;
     box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.7), 0 0 18px rgba(56, 189, 248, 0.4) !important;
     color: #38BDF8 !important;
 }
 
-button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+button:active, .garuda-btn-primary:active, .purple-btn:active, a.purple-btn:active {
     transform: translateY(2px) scale(0.96) !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
 }
@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <i data-lucide="shield" class="w-6 h-6"></i>
             </div>
             <div>
-                <span class="font-cyber font-bold text-lg tracking-wider text-purple-200">JARVIS PORTAL</span>
+                <span class="font-cyber font-bold text-lg tracking-wider text-purple-200">GARUDA PORTAL</span>
                 <span class="block text-[10px] font-mono text-purple-400">OPERATIONAL GATEWAY</span>
             </div>
         </div>
@@ -1811,7 +1811,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 <!-- MOBILE PERSISTENCE & COMING SOON FIRE LOCK SCRIPT -->
-<style id="jarvis-coming-soon-lock-style">
+<style id="garuda-coming-soon-lock-style">
 .btn-coming-soon-lock {
     background: #0f172a !important;
     color: #f97316 !important;
@@ -1832,7 +1832,7 @@ window.addEventListener('DOMContentLoaded', () => {
     border-color: #fb923c !important;
 }
 </style>
-<script id="jarvis-mobile-state-manager">
+<script id="garuda-mobile-state-manager">
 (function() {
     async function syncMobileDownloadState() {
         try {
@@ -1991,7 +1991,7 @@ var subsystemData = {
         content: "<p>• <strong>Transport Protocol:</strong> Full-Duplex Bi-Directional WebSocket Bridge</p><p>• <strong>Sync Target:</strong> Windows Desktop Core &lt;-&gt; Android Node Client</p><p>• <strong>Stream Frequency:</strong> 60Hz Telemetry Broadcast Loop</p>"
     },
     default: {
-        title: "JARVIS SYSTEM ARCHITECTURE",
+        title: "GARUDA SYSTEM ARCHITECTURE",
         content: "<p>• <strong>Runtime:</strong> Python FastAPI Real-Time Engine</p><p>• <strong>Interface:</strong> Reactive Glass Cyber HUD</p><p>• <strong>Client Node:</strong> Android Automated Node Client (APK Host)</p>"
     }
 };
@@ -2057,7 +2057,7 @@ document.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         if (!isAllActiveState) {
-            alert("JARVIS Mobile Client: Coming Soon (System in Standby/Deactive state)");
+            alert("GARUDA Mobile Client: Coming Soon (System in Standby/Deactive state)");
         } else {
             var dl = document.createElement('a');
             dl.href = '/download/mobile';

@@ -1,4 +1,4 @@
-"""Desktop client for the JARVIS license service."""
+"""Desktop client for the GARUDA license service."""
 
 from __future__ import annotations
 
@@ -70,7 +70,7 @@ def machine_fingerprint() -> str:
 
 
 def _validate_url() -> str:
-    configured = os.environ.get("JARVIS_LICENSE_API_URL", "").strip()
+    configured = os.environ.get("GARUDA_LICENSE_API_URL", "").strip()
     if not configured:
         return _DEFAULT_VALIDATE_URL
     if configured.endswith("/api/validate"):
@@ -79,7 +79,7 @@ def _validate_url() -> str:
 
 
 def _landing_url() -> str:
-    configured = os.environ.get("JARVIS_LANDING_URL", "").strip()
+    configured = os.environ.get("GARUDA_LANDING_URL", "").strip()
     if configured:
         return configured
     endpoint = urlsplit(_validate_url())
@@ -151,7 +151,7 @@ def validate_license(timeout: float = 8.0) -> LicenseDecision:
         return LicenseDecision(
             False,
             "invalid_endpoint",
-            "Set JARVIS_LICENSE_API_URL to a valid HTTP(S) license endpoint.",
+            "Set GARUDA_LICENSE_API_URL to a valid HTTP(S) license endpoint.",
         )
     if parsed_endpoint.scheme != "https" and parsed_endpoint.hostname not in {
         "localhost", "127.0.0.1", "::1",
@@ -257,7 +257,7 @@ def show_license_block(decision: LicenseDecision) -> None:
 
     app = QApplication.instance() or QApplication(sys.argv)
     dialog = QDialog()
-    dialog.setWindowTitle("JARVIS by Suraj — License")
+    dialog.setWindowTitle("GARUDA by Suraj — License")
     dialog.setFixedWidth(460)
     dialog.setStyleSheet(
         "QDialog { background: #080103; color: #ffe5ec; }"
@@ -279,7 +279,7 @@ def show_license_block(decision: LicenseDecision) -> None:
     layout.addWidget(title)
 
     body = QLabel(
-        "Your 10-day trial has ended. Buy a lifetime license to continue using JARVIS."
+        "Your 10-day trial has ended. Buy a lifetime license to continue using GARUDA."
         if decision.reason == "trial_expired"
         else decision.message
     )

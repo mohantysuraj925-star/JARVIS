@@ -1,7 +1,7 @@
-# ⚙️ JARVIS — Next-Generation Personal AI Assistant
+# ⚙️ GARUDA — Next-Generation Personal AI Assistant
 ### Developed and Maintained by Suraj (KUMAR SURAJ)
 
-JARVIS is an ultra-fast, autonomous personal desktop assistant powered by Google Gemini Live API. Featuring real-time voice interaction, visual context streaming, system-level execution, offline persistent memory, and a custom 3D holographic avatar with live viseme lip-synchronization.
+GARUDA is an ultra-fast, autonomous personal desktop assistant powered by Google Gemini Live API. Featuring real-time voice interaction, visual context streaming, system-level execution, offline persistent memory, and a custom 3D holographic avatar with live viseme lip-synchronization.
 
 Optimized to run seamlessly on low-latency and low-bandwidth connections (down to 20 KB/s).
 
@@ -9,11 +9,11 @@ Optimized to run seamlessly on low-latency and low-bandwidth connections (down t
 
 ## 🚀 Complete Step-by-Step Setup & Installation Guide
 
-Follow these exact steps to run JARVIS on any Windows, macOS, or Linux machine.
+Follow these exact steps to run GARUDA on any Windows, macOS, or Linux machine.
 
 ### Step 1: Download & Extract
 1. Download the project repository as a ZIP archive.
-2. Extract the ZIP folder to your preferred local directory (e.g., `C:\Users\YourUsername\Desktop\jarvis`).
+2. Extract the ZIP folder to your preferred local directory (e.g., `C:\Users\YourUsername\Desktop\garuda`).
 3. Open the extracted folder in **Visual Studio Code** or your system terminal.
 
 ---
@@ -69,7 +69,7 @@ set unique `JARVIS_ADMIN_USERNAME`, `JARVIS_ADMIN_PASSWORD`, and
 `JARVIS_COOKIE_HTTPS_ONLY=true` behind a correctly configured TLS proxy.
 Set `JARVIS_LICENSE_API_URL` to the deployed HTTPS `/api/validate` endpoint.
 
-Downloads are served from `dist/JARVIS-Windows.zip` and `mobile/bin/JARVIS.apk`
+Downloads are served from `dist/GARUDA-Windows.zip` and `mobile/bin/GARUDA.apk`
 by default. Configure `JARVIS_WINDOWS_PACKAGE` and `JARVIS_ANDROID_PACKAGE` to
 the built artifacts; endpoints return HTTP 503 until the corresponding package
 exists. These endpoints track downloads but do not yet provide payments or

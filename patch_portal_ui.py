@@ -24,8 +24,8 @@ import re
 text = re.sub(r'<div class="flex justify-between items-center border-b border-slate-800 pb-3">[\s\S]*?</div>\s*</div>', header_addon.strip(), text, count=1)
 
 # Attach confirmed downloads to buttons
-text = text.replace('href="/get-package/windows"', 'href="javascript:void(0)" onclick="downloadWithConfirmation(\'windows\', \'/get-package/windows\', \'JARVIS_Desktop_Setup.exe\')"')
-text = text.replace('href="/get-package/android"', 'href="javascript:void(0)" onclick="downloadWithConfirmation(\'android\', \'/get-package/android\', \'JARVIS_Node_Companion.apk\')"')
+text = text.replace('href="/get-package/windows"', 'href="javascript:void(0)" onclick="downloadWithConfirmation(\'windows\', \'/get-package/windows\', \'GARUDA_Desktop_Setup.exe\')"')
+text = text.replace('href="/get-package/android"', 'href="javascript:void(0)" onclick="downloadWithConfirmation(\'android\', \'/get-package/android\', \'GARUDA_Node_Companion.apk\')"')
 
 with open(path, "w", encoding="utf-8") as f:
     f.write(text)

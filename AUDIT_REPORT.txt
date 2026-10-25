@@ -1,5 +1,5 @@
 ==================================================
-       JARVIS SYSTEM DIAGNOSTIC & AUDIT REPORT     
+       GARUDA SYSTEM DIAGNOSTIC & AUDIT REPORT     
 ==================================================
 
 [1] BACKEND ROUTES & TOGGLE LOGIC (server/app.py):
@@ -42,8 +42,8 @@
 [4] DOWNLOAD ARTIFACTS IN FOLDER:
    -> android_installer.zip (0.00 MB)
    -> apk_installer.zip (0.00 MB)
-   -> JARVIS.bat (0.00 MB)
-   -> JARVIS.exe (0.00 MB)
+   -> GARUDA.bat (0.00 MB)
+   -> GARUDA.exe (0.00 MB)
    -> JARVIS_Companion.apk (1.88 MB)
    -> JARVIS_Desktop_Setup.exe (197.79 MB)
    -> JARVIS_Installer.exe (197.79 MB)

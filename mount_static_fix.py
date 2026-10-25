@@ -18,7 +18,7 @@ if 'app.mount("/static"' in text:
     import re
     text = re.sub(r'app\.mount\("/static"[^\)]+\)', clean_mount.strip(), text)
 else:
-    text = text.replace('app = FastAPI(title="JARVIS AI System Core")', 'app = FastAPI(title="JARVIS AI System Core")\n' + clean_mount)
+    text = text.replace('app = FastAPI(title="GARUDA AI System Core")', 'app = FastAPI(title="GARUDA AI System Core")\n' + clean_mount)
 
 with open(path, "w", encoding="utf-8") as f:
     f.write(text)

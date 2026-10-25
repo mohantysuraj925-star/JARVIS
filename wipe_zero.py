@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("jarvis.db")
+conn = sqlite3.connect("garuda.db")
 c = conn.cursor()
 
 # 1. Total counters reset to 0

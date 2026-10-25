@@ -59,8 +59,8 @@ with open(target, "r", encoding="utf-8-sig") as f:
     html = f.read()
 
 # Clear previous bottom box agar bacha ho
-if "<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->" in html:
-    parts = html.split("<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->")
+if "<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->" in html:
+    parts = html.split("<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->")
     end_parts = parts[1].split("<!-- ================= END MOBILE CONTROL CENTER ================= -->")
     html = parts[0] + (end_parts[1] if len(end_parts) > 1 else "")
 

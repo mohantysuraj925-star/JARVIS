@@ -8,8 +8,8 @@ with open(target, "r", encoding="utf-8-sig") as f:
     c = f.read()
 
 # Sirf download functions ko safely map karein bina script tags ko disturb kiye
-c = c.replace("triggerDirectDownload('windows')", "window.location.href='/downloads/JARVIS_Desktop_Setup.exe'")
-c = c.replace("triggerDirectDownload('android')", "window.location.href='/downloads/JARVIS_Companion.apk'")
+c = c.replace("triggerDirectDownload('windows')", "window.location.href='/downloads/GARUDA_Desktop_Setup.exe'")
+c = c.replace("triggerDirectDownload('android')", "window.location.href='/downloads/GARUDA_Companion.apk'")
 
 with open(target, "w", encoding="utf-8") as f:
     f.write(c)

@@ -59,7 +59,7 @@ user_dashboard_html = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JARVIS PORTAL // OPERATOR CONSOLE</title>
+    <title>GARUDA PORTAL // OPERATOR CONSOLE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -99,7 +99,7 @@ user_dashboard_html = """<!DOCTYPE html>
                 <i data-lucide="shield" class="w-6 h-6"></i>
             </div>
             <div>
-                <h1 class="font-cyber font-bold text-lg text-purple-200">JARVIS PORTAL</h1>
+                <h1 class="font-cyber font-bold text-lg text-purple-200">GARUDA PORTAL</h1>
                 <p class="text-[10px] font-mono text-purple-400">OPERATOR CONSOLE // AI RUNTIME</p>
             </div>
         </div>
@@ -155,7 +155,7 @@ user_dashboard_html = """<!DOCTYPE html>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <!-- Windows Client -->
-                    <button onclick="downloadWithConfirmation('windows', '/get-package/windows', 'JARVIS_Desktop_Setup.exe')" 
+                    <button onclick="downloadWithConfirmation('windows', '/get-package/windows', 'GARUDA_Desktop_Setup.exe')" 
                             class="purple-btn p-4 rounded-xl flex items-center justify-between group text-left w-full">
                         <div class="flex items-center gap-3.5">
                             <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">
@@ -172,7 +172,7 @@ user_dashboard_html = """<!DOCTYPE html>
                     </button>
 
                     <!-- Android Companion -->
-                    <button onclick="downloadWithConfirmation('android', '/get-package/android', 'JARVIS_Node_Companion.apk')" 
+                    <button onclick="downloadWithConfirmation('android', '/get-package/android', 'GARUDA_Node_Companion.apk')" 
                             class="purple-btn p-4 rounded-xl flex items-center justify-between group text-left w-full">
                         <div class="flex items-center gap-3.5">
                             <div class="w-10 h-10 rounded-lg bg-purple-950 border border-purple-500/50 flex items-center justify-center text-purple-300 group-hover:scale-110 transition-transform">

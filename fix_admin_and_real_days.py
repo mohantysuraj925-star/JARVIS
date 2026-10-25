@@ -106,7 +106,7 @@ admin_candidates = [
 
 admin_html_snippet = """
 <!-- MOBILE & DYNAMIC SUBSCRIPTION CONTROL PANEL -->
-<div id="jarvisMobileAdminSection" style="margin: 25px auto; max-width: 900px; background: rgba(13, 20, 36, 0.95); border: 2px solid #00d2ff; border-radius: 12px; padding: 22px; box-shadow: 0 0 25px rgba(0,210,255,0.25); color: #fff; font-family: sans-serif;">
+<div id="garudaMobileAdminSection" style="margin: 25px auto; max-width: 900px; background: rgba(13, 20, 36, 0.95); border: 2px solid #00d2ff; border-radius: 12px; padding: 22px; box-shadow: 0 0 25px rgba(0,210,255,0.25); color: #fff; font-family: sans-serif;">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 18px;">
         <h2 style="margin:0; color:#00d2ff; font-size: 20px;">?? Mobile Access & Real Trial Monitor</h2>
         <button id="adminGlobalMobileBtn" onclick="toggleGlobalAccess()" style="background:#ef4444; color:#fff; border:none; padding: 8px 16px; border-radius: 6px; font-weight:bold; cursor:pointer;">Global Mobile: OFF</button>
@@ -209,7 +209,7 @@ for target in admin_candidates:
     if os.path.exists(target):
         with open(target, "r", encoding="utf-8-sig") as f:
             content = f.read()
-        if "jarvisMobileAdminSection" not in content:
+        if "garudaMobileAdminSection" not in content:
             if "</body>" in content:
                 content = content.replace("</body>", f"{admin_html_snippet}\n</body>")
             else:
@@ -228,7 +228,7 @@ user_patch_script = """
 <script>
 async function syncRealTrialData() {
     try {
-        const u = localStorage.getItem('jarvis_user') || sessionStorage.getItem('jarvis_user') || 'default_user';
+        const u = localStorage.getItem('garuda_user') || sessionStorage.getItem('garuda_user') || 'default_user';
         const res = await fetch('/api/user/real_subscription?username=' + encodeURIComponent(u));
         const data = await res.json();
         

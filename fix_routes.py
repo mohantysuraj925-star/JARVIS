@@ -17,7 +17,7 @@ async def root_index(request: Request):
             if "templates" in globals() and hasattr(templates, "TemplateResponse"):
                 return templates.TemplateResponse("portal.html", {"request": request, "username": uname or "Guest"})
             return FileResponse(p)
-    return {"status": "online", "message": "JARVIS Portal Ready"}
+    return {"status": "online", "message": "GARUDA Portal Ready"}
 """
 
 if '@app.get("/")' not in text:

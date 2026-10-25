@@ -42,8 +42,8 @@ for db in db_files:
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        hwid TEXT DEFAULT 'MASTER-JARVIS-001',
-        email TEXT DEFAULT 'master@jarvis.local',
+        hwid TEXT DEFAULT 'MASTER-GARUDA-001',
+        email TEXT DEFAULT 'master@garuda.local',
         role TEXT DEFAULT 'admin',
         created_at TEXT NOT NULL,
         days_remaining INTEGER DEFAULT 10,
@@ -60,7 +60,7 @@ for db in db_files:
     # Insert Master Admin
     c.execute("""
     INSERT INTO users (username, password, hwid, email, role, created_at, days_remaining, is_unlimited, is_active, last_seen)
-    VALUES ('admin123', 'Suraj@2026', 'MASTER-JARVIS-001', 'master@jarvis.local', 'admin', ?, 365, 1, 1, ?)
+    VALUES ('admin123', 'Suraj@2026', 'MASTER-GARUDA-001', 'master@garuda.local', 'admin', ?, 365, 1, 1, ?)
     """, (now_str, time.time()))
     
     conn.commit()

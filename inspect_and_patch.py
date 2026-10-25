@@ -6,7 +6,7 @@ with open(path, "r", encoding="utf-8-sig") as f:
 helper = """
 def get_db_connection():
     import sqlite3
-    db_path = "portal.db" if os.path.exists("portal.db") else "jarvis.db"
+    db_path = "portal.db" if os.path.exists("portal.db") else "garuda.db"
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn

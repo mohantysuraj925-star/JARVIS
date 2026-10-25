@@ -1,9 +1,9 @@
 ﻿{
-  "appId": "com.jarvis.companion",
-  "appName": "JARVIS",
+  "appId": "com.garuda.companion",
+  "appName": "GARUDA",
   "webDir": "www",
   "server": {
-    "url": "https://jarvis-live-render-url.onrender.com",
+    "url": "https://garuda-live-render-url.onrender.com",
     "cleartext": true
   }
 }

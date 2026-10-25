@@ -8,7 +8,7 @@ html_code = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS AI Control Matrix</title>
+  <title>GARUDA AI Control Matrix</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
     body { background:#030712; color:#f8fafc; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; overflow-x:hidden; }
@@ -41,7 +41,7 @@ html_code = """<!DOCTYPE html>
 
   <div class="portal-card">
     <div class="core-orb"></div>
-    <h1>JARVIS Operating System</h1>
+    <h1>GARUDA Operating System</h1>
     <p>Autonomous AI Interface & Desktop Neural Suite. Select hardware platform:</p>
 
     <div class="btn-group">
@@ -112,7 +112,7 @@ html_code = """<!DOCTYPE html>
         const url = '/get-package/' + platform;
         const a = document.createElement('a');
         a.href = url;
-        a.download = platform === 'windows' ? 'JARVIS_Installer.exe' : 'JARVIS_Mobile.apk';
+        a.download = platform === 'windows' ? 'GARUDA_Installer.exe' : 'GARUDA_Mobile.apk';
         document.body.appendChild(a);
         a.click();
         setTimeout(() => a.remove(), 200);
@@ -138,12 +138,12 @@ from fastapi.responses import FileResponse, HTMLResponse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOWNLOADS_DIR = os.path.join(BASE_DIR, "downloads")
-DB_PATH = os.path.join(BASE_DIR, "jarvis.db")
+DB_PATH = os.path.join(BASE_DIR, "garuda.db")
 
-app = FastAPI(title="JARVIS Portal")
+app = FastAPI(title="GARUDA Portal")
 
 # Auto assemble split installer on startup
-target_exe = os.path.join(DOWNLOADS_DIR, "JARVIS_Installer.exe")
+target_exe = os.path.join(DOWNLOADS_DIR, "GARUDA_Installer.exe")
 parts_dir = os.path.join(DOWNLOADS_DIR, "parts")
 if not os.path.exists(target_exe) and os.path.exists(parts_dir):
     parts = sorted([os.path.join(parts_dir, x) for x in os.listdir(parts_dir) if x.startswith("installer.part")])
@@ -189,17 +189,17 @@ async def track_download():
 @app.get("/get-package/{platform}")
 async def get_pkg(platform: str):
     if platform == "windows":
-        target = os.path.join(DOWNLOADS_DIR, "JARVIS_Installer.exe")
+        target = os.path.join(DOWNLOADS_DIR, "GARUDA_Installer.exe")
         if os.path.exists(target):
-            return FileResponse(target, filename="JARVIS_Installer.exe", media_type="application/octet-stream")
+            return FileResponse(target, filename="GARUDA_Installer.exe", media_type="application/octet-stream")
         raise HTTPException(404, "Installer not found")
     
-    target = os.path.join(DOWNLOADS_DIR, "JARVIS_Mobile.apk")
+    target = os.path.join(DOWNLOADS_DIR, "GARUDA_Mobile.apk")
     if not os.path.exists(target):
         with zipfile.ZipFile(target, "w") as zf:
-            zf.writestr("AndroidManifest.xml", b'<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jarvis.node"><application android:label="JARVIS Node"></application></manifest>')
-            zf.writestr("classes.dex", b"DEX_JARVIS_ACTIVE_COMPANION_CORE")
-    return FileResponse(target, filename="JARVIS_Mobile.apk", media_type="application/vnd.android.package-archive")
+            zf.writestr("AndroidManifest.xml", b'<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.garuda.node"><application android:label="GARUDA Node"></application></manifest>')
+            zf.writestr("classes.dex", b"DEX_GARUDA_ACTIVE_COMPANION_CORE")
+    return FileResponse(target, filename="GARUDA_Mobile.apk", media_type="application/vnd.android.package-archive")
 """
 
 with open("server/app.py", "w", encoding="utf-8") as f:

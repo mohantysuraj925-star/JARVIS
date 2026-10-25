@@ -120,7 +120,7 @@ async def track_download(platform_name: str, req: Request):
 
     fpath = f"downloads/{plat}_installer.zip"
     if os.path.exists(fpath):
-        return FileResponse(fpath, filename=f"jarvis_{plat}.zip")
+        return FileResponse(fpath, filename=f"garuda_{plat}.zip")
     return {"status": "success", "platform": plat, "user": uname, "time": t_str}
 
 if __name__ == "__main__":

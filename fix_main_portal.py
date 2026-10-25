@@ -2,7 +2,7 @@ import sqlite3
 import re
 
 # 1. Database ko real 0 baseline par set karein
-conn = sqlite3.connect("jarvis.db")
+conn = sqlite3.connect("garuda.db")
 c = conn.cursor()
 c.execute("DROP TABLE IF EXISTS portal_stats")
 c.execute("CREATE TABLE portal_stats (key TEXT PRIMARY KEY, val INTEGER DEFAULT 0)")

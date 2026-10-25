@@ -32,9 +32,9 @@ function showDetails(platform) {
             <p class="font-bold text-purple-300">Windows Client (.exe) Installation:</p>
             <ol class="list-decimal list-inside space-y-2 text-purple-200/80">
                 <li>Download button par click karein aur setup package save karein.</li>
-                <li>Apne <b>Downloads</b> folder me jakar <b>JARVIS_Desktop_Setup.exe</b> par double-click karein.</li>
+                <li>Apne <b>Downloads</b> folder me jakar <b>GARUDA_Desktop_Setup.exe</b> par double-click karein.</li>
                 <li>Agar Windows SmartScreen prompt aaye, toh <b>"More info"</b> dabakar <b>"Run anyway"</b> chunein.</li>
-                <li>Setup complete hote hi JARVIS assistant background me active ho jayega.</li>
+                <li>Setup complete hote hi GARUDA assistant background me active ho jayega.</li>
             </ol>
         `;
     } else {

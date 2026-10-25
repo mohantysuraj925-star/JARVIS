@@ -58,3 +58,8 @@ config/api_keys.json
 
 node_modules/
 .venv/
+
+config/api_keys.json
+config/user_config.json
+config/user_profile.json
+.env

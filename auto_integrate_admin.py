@@ -21,8 +21,8 @@ with open(target_path, "r", encoding="utf-8-sig") as f:
     content = f.read()
 
 # 1. Clear any previously appended junk at bottom
-if "<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->" in content:
-    content = content.split("<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->")[0] + "</body></html>"
+if "<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->" in content:
+    content = content.split("<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->")[0] + "</body></html>"
 
 # 2. Inject Master Button right next to 'Home' in DOM
 script_logic = """

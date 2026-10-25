@@ -1,7 +1,7 @@
 import os, sys, re, sqlite3, ast
 from datetime import datetime
 
-REPORT_FILE = "jarvis_audit_report.txt"
+REPORT_FILE = "garuda_audit_report.txt"
 
 passed = []
 warnings = []
@@ -14,7 +14,7 @@ def log_bug(msg): bugs.append(msg)
 def log_sugg(msg): suggestions.append(msg)
 
 print("=" * 65)
-print("       JARVIS FULL-STACK SYSTEM AUDITOR & SCANNER")
+print("       GARUDA FULL-STACK SYSTEM AUDITOR & SCANNER")
 print("=" * 65)
 
 # 1. DATABASE AUDIT
@@ -115,7 +115,7 @@ for t_path in template_files:
 
 # 4. GENERATE AI REPORT FILE
 with open(REPORT_FILE, "w", encoding="utf-8") as rf:
-    rf.write("=== JARVIS SYSTEM AUDIT REPORT ===\n")
+    rf.write("=== GARUDA SYSTEM AUDIT REPORT ===\n")
     rf.write(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
     
     rf.write("[PASSED CHECKS]\n")

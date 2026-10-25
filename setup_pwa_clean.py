@@ -5,8 +5,8 @@ os.makedirs("static", exist_ok=True)
 
 # 2. Valid Web Manifest create karein
 manifest_content = """{
-  "name": "JARVIS Assistant",
-  "short_name": "JARVIS",
+  "name": "GARUDA Assistant",
+  "short_name": "GARUDA",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",

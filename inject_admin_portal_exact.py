@@ -86,7 +86,7 @@ async def set_user_mobile_access(username: str, allow: bool):
 
 # 3. Inject Visual Control Box in Admin Templates
 admin_box_ui = """
-<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->
+<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->
 <div id="adminMobileHub" style="margin: 25px auto; max-width: 950px; background: #0b132b; border: 2px solid #00d2ff; border-radius: 12px; padding: 20px; color: #fff; font-family: 'Segoe UI', sans-serif; box-shadow: 0 0 20px rgba(0,210,255,0.3);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 15px;">
         <h3 style="margin:0; color:#00d2ff; font-size: 20px;">?? Mobile APK Access & Real Calculation Monitor</h3>

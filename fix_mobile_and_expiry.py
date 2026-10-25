@@ -10,17 +10,17 @@ if os.path.exists(app_file):
     apk_patch = """
 from fastapi.responses import RedirectResponse, FileResponse
 
-@app.get("/downloads/JARVIS_Companion.apk")
+@app.get("/downloads/GARUDA_Companion.apk")
 async def download_android():
-    apk_path = os.path.join("downloads", "JARVIS_Companion.apk")
+    apk_path = os.path.join("downloads", "GARUDA_Companion.apk")
     if os.path.exists(apk_path) and os.path.getsize(apk_path) > 100000:
-        return FileResponse(apk_path, filename="JARVIS_Companion.apk", media_type="application/vnd.android.package-archive")
+        return FileResponse(apk_path, filename="GARUDA_Companion.apk", media_type="application/vnd.android.package-archive")
     # Reliable GitHub mirror fallback taaki mobile user ko kabhi download error na mile
-    return RedirectResponse(url="https://github.com/Oliv4945/jarvis-android-app/releases/download/v0.2.4/Jarvis_v0.2.4.apk")
+    return RedirectResponse(url="https://github.com/Oliv4945/garuda-android-app/releases/download/v0.2.4/GARUDA_v0.2.4.apk")
 """
 
-    if "/downloads/JARVIS_Companion.apk" in code:
-        code = re.sub(r'@app\.get\("/downloads/JARVIS_Companion\.apk"\)[\s\S]*?def download_android\(\):[\s\S]*?(?=@app|\Z)', apk_patch.strip() + "\n\n", code)
+    if "/downloads/GARUDA_Companion.apk" in code:
+        code = re.sub(r'@app\.get\("/downloads/GARUDA_Companion\.apk"\)[\s\S]*?def download_android\(\):[\s\S]*?(?=@app|\Z)', apk_patch.strip() + "\n\n", code)
     else:
         code += "\n" + apk_patch
 

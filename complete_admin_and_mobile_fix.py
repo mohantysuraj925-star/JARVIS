@@ -200,7 +200,7 @@ for uf in user_files:
 <script>
 async function enforceLiveMobileState() {
     try {
-        const username = localStorage.getItem('jarvis_user') || sessionStorage.getItem('jarvis_user') || '';
+        const username = localStorage.getItem('garuda_user') || sessionStorage.getItem('garuda_user') || '';
         const res = await fetch('/api/user/can_download_mobile?username=' + encodeURIComponent(username));
         const data = await res.json();
         
@@ -227,7 +227,7 @@ async function enforceLiveMobileState() {
                 mBtn.style.opacity = "1";
                 mBtn.style.filter = "none";
                 mBtn.onclick = function() {
-                    window.location.href = '/downloads/JARVIS_Companion.apk';
+                    window.location.href = '/downloads/GARUDA_Companion.apk';
                 };
             }
         }

@@ -18,8 +18,8 @@ if target_file:
         html = fp.read()
 
     # 1. Niche ka faltu block delete karein
-    if "<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->" in html:
-        p1 = html.split("<!-- ================= JARVIS ADMIN MOBILE CONTROL CENTER ================= -->")[0]
+    if "<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->" in html:
+        p1 = html.split("<!-- ================= GARUDA ADMIN MOBILE CONTROL CENTER ================= -->")[0]
         p2 = html.split("<!-- ================= END MOBILE CONTROL CENTER ================= -->")[-1]
         html = p1 + p2
 

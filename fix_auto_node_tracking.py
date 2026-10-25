@@ -38,7 +38,7 @@ async def download_package_tracker(platform_name: str, req: Request):
     
     file_path = f"downloads/{plat}_installer.zip"
     if os.path.exists(file_path):
-        return FileResponse(file_path, filename=f"jarvis_{plat}.zip")
+        return FileResponse(file_path, filename=f"garuda_{plat}.zip")
     return {"status": "success", "node_registered": node_name, "platform": plat, "time": t_str}"""
 
 text = re.sub(r'@app\.get\("/get-package/\{platform_name\}"\)[\s\S]*?return\s*\{[\s\S]*?\}', enhanced_tracker.strip(), text)

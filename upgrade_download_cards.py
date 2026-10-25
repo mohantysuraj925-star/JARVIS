@@ -27,7 +27,7 @@ pro_win_block = """
             <ul class="text-xs text-purple-200/80 space-y-2 font-mono pl-1 list-none">
                 <li class="flex items-start gap-2.5">
                     <span class="text-purple-400 font-bold">01.</span>
-                    <span>Launch <b>JARVIS_Desktop_Setup.exe</b> from your Downloads folder.</span>
+                    <span>Launch <b>GARUDA_Desktop_Setup.exe</b> from your Downloads folder.</span>
                 </li>
                 <li class="flex items-start gap-2.5">
                     <span class="text-purple-400 font-bold">02.</span>

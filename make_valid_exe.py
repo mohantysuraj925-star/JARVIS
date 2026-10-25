@@ -19,13 +19,13 @@ valid_pe_bytes = bytes([
 # 2. Re-pack valid Windows client
 win_zip = "downloads/win_installer.zip"
 with zipfile.ZipFile(win_zip, "w") as z:
-    z.writestr("JARVIS_Setup.exe", valid_pe_bytes)
+    z.writestr("GARUDA_Setup.exe", valid_pe_bytes)
     # Runner script included taaki double click par popup/launch confirm ho
-    z.writestr("Run_JARVIS.bat", "@echo off\r\necho [JARVIS] Client Initialized Successfully!\r\npause\r\n")
+    z.writestr("Run_GARUDA.bat", "@echo off\r\necho [GARUDA] Client Initialized Successfully!\r\npause\r\n")
 
 # 3. Android APK zip
 apk_zip = "downloads/apk_installer.zip"
 with zipfile.ZipFile(apk_zip, "w") as z:
-    z.writestr("JARVIS_Node.apk", b"PK\x03\x04JARVIS_ANDROID_BINARY_NODE")
+    z.writestr("GARUDA_Node.apk", b"PK\x03\x04GARUDA_ANDROID_BINARY_NODE")
 
 print("Generated genuine installer packages without corruption.")

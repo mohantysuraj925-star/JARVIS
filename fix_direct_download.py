@@ -28,7 +28,7 @@ async def download_package_tracker(platform_name: str, req: Request):
         pass
     
     target_zip = f"downloads/{plat}_installer.zip"
-    out_name = f"JARVIS_Desktop_Setup.zip" if "win" in plat else f"JARVIS_Android_Companion.zip"
+    out_name = f"GARUDA_Desktop_Setup.zip" if "win" in plat else f"GARUDA_Android_Companion.zip"
     
     if os.path.exists(target_zip):
         return FileResponse(

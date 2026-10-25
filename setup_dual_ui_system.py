@@ -30,7 +30,7 @@ mobile_template_content = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JARVIS Mobile AI</title>
+    <title>GARUDA Mobile AI</title>
     <style>
         :root {
             --bg-color: #050b14;
@@ -135,7 +135,7 @@ mobile_template_content = """<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h3 style="color: var(--accent-color); letter-spacing: 1px;">JARVIS MOBILE</h3>
+        <h3 style="color: var(--accent-color); letter-spacing: 1px;">GARUDA MOBILE</h3>
         <button class="theme-btn" onclick="cycleTheme()">Switch UI</button>
     </div>
 

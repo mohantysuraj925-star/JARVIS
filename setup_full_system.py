@@ -108,7 +108,7 @@ async def download_package_tracker(platform_name: str, req: Request):
     fpath = f"downloads/{plat}_installer.{ext}"
     if os.path.exists(fpath):
         from fastapi.responses import FileResponse
-        return FileResponse(fpath, filename=f"jarvis_{plat}.{ext}")
+        return FileResponse(fpath, filename=f"garuda_{plat}.{ext}")
     return {"status": "success", "platform": plat, "user": uname, "logged_at": t_str}
 
 @app.post("/api/admin/modify-lifecycle")

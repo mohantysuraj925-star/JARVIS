@@ -13,12 +13,12 @@ for folder in folders_to_copy:
         add_data_args.extend(["--add-data", f"{src}{os.pathsep}{folder}"])
 
 # --onefile flag se single standalone .exe banegi
-cmd = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--onefile", "--windowed", "--name", "JARVIS_Installer"] + add_data_args + [os.path.join(BASE_DIR, "main.py")]
+cmd = [sys.executable, "-m", "PyInstaller", "--noconfirm", "--onefile", "--windowed", "--name", "GARUDA_Installer"] + add_data_args + [os.path.join(BASE_DIR, "main.py")]
 subprocess.run(cmd, check=True)
 
-print("[2/2] Moving JARVIS_Installer.exe to downloads folder...")
-built_exe = os.path.join(BASE_DIR, "dist", "JARVIS_Installer.exe")
-target_exe = os.path.join(DOWNLOADS_DIR, "JARVIS_Installer.exe")
+print("[2/2] Moving GARUDA_Installer.exe to downloads folder...")
+built_exe = os.path.join(BASE_DIR, "dist", "GARUDA_Installer.exe")
+target_exe = os.path.join(DOWNLOADS_DIR, "GARUDA_Installer.exe")
 
 if os.path.exists(target_exe):
     os.remove(target_exe)
@@ -29,5 +29,5 @@ print("\n" + "="*60)
 print("[SUCCESS] Direct Single-Click Executable Tayar!")
 print("Path: " + target_exe)
 print("="*60)
-print("Ab website se koi bhi user direct 'JARVIS_Installer.exe' download karega.")
+print("Ab website se koi bhi user direct 'GARUDA_Installer.exe' download karega.")
 print("Unhe koi zip kholne ki zarurat nahi hai. Bas 2 baar click karenge aur aapka 3D AI Assistant chalu!")

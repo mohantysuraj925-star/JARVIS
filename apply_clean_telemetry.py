@@ -89,7 +89,7 @@ async def store_feedback_live(request: Request):
 # 3. REAL TELEMETRY PLOT & FEEDBACK ENGINE (No fake elements)
 clean_plot_engine = """
 <!-- ================= COMPLETE REAL TELEMETRY & FEEDBACK MATRIX ================= -->
-<div id="JARVIS_VERIFIED_TELEMETRY_SUITE" style="max-width: 960px; margin: 50px auto 30px; padding: 0 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; position: relative; z-index: 50;">
+<div id="GARUDA_VERIFIED_TELEMETRY_SUITE" style="max-width: 960px; margin: 50px auto 30px; padding: 0 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; position: relative; z-index: 50;">
   <div style="background: rgba(13, 17, 28, 0.94); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 25px rgba(56, 189, 248, 0.08); padding: 30px 24px; backdrop-filter: blur(16px);">
 
     <!-- TOP HEADER -->

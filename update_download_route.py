@@ -28,12 +28,12 @@ async def download_package_tracker(platform_name: str, req: Request):
         pass
 
     if is_win:
-        file_path = "downloads/JARVIS_Desktop_Setup.exe"
-        filename = "JARVIS_Desktop_Setup.exe"
+        file_path = "downloads/GARUDA_Desktop_Setup.exe"
+        filename = "GARUDA_Desktop_Setup.exe"
         media = "application/vnd.microsoft.portable-executable"
     else:
-        file_path = "downloads/JARVIS_Node_Companion.apk"
-        filename = "JARVIS_Node_Companion.apk"
+        file_path = "downloads/GARUDA_Node_Companion.apk"
+        filename = "GARUDA_Node_Companion.apk"
         media = "application/vnd.android.package-archive"
 
     return FileResponse(

@@ -31,7 +31,7 @@ DEFAULT_SITE_SETTINGS = {
     "creator_name": "Suraj Kumar",
     "journey_text": (
         "Built completely from scratch over 7 months of dedicated research and development. "
-        "Inspired by Tony Stark's JARVIS and AI concepts, developed by deeply analyzing ideas "
+        "Inspired by Tony Stark's GARUDA and AI concepts, developed by deeply analyzing ideas "
         "across multi-AI platforms (ChatGPT, Gemini, DeepSeek, Claude, VS Code AI) to build a "
         "personalized, powerful AI companion ecosystem."
     ),
@@ -39,7 +39,7 @@ DEFAULT_SITE_SETTINGS = {
     "phone": "",
     "api_guide_link": "https://aistudio.google.com/app/apikey",
     "footer_text": (
-        "© 2026 JARVIS Project. Engineered & Developed by Suraj Kumar. All rights reserved."
+        "© 2026 GARUDA Project. Engineered & Developed by Suraj Kumar. All rights reserved."
     ),
 }
 logger = logging.getLogger(__name__)
@@ -162,9 +162,9 @@ def _mobile_access_allowed(request: Request):
 
 def _companion_apk_path(minimum_size=1000):
     apk_candidates = (
-        os.path.join("downloads", "JARVIS_Companion.apk"),
+        os.path.join("downloads", "GARUDA_Companion.apk"),
         os.path.join("downloads", "app-debug.apk"),
-        os.path.join("downloads", "JARVIS_Node_Companion.apk"),
+        os.path.join("downloads", "GARUDA_Node_Companion.apk"),
     )
     return next(
         (
@@ -521,9 +521,9 @@ async def modify_lifecycle(req: Request):
     return {"status": "success"}
 
 def _windows_installer_response():
-    target = os.path.join("downloads", "JARVIS_Installer.exe")
+    target = os.path.join("downloads", "GARUDA_Installer.exe")
     if not os.path.exists(target):
-        target = os.path.join("downloads", "JARVIS_Desktop_Setup.exe")
+        target = os.path.join("downloads", "GARUDA_Desktop_Setup.exe")
     if not os.path.exists(target):
         return JSONResponse(
             {"status": "error", "message": "Real installer not found on server"},
@@ -531,7 +531,7 @@ def _windows_installer_response():
         )
     return FileResponse(
         target,
-        filename="JARVIS_Installer.exe",
+        filename="GARUDA_Installer.exe",
         media_type="application/octet-stream",
     )
 
@@ -555,7 +555,7 @@ async def get_package(platform_name: str, request: Request):
         )
     return FileResponse(
         path=fpath,
-        filename="JARVIS_Node_Companion.apk",
+        filename="GARUDA_Node_Companion.apk",
         media_type="application/vnd.android.package-archive",
     )
 
@@ -573,20 +573,20 @@ async def execute_mobile_command(command: str):
 
 from fastapi.responses import FileResponse
 
-@app.get("/downloads/JARVIS_Desktop_Setup.exe")
+@app.get("/downloads/GARUDA_Desktop_Setup.exe")
 async def download_windows():
     return _windows_installer_response()
 
 
 from fastapi.responses import RedirectResponse, FileResponse
 
-@app.get("/downloads/JARVIS_Companion.apk")
+@app.get("/downloads/GARUDA_Companion.apk")
 async def download_android(request: Request):
     if not _mobile_access_allowed(request):
         return JSONResponse({"status": "error", "message": "Mobile downloads are not enabled for this account."}, status_code=403)
     apk_path = _companion_apk_path(minimum_size=100000)
     if apk_path:
-        return FileResponse(apk_path, filename="JARVIS_Companion.apk", media_type="application/vnd.android.package-archive")
+        return FileResponse(apk_path, filename="GARUDA_Companion.apk", media_type="application/vnd.android.package-archive")
     return JSONResponse(
         {
             "status": "error",
@@ -1631,7 +1631,7 @@ def api_toggle_mobile_status(payload: dict = None):
 # DIRECT APK DOWNLOAD ROUTE
 @app.get("/download-apk")
 @app.get("/api/downloads/mobile")
-async def download_jarvis_apk():
+async def download_garuda_apk():
     from fastapi.responses import FileResponse
     import os
     paths = [
@@ -1640,5 +1640,5 @@ async def download_jarvis_apk():
     ]
     for p in paths:
         if os.path.exists(p):
-            return FileResponse(path=p, filename="JARVIS-Android.apk", media_type="application/vnd.android.package-archive")
+            return FileResponse(path=p, filename="GARUDA-Android.apk", media_type="application/vnd.android.package-archive")
     return {"error": "APK not found"}

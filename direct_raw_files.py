@@ -4,18 +4,18 @@ import re
 # 1. Real standalone files folder me ensure karein
 os.makedirs("downloads", exist_ok=True)
 
-win_raw = "downloads/JARVIS_Desktop_Setup.exe"
-apk_raw = "downloads/JARVIS_Node_Companion.apk"
+win_raw = "downloads/GARUDA_Desktop_Setup.exe"
+apk_raw = "downloads/GARUDA_Node_Companion.apk"
 
 # Windows binary header
 if not os.path.exists(win_raw):
     with open(win_raw, "wb") as f:
-        f.write(b"MZ\x90\x00" + b"\x00" * 60 + b"\x80\x00\x00\x00" + b"JARVIS_RAW_BINARY")
+        f.write(b"MZ\x90\x00" + b"\x00" * 60 + b"\x80\x00\x00\x00" + b"GARUDA_RAW_BINARY")
 
 # Android dummy binary
 if not os.path.exists(apk_raw):
     with open(apk_raw, "wb") as f:
-        f.write(b"PK\x03\x04" + b"JARVIS_RAW_APK_DATA")
+        f.write(b"PK\x03\x04" + b"GARUDA_RAW_APK_DATA")
 
 # 2. server/app.py me direct .exe aur .apk serve karne ka route
 path = "server/app.py"
@@ -46,12 +46,12 @@ async def download_package_tracker(platform_name: str, req: Request):
         pass
 
     if is_win:
-        file_path = "downloads/JARVIS_Desktop_Setup.exe"
-        filename = "JARVIS_Desktop_Setup.exe"
+        file_path = "downloads/GARUDA_Desktop_Setup.exe"
+        filename = "GARUDA_Desktop_Setup.exe"
         media = "application/vnd.microsoft.portable-executable"
     else:
-        file_path = "downloads/JARVIS_Node_Companion.apk"
-        filename = "JARVIS_Node_Companion.apk"
+        file_path = "downloads/GARUDA_Node_Companion.apk"
+        filename = "GARUDA_Node_Companion.apk"
         media = "application/vnd.android.package-archive"
 
     return FileResponse(

@@ -1,4 +1,4 @@
-"""Kivy Android companion for the JARVIS realtime voice WebSocket."""
+"""Kivy Android companion for the GARUDA realtime voice WebSocket."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ FRAME_SAMPLES = WIRE_SAMPLE_RATE * FRAME_MS // 1000
 MAX_QUEUE_FRAMES = 5
 
 _KV = """
-<JarvisRoot>:
+<GARUDARoot>:
     orientation: "vertical"
     padding: "22dp"
     spacing: "14dp"
@@ -37,7 +37,7 @@ _KV = """
             pos: self.pos
             size: self.size
     Label:
-        text: "◈  JARVIS BY SURAJ"
+        text: "◈  GARUDA BY SURAJ"
         size_hint_y: None
         height: "52dp"
         color: 1, 0.16, 0.29, 1
@@ -135,7 +135,7 @@ class AndroidAudioCapture:
 
     def start(self) -> None:
         self._thread = threading.Thread(
-            target=self._capture, name="jarvis-android-audio", daemon=True
+            target=self._capture, name="garuda-android-audio", daemon=True
         )
         self._thread.start()
 
@@ -200,9 +200,9 @@ class AndroidAudioCapture:
                 app.root._schedule_status(f"Microphone error: {exc}")
 
 
-class JarvisRoot(BoxLayout):
+class GARUDARoot(BoxLayout):
     endpoint = StringProperty(
-        os.environ.get("JARVIS_MOBILE_WS_URL", DEFAULT_WS_URL)
+        os.environ.get("GARUDA_MOBILE_WS_URL", DEFAULT_WS_URL)
     )
     status = StringProperty("Set your deployed WSS endpoint to connect.")
     connected = BooleanProperty(False)
@@ -230,7 +230,7 @@ class JarvisRoot(BoxLayout):
             return
 
         if "your-host.example" in self.endpoint:
-            self.status = "Configure JARVIS_MOBILE_WS_URL with your server address."
+            self.status = "Configure GARUDA_MOBILE_WS_URL with your server address."
             return
 
         try:
@@ -260,10 +260,10 @@ class JarvisRoot(BoxLayout):
         self._capture = AndroidAudioCapture(self._audio_queue)
         self._capture.start()
         self._network_thread = threading.Thread(
-            target=self._network_worker, name="jarvis-mobile-websocket", daemon=True
+            target=self._network_worker, name="garuda-mobile-websocket", daemon=True
         )
         self._network_thread.start()
-        self.status = "Connecting to JARVIS voice service…"
+        self.status = "Connecting to GARUDA voice service…"
 
     def disconnect(self) -> None:
         self._stop_event.set()
@@ -347,11 +347,11 @@ class JarvisRoot(BoxLayout):
         Clock.schedule_once(lambda _dt, text=value: self.set_status(text), 0)
 
 
-class JarvisMobileApp(App):
+class GARUDAMobileApp(App):
     def build(self):
-        self.title = "JARVIS by Suraj"
+        self.title = "GARUDA by Suraj"
         Builder.load_string(_KV)
-        return JarvisRoot()
+        return GARUDARoot()
 
     def on_stop(self):
         if self.root is not None:
@@ -359,7 +359,7 @@ class JarvisMobileApp(App):
 
 
 if __name__ == "__main__":
-    JarvisMobileApp().run()
+    GARUDAMobileApp().run()
 
 
 # Feedback Storage Endpoint

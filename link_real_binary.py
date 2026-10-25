@@ -22,7 +22,7 @@ for root, dirs, files in os.walk("."):
                 pass
 
 if target_exe and max_size > 10 * 1024 * 1024:  # > 10MB
-    dest = "downloads/JARVIS_Desktop_Setup.exe"
+    dest = "downloads/GARUDA_Desktop_Setup.exe"
     shutil.copy2(target_exe, dest)
     print(f"SUCCESS: Copied real build ({max_size // (1024*1024)} MB) from {target_exe} to {dest}")
 else:

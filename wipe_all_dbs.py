@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-db_files = ["portal.db", "jarvis.db"]
+db_files = ["portal.db", "garuda.db"]
 
 for db in db_files:
     if not os.path.exists(db):

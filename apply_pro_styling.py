@@ -9,7 +9,7 @@ win_card = """
     <ul class="text-[12px] text-purple-200/80 space-y-1.5 leading-relaxed list-none pl-1">
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-mono text-[10px] mt-0.5">01</span>
-            <span>Launch <b>JARVIS_Desktop_Setup.exe</b> from your local Downloads folder.</span>
+            <span>Launch <b>GARUDA_Desktop_Setup.exe</b> from your local Downloads folder.</span>
         </li>
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-mono text-[10px] mt-0.5">02</span>

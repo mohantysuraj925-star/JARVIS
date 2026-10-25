@@ -12,7 +12,7 @@ if 'from fastapi.staticfiles import StaticFiles' not in text:
     text = 'from fastapi.staticfiles import StaticFiles\n' + text
 
 if 'app.mount("/static"' not in text:
-    text = text.replace('app = FastAPI(title="JARVIS AI System Core")', 'app = FastAPI(title="JARVIS AI System Core")\napp.mount("/static", StaticFiles(directory="static"), name="static")')
+    text = text.replace('app = FastAPI(title="GARUDA AI System Core")', 'app = FastAPI(title="GARUDA AI System Core")\napp.mount("/static", StaticFiles(directory="static"), name="static")')
 
 # Clean Modal HTML without JS code (calls external static/auth.js)
 clean_modal_html = """<!-- Interactive Cyberpunk Auth Modal -->

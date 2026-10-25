@@ -1,7 +1,7 @@
 import sqlite3
 import time
 
-conn = sqlite3.connect("jarvis.db")
+conn = sqlite3.connect("garuda.db")
 c = conn.cursor()
 
 # 1. Reset Stats to clean 0

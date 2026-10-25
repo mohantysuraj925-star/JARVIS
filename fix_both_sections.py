@@ -43,7 +43,7 @@ win_steps = """<div class="p-5 rounded-2xl bg-purple-950/40 border border-purple
     <ul class="text-xs text-purple-100/90 space-y-1.5 list-none pl-0">
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-bold">1.</span>
-            <span>Click below to download <b>JARVIS_Desktop_Setup.exe</b>.</span>
+            <span>Click below to download <b>GARUDA_Desktop_Setup.exe</b>.</span>
         </li>
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-bold">2.</span>
@@ -55,7 +55,7 @@ win_steps = """<div class="p-5 rounded-2xl bg-purple-950/40 border border-purple
         </li>
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-bold">4.</span>
-            <span>Paste your designated <b>API Key</b> when prompted to authenticate and start using JARVIS.</span>
+            <span>Paste your designated <b>API Key</b> when prompted to authenticate and start using GARUDA.</span>
         </li>
     </ul>
 </div>"""
@@ -80,7 +80,7 @@ apk_steps = """<div class="p-5 rounded-2xl bg-purple-950/40 border border-purple
         </li>
         <li class="flex items-start gap-2">
             <span class="text-purple-400 font-bold">4.</span>
-            <span>Enter your <b>API Key</b> to link the mobile companion to your JARVIS server.</span>
+            <span>Enter your <b>API Key</b> to link the mobile companion to your GARUDA server.</span>
         </li>
     </ul>
 </div>"""

@@ -1,1 +1,1 @@
-"""JARVIS licensing and download service."""
+"""GARUDA licensing and download service."""
