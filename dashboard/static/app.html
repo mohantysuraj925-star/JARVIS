@@ -1,740 +1,332 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS by Suraj</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GARUDA BY SURAJ — Mobile Cockpit</title>
   <script src="/static/crypto.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:      #07090f;
-      --surface: rgba(255,255,255,0.04);
-      --border:  rgba(255,255,255,0.07);
-      --accent:  #6366f1;
-      --adim:    rgba(99,102,241,0.14);
-      --text:    #dde3ed;
-      --muted:   #5e6a7e;
-      --green:   #22c55e;
-      --gdim:    rgba(34,197,94,0.14);
+      --bg: #030712;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border: rgba(239, 68, 68, 0.25);
+      --border-glow: rgba(239, 68, 68, 0.45);
+      --accent: #ef4444;
+      --accent-glow: rgba(239, 68, 68, 0.2);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #10b981;
+      --gdim: rgba(16, 185, 129, 0.15);
     }
-    html, body {
-      height: 100%; background: var(--bg); color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex; flex-direction: column; overflow: hidden;
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at 50% 0%, #1e111a 0%, var(--bg) 75%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-
-    /* ── HEADER ── */
+    /* Top Header Bar */
     header {
-      flex-shrink: 0; display: flex; align-items: center; gap: 10px;
-      padding: 12px 16px; border-bottom: 1px solid var(--border);
-      background: rgba(7,9,15,0.95);
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
     }
-    .logo { font-size: 15px; font-weight: 700; letter-spacing: 6px; }
-    .logo em { color: var(--accent); font-style: normal; }
-    .logo small { font-size: 10px; font-weight: 500; letter-spacing: 1px; color: var(--muted); }
-    .pill {
-      display: flex; align-items: center; gap: 6px; padding: 4px 11px;
-      border-radius: 99px; background: var(--surface); border: 1px solid var(--border);
-      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--muted); transition: all 0.3s;
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
     }
-    .pill.on { background: var(--gdim); border-color: rgba(34,197,94,0.3); color: var(--green); }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
-    .pill.on .dot { background: var(--green); animation: blink 2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .spacer { flex: 1; }
-    .enc-badge {
-      font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 3px 8px;
-      border-radius: 4px; display: none;
+    .brand-title span {
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
     }
-    .enc-badge.on  { display: block; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--green); }
-    .enc-badge.off { display: block; background: rgba(255,100,100,0.08); border: 1px solid rgba(255,100,100,0.2); color: #f87171; }
-    .url { font-size: 10px; font-family: monospace; color: var(--muted); padding: 4px 9px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; }
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: var(--gdim);
+      color: var(--green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
 
-    /* ── FEED ── */
-    main { flex: 1; overflow-y: auto; padding: 14px 16px 8px; display: flex; flex-direction: column; gap: 10px; }
-    main::-webkit-scrollbar { width: 3px; }
-    main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .msg { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.55; animation: pop 0.18s ease; }
-    @keyframes pop { from { opacity:0; transform:translateY(4px); } }
-    .msg-j   { align-self:flex-start; background:var(--adim);   border:1px solid rgba(99,102,241,0.18); border-bottom-left-radius:4px; }
-    .msg-u   { align-self:flex-end;   background:var(--surface); border:1px solid var(--border);        border-bottom-right-radius:4px; }
-    .msg-sys { align-self:center; font-size:11px; color:var(--muted); padding:2px 0; background:transparent; border:none; letter-spacing:0.3px; }
-    .lbl { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:0.45; margin-bottom:4px; }
-    .msg-j .lbl { color:var(--accent); }
-    .msg-u .lbl { color:var(--muted); text-align:right; }
+    /* Main Console / Logs */
+    main {
+      flex: 1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+    .panel-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .console-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+    }
+    .console-header {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #logOutput {
+      flex: 1;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #e2e8f0;
+      word-break: break-word;
+    }
+    .log-line {
+      margin-bottom: 4px;
+      padding: 2px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .log-sys { color: #f87171; }
+    .log-user { color: #38bdf8; }
 
-    /* ── FILE CARD ── */
-    .msg-file {
-      align-self: flex-end;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; border-bottom-right-radius: 4px;
-      padding: 11px 14px; display: flex; align-items: center; gap: 12px;
-      max-width: 82%; animation: pop 0.18s ease;
+    /* Quick Action Grid */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
     }
-    .fc-icon { font-size: 26px; flex-shrink: 0; }
-    .fc-meta { flex: 1; min-width: 0; }
-    .fc-lbl  { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; opacity:0.45; color:var(--muted); margin-bottom:4px; }
-    .fc-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .fc-size { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .fc-bar-wrap { height: 3px; background: var(--border); border-radius: 2px; margin-top: 7px; overflow: hidden; }
-    .fc-bar { height: 100%; width: 0%; background: var(--accent); border-radius: 2px; transition: width 0.12s linear; }
-    .fc-status { font-size: 10px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0; color: var(--muted); }
-    .fc-status.done { color: var(--green); }
-    .fc-status.err  { color: #f87171; }
-    .fc-dl { display:block; margin-top:6px; font-size:11px; color:var(--accent); text-decoration:none; font-weight:600; }
-    .fc-dl:hover { opacity: 0.8; }
+    .btn-action {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      padding: 10px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-action:active {
+      transform: scale(0.95);
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+    .btn-action i {
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+    }
 
-    /* ── FOOTER ── */
-    footer { flex-shrink:0; padding:10px 14px; border-top:1px solid var(--border); background:rgba(7,9,15,0.95); display:flex; gap:8px; align-items:center; }
-    #inp { flex:1; padding:11px 14px; background:var(--surface); border:1.5px solid var(--border); border-radius:12px; color:var(--text); font-size:14px; outline:none; transition:border-color 0.15s; }
-    #inp:focus { border-color: var(--accent); }
-    #inp::placeholder { color: var(--muted); }
-    .btn { padding:11px 15px; border:none; border-radius:12px; font-size:11px; font-weight:700; letter-spacing:1.5px; cursor:pointer; transition:opacity 0.15s,transform 0.1s; }
-    .btn:active { transform: scale(0.96); }
-    .btn:hover  { opacity: 0.82; }
-    .btn-send { background: var(--accent); color: #fff; }
-    .btn-wake { background:var(--surface); border:1px solid var(--border); color:var(--muted); display:none; }
-    .btn-wake.show { display:block; color:var(--green); border-color:rgba(34,197,94,0.35); }
-    .btn-attach {
-      background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-      padding: 11px 13px; font-size: 16px; line-height: 1; border-radius: 12px;
-      cursor: pointer; transition: opacity 0.15s, transform 0.1s; display: flex;
-      align-items: center; justify-content: center; flex-shrink: 0;
+    /* Bottom Control Bar */
+    footer {
+      padding: 12px 14px;
+      background: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
-    .btn-attach:hover  { opacity: 0.82; border-color: var(--accent); color: var(--accent); }
-    .btn-attach:active { transform: scale(0.96); }
-
-    /* ── MIC BUTTON ── */
-    #mic-btn {
-      background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-      padding: 11px 13px; font-size: 16px; line-height: 1; border-radius: 12px;
-      cursor: pointer; transition: opacity 0.15s, transform 0.1s, background 0.2s, border-color 0.2s;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .input-box {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: white;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
     }
-    #mic-btn:hover  { opacity: 0.82; border-color: var(--accent); color: var(--accent); }
-    #mic-btn:active { transform: scale(0.96); }
-    #mic-btn.recording {
-      background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.45); color: #ef4444;
-      animation: mic-pulse 1s ease-in-out infinite;
+    .input-box:focus {
+      border-color: var(--accent);
     }
-    #mic-btn.unsupported { opacity: 0.3; cursor: not-allowed; }
-    @keyframes mic-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.65;transform:scale(0.97)} }
-
-    /* ── TOAST ── */
-    #toast {
-      position:fixed; top:66px; left:50%; transform:translateX(-50%) translateY(-8px);
-      background:rgba(34,197,94,0.16); border:1px solid rgba(34,197,94,0.4);
-      color:var(--green); font-size:12px; font-weight:700; letter-spacing:1px;
-      padding:7px 18px; border-radius:99px;
-      opacity:0; transition:opacity 0.22s,transform 0.22s;
-      pointer-events:none; white-space:nowrap;
+    .btn-send {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s;
     }
-    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .btn-send:active {
+      transform: scale(0.92);
+    }
+    .btn-send i {
+      width: 18px;
+      height: 18px;
+    }
   </style>
-
-    <!-- PWA Config -->
-    <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#8b5cf6">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
-        });
-      }
-    </script>
-
 </head>
 <body>
-<div role="region" aria-label="Main content">
-  <div id="toast"></div>
+
+  <!-- Header -->
   <header>
-    <div class="logo"><em>J</em>ARVIS <small>by Suraj</small></div>
-    <div class="pill" id="pill"><span class="dot"></span><span id="st">Connecting</span></div>
-    <div class="enc-badge" id="enc">AES-256</div>
-    <div class="spacer"></div>
-    <div class="url">__IP__:__PORT__</div>
+    <div class="brand-title">
+      <i data-lucide="zap"></i>
+      GARUDA <span>BY SURAJ</span>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      ACTIVE
+    </div>
   </header>
-  <main id="feed">
+
+  <!-- Main Viewport -->
+  <main>
+    <!-- Quick Controls -->
+    <div class="panel-card">
+      <div class="action-grid">
+        <button class="btn-action" onclick="sendCommand('mute')">
+          <i data-lucide="mic-off"></i>
+          <span>Mute</span>
+        </button>
+        <button class="btn-action" onclick="sendCommand('unmute')">
+          <i data-lucide="mic"></i>
+          <span>Unmute</span>
+        </button>
+        <button class="btn-action" onclick="sendCommand('screenshot')">
+          <i data-lucide="camera"></i>
+          <span>Vision</span>
+        </button>
+        <button class="btn-action" onclick="sendCommand('interrupt')">
+          <i data-lucide="octagon-alert"></i>
+          <span>Halt</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Logs -->
+    <div class="panel-card console-box">
+      <div class="console-header">
+        <span>TELEMETRY STREAM</span>
+        <i data-lucide="terminal" style="width: 14px; height: 14px;"></i>
+      </div>
+      <div id="logOutput">
+        <div class="log-line log-sys">[SYS] Connected to GARUDA Host Core.</div>
+        <div class="log-line log-sys">[SYS] Neural link established via WebSocket.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Input Footer -->
   <footer>
-    <input id="inp" placeholder="Send a command to JARVIS…" autocomplete="off">
-    <label class="btn-attach" for="file-inp" title="Send file">📎</label>
-    <input type="file" id="file-inp" multiple accept="*/*" style="display:none">
-    <button id="mic-btn" onclick="doMic()" title="Voice command">🎤</button>
-    <button class="btn btn-wake" id="wake" onclick="doWake()">WAKE</button>
-    <button class="btn btn-send" onclick="doSend()">SEND</button>
+    <input type="text" id="cmdInput" class="input-box" placeholder="Send command or query..." onkeydown="handleEnter(event)">
+    <button class="btn-send" onclick="sendInput()">
+      <i data-lucide="send"></i>
+    </button>
   </footer>
 
   <script>
-    // ── Auth — bearer token ───────────────────────────────────────────────────
-    const _authToken  = sessionStorage.getItem('jarvis_token');
-    const _sessionKey = sessionStorage.getItem('jarvis_key');
+    // Initialize Lucide Icons
+    lucide.createIcons();
 
-    if (!_authToken) {
-      location.replace('/login');
+    let ws = null;
+    const logBox = document.getElementById('logOutput');
+
+    function appendLog(txt, isUser=false) {
+      const line = document.createElement('div');
+      line.className = 'log-line ' + (isUser ? 'log-user' : 'log-sys');
+      line.textContent = txt;
+      logBox.appendChild(line);
+      logBox.scrollTop = logBox.scrollHeight;
     }
 
-    function _authHeader() { return { 'Authorization': `Bearer ${_authToken}` }; }
-    function _authFetch(url, opts = {}) {
-      opts.headers = Object.assign({}, opts.headers, _authHeader());
-      return fetch(url, opts);
-    }
-
-    // ── AES-256-CBC encryption (CryptoJS) ────────────────────────────────────
-    const _AES_SALT = 'JARVIS-DASHBOARD-v1';
-    let _aesKey = null;
-
-    function _initCrypto(key) {
-      if (typeof CryptoJS === 'undefined') return false;
-      _aesKey = CryptoJS.SHA256(key + _AES_SALT);
-      return true;
-    }
-
-    function _encrypt(plaintext) {
-      if (!_aesKey || typeof CryptoJS === 'undefined') return null;
+    function initWS() {
+      const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${proto}//${location.host}/ws`;
       try {
-        const iv  = CryptoJS.lib.WordArray.random(16);
-        const enc = CryptoJS.AES.encrypt(
-          CryptoJS.enc.Utf8.parse(plaintext), _aesKey,
-          { iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
-        );
-        const ivHex = iv.toString(CryptoJS.enc.Hex);
-        const ctHex = enc.ciphertext.toString(CryptoJS.enc.Hex);
-        const hex   = ivHex + ctHex;
-        const bytes = new Uint8Array(hex.length / 2);
-        for (let i = 0; i < bytes.length; i++)
-          bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
-        return btoa(String.fromCharCode(...bytes));
-      } catch { return null; }
-    }
-
-    const _encReady = _sessionKey ? _initCrypto(_sessionKey) : false;
-    const encBadge  = document.getElementById('enc');
-    if (_encReady) { encBadge.className = 'enc-badge on'; }
-    else           { encBadge.className = 'enc-badge off'; encBadge.textContent = 'NO ENC'; }
-
-    // ── WebSocket ─────────────────────────────────────────────────────────────
-    const feed  = document.getElementById('feed');
-    const pill  = document.getElementById('pill');
-    const stTxt = document.getElementById('st');
-    const wake  = document.getElementById('wake');
-
-    const _wsProto = location.protocol === 'https:' ? 'wss' : 'ws';
-    const _wsUrl   = `${_wsProto}://${location.host}/ws?token=${encodeURIComponent(_authToken)}`;
-    const ws       = new WebSocket(_wsUrl);
-    const _shownMessageIds = new Set();
-
-    ws.onopen    = () => { sys('Remote session active.'); toast('Connected to JARVIS'); };
-    ws.onclose   = () => sys('Connection lost — refresh to reconnect.');
-    ws.onerror   = () => sys('Connection error.');
-    ws.onmessage = (e) => {
-      const m = JSON.parse(e.data);
-      if (m.type === 'log')           append(m.speaker, m.text, m.id);
-      if (m.type === 'status')        setStatus(m.state);
-      if (m.type === 'wake')          sys('Wake word detected — connecting…');
-      if (m.type === 'sys')           sys(m.text);
-      if (m.type === 'file_received') _onFileReceived(m);
-    };
-
-    function setStatus(s) {
-      if (s === 'active') {
-        pill.className = 'pill on'; stTxt.textContent = 'Active'; wake.classList.remove('show');
-      } else {
-        pill.className = 'pill'; stTxt.textContent = 'Sleeping'; wake.classList.add('show');
+        ws = new WebSocket(wsUrl);
+        ws.onopen = () => appendLog('[SYS] Linked to Engine.');
+        ws.onmessage = (e) => appendLog(e.data);
+        ws.onclose = () => {
+          appendLog('[SYS] Disconnected. Reconnecting in 3s...');
+          setTimeout(initWS, 3000);
+        };
+      } catch(err) {
+        appendLog('[ERR] Connection error: ' + err);
       }
     }
 
-    function append(speaker, text, id) {
-      if (id != null && _shownMessageIds.has(String(id))) return;
-      if (id != null) _shownMessageIds.add(String(id));
-      const d = document.createElement('div');
-      if (id != null) d.dataset.messageId = String(id);
-      if (speaker === 'jarvis') {
-        d.className = 'msg msg-j';
-        d.innerHTML = `<div class="lbl">Jarvis</div>${esc(text)}`;
-      } else {
-        d.className = 'msg msg-u';
-        d.innerHTML = `<div class="lbl">You</div>${esc(text)}`;
+    function sendCommand(cmd) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'command', command: cmd }));
+        appendLog('> ' + cmd, true);
       }
-      feed.appendChild(d);
-      feed.scrollTop = feed.scrollHeight;
     }
 
-    async function hydrateHistory() {
-      try {
-        const r = await _authFetch('/api/history');
-        if (r.status === 401) { location.replace('/login'); return; }
-        const data = await r.json();
-        (data.messages || []).forEach(m => append(m.speaker, m.text, m.id));
-      } catch (_) {}
-    }
-    hydrateHistory();
-
-    function sys(text) {
-      const d = document.createElement('div');
-      d.className = 'msg msg-sys'; d.textContent = text;
-      feed.appendChild(d); feed.scrollTop = feed.scrollHeight;
-    }
-
-    function esc(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    // ── File helpers ──────────────────────────────────────────────────────────
-    function _fileIcon(name) {
-      const ext = (name.split('.').pop() || '').toLowerCase();
-      if (['jpg','jpeg','png','gif','webp','heic','heif','avif','bmp','svg'].includes(ext)) return '🖼️';
-      if (['mp4','mov','avi','mkv','webm','m4v','3gp'].includes(ext))                       return '🎬';
-      if (['mp3','m4a','wav','flac','aac','ogg','opus'].includes(ext))                      return '🎵';
-      if (['pdf'].includes(ext))                                                             return '📋';
-      if (['doc','docx','txt','md','rtf','odt'].includes(ext))                              return '📝';
-      if (['xls','xlsx','csv','ods'].includes(ext))                                         return '📊';
-      if (['ppt','pptx','odp'].includes(ext))                                               return '📑';
-      if (['zip','rar','7z','tar','gz','bz2','xz'].includes(ext))                          return '📦';
-      if (['apk','exe','dmg','deb','rpm','msi'].includes(ext))                              return '⚙️';
-      return '📎';
-    }
-
-    function _fmtSize(bytes) {
-      if (bytes < 1024)             return bytes + ' B';
-      if (bytes < 1024 * 1024)     return (bytes / 1024).toFixed(1) + ' KB';
-      if (bytes < 1024 ** 3)       return (bytes / 1024 / 1024).toFixed(1) + ' MB';
-      return (bytes / 1024 ** 3).toFixed(2) + ' GB';
-    }
-
-    // ── File upload (phone → computer) ────────────────────────────────────────
-    function _uploadFile(file) {
-      const id = 'fc_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-
-      // Create file card in feed
-      const card = document.createElement('div');
-      card.className = 'msg-file';
-      card.id = id;
-      card.innerHTML = `
-        <div class="fc-icon">${_fileIcon(file.name)}</div>
-        <div class="fc-meta">
-          <div class="fc-lbl">Sending</div>
-          <div class="fc-name">${esc(file.name)}</div>
-          <div class="fc-size">${_fmtSize(file.size)}</div>
-          <div class="fc-bar-wrap"><div class="fc-bar" id="${id}_bar"></div></div>
-        </div>
-        <div class="fc-status" id="${id}_st">0%</div>
-      `;
-      feed.appendChild(card);
-      feed.scrollTop = feed.scrollHeight;
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/upload');
-      xhr.setRequestHeader('Authorization', `Bearer ${_authToken}`);
-
-      xhr.upload.onprogress = (e) => {
-        if (!e.lengthComputable) return;
-        const pct = Math.round(e.loaded / e.total * 100);
-        const bar = document.getElementById(`${id}_bar`);
-        const st  = document.getElementById(`${id}_st`);
-        if (bar) bar.style.width = pct + '%';
-        if (st)  st.textContent  = pct + '%';
-      };
-
-      xhr.onload = () => {
-        const bar  = document.getElementById(`${id}_bar`);
-        const st   = document.getElementById(`${id}_st`);
-        const meta = card.querySelector('.fc-meta');
-        const lbl  = card.querySelector('.fc-lbl');
-        if (xhr.status === 200) {
-          let savedName = file.name;
-          try { savedName = JSON.parse(xhr.responseText).name || file.name; } catch {}
-          const dlUrl = `/uploads/${encodeURIComponent(savedName)}?token=${encodeURIComponent(_authToken)}`;
-          if (bar)  { bar.style.width = '100%'; bar.style.background = 'var(--green)'; }
-          if (st)   { st.textContent = '✓'; st.className = 'fc-status done'; }
-          if (lbl)  lbl.textContent = 'Sent';
-          if (meta) meta.insertAdjacentHTML('beforeend',
-            `<a class="fc-dl" href="${dlUrl}" download="${esc(savedName)}">⬇ Download back</a>`);
-          toast('File sent!');
-        } else {
-          let errMsg = 'Upload failed';
-          try { errMsg = JSON.parse(xhr.responseText).error || errMsg; } catch {}
-          if (bar) bar.style.background = '#f87171';
-          if (st)  { st.textContent = 'ERR'; st.className = 'fc-status err'; }
-          if (lbl) lbl.textContent = errMsg;
-        }
-      };
-
-      xhr.onerror = () => {
-        const st  = document.getElementById(`${id}_st`);
-        const lbl = card.querySelector('.fc-lbl');
-        if (st)  { st.textContent = 'ERR'; st.className = 'fc-status err'; }
-        if (lbl) lbl.textContent = 'Connection error';
-      };
-
-      const fd = new FormData();
-      fd.append('file', file);
-      xhr.send(fd);
-    }
-
-    // File received by another WebSocket client (e.g., second open tab)
-    function _onFileReceived(m) {
-      const dlUrl = `/uploads/${encodeURIComponent(m.name)}?token=${encodeURIComponent(_authToken)}`;
-      const card  = document.createElement('div');
-      card.className = 'msg-file';
-      card.innerHTML = `
-        <div class="fc-icon">${_fileIcon(m.name)}</div>
-        <div class="fc-meta">
-          <div class="fc-lbl">Received</div>
-          <div class="fc-name">${esc(m.name)}</div>
-          <div class="fc-size">${_fmtSize(m.size)}</div>
-          <a class="fc-dl" href="${dlUrl}" download="${esc(m.name)}">⬇ Download</a>
-        </div>
-        <div class="fc-status done">✓</div>
-      `;
-      feed.appendChild(card);
-      feed.scrollTop = feed.scrollHeight;
-      toast('File received on computer!');
-    }
-
-    // File input change handler
-    document.getElementById('file-inp').addEventListener('change', function () {
-      Array.from(this.files).forEach(_uploadFile);
-      this.value = ''; // reset so the same file can be re-sent
-    });
-
-    // ── Commands ──────────────────────────────────────────────────────────────
-    function doSend() {
-      const inp = document.getElementById('inp');
-      const txt = inp.value.trim();
-      if (!txt) return;
-      inp.value = '';
-      const enc  = _encrypt(txt);
-      const body = enc ? { enc } : { text: txt };
-      _authFetch('/api/command', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-    }
-
-    function doWake() {
-      sys('Sending wake signal…');
-      _authFetch('/api/wake', { method: 'POST' });
-    }
-
-    document.getElementById('inp').addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); }
-    });
-
-    // ── Toast ─────────────────────────────────────────────────────────────────
-    let _toastTimer;
-    function toast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
-      clearTimeout(_toastTimer);
-      _toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-    }
-
-    // ── Real-time Voice — PCM16 WebSocket → Gemini Live ──────────────────────
-    const micBtn  = document.getElementById('mic-btn');
-    let _voiceWs  = null;
-    let _audioCtx = null;
-    let _micStm   = null;
-    let _audioNd  = null;
-
-    function _micIdle() {
-      micBtn.innerHTML = '🎤';
-      micBtn.title     = 'Voice — tap to speak';
-      micBtn.classList.remove('recording');
-    }
-
-    // Float32 PCM → resample to 16 kHz + convert to Int16
-    function _f32toPcm16(f32, srcRate) {
-      let s = f32;
-      if (srcRate !== 16000) {
-        const ratio = srcRate / 16000;
-        const len   = Math.round(f32.length / ratio);
-        s = new Float32Array(len);
-        for (let i = 0; i < len; i++)
-          s[i] = f32[Math.min(Math.round(i * ratio), f32.length - 1)];
+    function sendInput() {
+      const inp = document.getElementById('cmdInput');
+      const text = inp.value.trim();
+      if (!text) return;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'text', text: text }));
+        appendLog('> ' + text, true);
+        inp.value = '';
       }
-      const out = new Int16Array(s.length);
-      for (let i = 0; i < s.length; i++)
-        out[i] = Math.max(-32768, Math.min(32767, Math.round(s[i] * 32768)));
-      return out.buffer;
     }
 
-    function _showVoiceSetup() {
-      if (document.getElementById('voice-setup')) return; // show once
-      const origin = location.origin;
-      const card = document.createElement('div');
-      card.id = 'voice-setup';
-      card.style.cssText = [
-        'align-self:stretch', 'background:rgba(99,102,241,0.07)',
-        'border:1px solid rgba(99,102,241,0.22)', 'border-radius:14px',
-        'padding:16px 18px', 'font-size:13px', 'line-height:1.8',
-        'animation:pop 0.18s ease'
-      ].join(';');
-      card.innerHTML =
-        '<div style="font-weight:700;color:#818cf8;letter-spacing:.5px;margin-bottom:10px">🎤 One-time voice setup</div>' +
-        '<ol style="padding-left:18px;color:#8899aa;margin:0;display:flex;flex-direction:column;gap:4px">' +
-        '<li>Open a new tab → go to <span style="background:rgba(255,255,255,0.07);padding:1px 6px;border-radius:4px;font-family:monospace;font-size:12px">chrome://flags</span></li>' +
-        '<li>Search: <strong style="color:#dde3ed">Insecure origins treated as secure</strong></li>' +
-        '<li>Paste this URL into the box:<br><span id="flags-url" style="background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:4px;font-family:monospace;font-size:11px;user-select:all;cursor:pointer">' + esc(origin) + '</span></li>' +
-        '<li>Set to <strong style="color:#22c55e">Enabled</strong> → tap <strong style="color:#dde3ed">Relaunch</strong></li>' +
-        '<li>Return here and tap 🎤</li>' +
-        '</ol>';
-      feed.appendChild(card);
-      feed.scrollTop = feed.scrollHeight;
-      // tap to copy
-      card.querySelector('#flags-url').addEventListener('click', () => {
-        navigator.clipboard?.writeText(origin).then(() => toast('URL copied!')).catch(() => {});
-      });
+    function handleEnter(e) {
+      if (e.key === 'Enter') sendInput();
     }
 
-    async function doMic() {
-      if (_voiceWs) { _stopVoice(); return; }
-
-      if (!navigator.mediaDevices?.getUserMedia) {
-        _showVoiceSetup();
-        return;
-      }
-      let stream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true },
-        });
-      } catch (e) {
-        sys(e.name === 'NotAllowedError'
-          ? 'Microphone denied — tap the address bar lock and allow microphone.'
-          : 'Mic error: ' + e.message);
-        return;
-      }
-
-      // 16 kHz context (fall back to native rate — _f32toPcm16 resamples)
-      let ctx;
-      try { ctx = new AudioContext({ sampleRate: 16000 }); }
-      catch (_) { ctx = new AudioContext(); }
-      if (ctx.state === 'suspended') await ctx.resume();
-
-      const wsProto = location.protocol === 'https:' ? 'wss' : 'ws';
-      const ws = new WebSocket(
-        `${wsProto}://${location.host}/ws/phone-audio?token=${encodeURIComponent(_authToken)}`
-      );
-      ws.binaryType = 'arraybuffer';
-
-      ws.onopen = async () => {
-        const rate = ctx.sampleRate;
-        const src  = ctx.createMediaStreamSource(stream);
-
-        // AudioWorklet (modern) — runs in dedicated audio thread
-        const wCode = `class J extends AudioWorkletProcessor{process(i){const c=i[0]?.[0];if(c)this.port.postMessage(c.slice());return true;}}registerProcessor('j',J);`;
-        try {
-          const burl = URL.createObjectURL(new Blob([wCode], { type: 'application/javascript' }));
-          await ctx.audioWorklet.addModule(burl);
-          URL.revokeObjectURL(burl);
-          const nd = new AudioWorkletNode(ctx, 'j');
-          // Buffer to 1024 samples (64 ms at 16 kHz) before sending —
-          // matches PC mic chunk size, prevents queue flooding on the server.
-          let _pbuf = [], _plen = 0;
-          nd.port.onmessage = e => {
-            const chunk = new Int16Array(_f32toPcm16(e.data, rate));
-            _pbuf.push(chunk); _plen += chunk.length;
-            if (_plen >= 1024) {
-              const out = new Int16Array(_plen); let off = 0;
-              for (const c of _pbuf) { out.set(c, off); off += c.length; }
-              if (ws.readyState === 1) ws.send(out.buffer);
-              _pbuf = []; _plen = 0;
-            }
-          };
-          src.connect(nd);
-          _audioNd = nd;
-        } catch (_) {
-          // ScriptProcessor fallback (deprecated, still works everywhere)
-          const sp = ctx.createScriptProcessor(4096, 1, 1);
-          sp.onaudioprocess = e => {
-            if (ws.readyState === 1) ws.send(_f32toPcm16(e.inputBuffer.getChannelData(0), rate));
-          };
-          src.connect(sp); sp.connect(ctx.destination);
-          _audioNd = sp;
-        }
-
-        micBtn.innerHTML = '⏹';
-        micBtn.title     = 'Tap to stop';
-        micBtn.classList.add('recording');
-        sys('Voice live — speak now');
-        toast('🎤 Live');
-      };
-
-      ws.onclose = () => { _stopVoice(); };
-      ws.onerror = () => { sys('Voice connection failed.'); _stopVoice(); };
-
-      _voiceWs  = ws;
-      _audioCtx = ctx;
-      _micStm   = stream;
-    }
-
-    function _stopVoice() {
-      if (_audioNd)  { try { _audioNd.disconnect(); }  catch (_) {}; _audioNd  = null; }
-      if (_audioCtx) { try { _audioCtx.close(); }      catch (_) {}; _audioCtx = null; }
-      if (_micStm)   { _micStm.getTracks().forEach(t => t.stop()); _micStm = null; }
-      if (_voiceWs)  {
-        const w = _voiceWs; _voiceWs = null;
-        if (w.readyState < 2) w.close();
-      }
-      _micIdle();
-    }
+    window.onload = initWS;
   </script>
-
-<script id="mobile-coming-soon-enforcer">
-(function() {
-    async function enforceMobileState() {
-        try {
-            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
-            const data = await res.json();
-            const isActive = (data.active === true || data.enabled === true || data.status === 'active');
-
-            // Find all Android / Mobile / APK links and buttons
-            const candidates = document.querySelectorAll('a, button');
-            candidates.forEach(el => {
-                const href = (el.getAttribute('href') || '').toLowerCase();
-                const text = (el.innerText || el.textContent || '').toLowerCase();
-                const id = (el.id || '').toLowerCase();
-                const cl = (el.className || '').toLowerCase();
-
-                // Target strictly Android / APK / Mobile downloads
-                const isMobileBtn = href.includes('.apk') || 
-                                    text.includes('android') || 
-                                    text.includes('mobile download') || 
-                                    text.includes('download apk') || 
-                                    id.includes('mobile') || 
-                                    id.includes('android') || 
-                                    cl.includes('mobile-download');
-
-                // Leave Windows / PC strictly untouched
-                const isWindows = href.includes('.exe') || href.includes('.zip') || text.includes('windows') || text.includes('pc');
-                if (isWindows) return;
-
-                if (isMobileBtn) {
-                    if (!isActive) {
-                        if (!el.dataset.originalContent) {
-                            el.dataset.originalContent = el.innerHTML;
-                            el.dataset.originalHref = el.getAttribute('href') || '#';
-                        }
-                        el.innerHTML = '<span class="inline-flex items-center gap-1.5 font-bold">🔥 Coming Soon</span>';
-                        el.removeAttribute('href');
-                        el.style.pointerEvents = 'none';
-                        el.style.opacity = '0.75';
-                        el.style.cursor = 'not-allowed';
-                    } else {
-                        if (el.dataset.originalContent) {
-                            el.innerHTML = el.dataset.originalContent;
-                            el.setAttribute('href', el.dataset.originalHref);
-                        }
-                        el.style.pointerEvents = 'auto';
-                        el.style.opacity = '1';
-                        el.style.cursor = 'pointer';
-                    }
-                }
-            });
-        } catch(err) {
-            console.error("Master mobile enforcement error:", err);
-        }
-    }
-
-    window.addEventListener("DOMContentLoaded", enforceMobileState);
-    setInterval(enforceMobileState, 2000);
-})();
-</script>
-
-
-
-
-</div>
-
-
-
-
-<div id="holo-universe" role="presentation" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-  <div class="holo-stage">
-    <div class="h-ring h-x"></div>
-    <div class="h-ring h-y"></div>
-    <div class="h-ring h-z"></div>
-    <div class="h-ring h-diag"></div>
-    <div class="h-core-sphere"></div>
-  </div>
-</div>
-<style id="holo-style">
-  .holo-stage {
-    position: relative;
-    width: 320px;
-    height: 320px;
-    transform-style: preserve-3d;
-    perspective: 1200px;
-    animation: holoWorldRotate 18s linear infinite;
-    will-change: transform;
-  }
-  .h-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 1.5px solid rgba(147, 197, 253, 0.35);
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.22), inset 0 0 16px rgba(59, 130, 246, 0.15);
-    transform-style: preserve-3d;
-    will-change: transform;
-  }
-  .h-x {
-    transform: rotateX(80deg);
-    animation: spinX 9s linear infinite;
-  }
-  .h-y {
-    transform: rotateY(80deg);
-    animation: spinY 12s linear infinite reverse;
-  }
-  .h-z {
-    transform: rotateZ(45deg) rotateX(45deg);
-    animation: spinZ 15s linear infinite;
-  }
-  .h-diag {
-    transform: rotate3d(1, 1, 0, 60deg);
-    animation: spinDiag 10s linear infinite reverse;
-    border-color: rgba(96, 165, 250, 0.45);
-  }
-  .h-core-sphere {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60px;
-    height: 60px;
-    margin: -30px 0 0 -30px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(96,165,250,0.5) 45%, rgba(30,58,138,0.15) 80%, transparent 100%);
-    box-shadow: 0 0 25px rgba(59,130,246,0.55);
-    animation: pulseCore 3s ease-in-out infinite alternate;
-  }
-  @keyframes holoWorldRotate {
-    0% { transform: rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
-    50% { transform: rotateX(-15deg) rotateY(180deg) rotateZ(10deg); }
-    100% { transform: rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
-  }
-  @keyframes spinX { 0% { transform: rotateX(80deg) rotateZ(0deg); } 100% { transform: rotateX(80deg) rotateZ(360deg); } }
-  @keyframes spinY { 0% { transform: rotateY(80deg) rotateZ(0deg); } 100% { transform: rotateY(80deg) rotateZ(360deg); } }
-  @keyframes spinZ { 0% { transform: rotateZ(45deg) rotateX(45deg) rotate(0deg); } 100% { transform: rotateZ(45deg) rotateX(45deg) rotate(360deg); } }
-  @keyframes spinDiag { 0% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(0deg); } 100% { transform: rotate3d(1, 1, 0, 60deg) rotateZ(360deg); } }
-  @keyframes pulseCore { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.15); opacity: 1; } }
-  
-  /* Bold Blue Professional Accents */
-  .title-accent-blue {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    text-shadow: 0 2px 10px rgba(37, 99, 235, 0.45);
-  }
-  .sub-accent-blue {
-    color: #93c5fd !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.025em;
-  }
-</style>
-
 </body>
 </html>
-

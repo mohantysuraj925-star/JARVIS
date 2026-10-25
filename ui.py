@@ -2821,35 +2821,52 @@ class RemoteKeyOverlay(QWidget):
             return
         try:
             import qrcode as _qrmod
-            from io import BytesIO
             qr = _qrmod.QRCode(
-                box_size=5, border=2,
+                box_size=4, border=2,
                 error_correction=_qrmod.constants.ERROR_CORRECT_M,
             )
             qr.add_data(url)
             qr.make(fit=True)
-            img = qr.make_image(fill_color="black", back_color="white")
-            buf = BytesIO()
-            img.save(buf, format="PNG")
-            px = QPixmap()
-            px.loadFromData(buf.getvalue())
+            matrix = qr.get_matrix()
+            rows = len(matrix)
+            cols = len(matrix[0]) if rows else 0
+
+            # Native QImage raster generation (zero pillow dependency)
+            from PyQt6.QtGui import QImage, QPainter, QColor
+            scale = 4
+            img = QImage(cols * scale, rows * scale, QImage.Format.Format_RGB32)
+            img.fill(QColor("white"))
+            painter = QPainter(img)
+            painter.setBrush(QColor("black"))
+            painter.setPen(Qt.PenStyle.NoPen)
+            for r in range(rows):
+                for c in range(cols):
+                    if matrix[r][c]:
+                        painter.drawRect(c * scale, r * scale, scale, scale)
+            painter.end()
+
+            px = QPixmap.fromImage(img)
             self._qr_label.setPixmap(
                 px.scaled(170, 170,
                           Qt.AspectRatioMode.KeepAspectRatio,
                           Qt.TransformationMode.SmoothTransformation)
             )
-        except ImportError:
-            self._qr_label.setText("pip install\nqrcode[pil]")
-            self._qr_label.setFont(QFont("Courier New", 8))
-            self._qr_label.setStyleSheet(
-                "color: #888; background: white; border-radius: 10px; padding: 4px;"
-            )
-        except Exception:
-            self._qr_label.setText(url[:28])
-            self._qr_label.setFont(QFont("Courier New", 7))
-            self._qr_label.setStyleSheet(
-                f"color: {C.PRI}; background: white; border-radius: 10px; padding: 4px;"
-            )
+        except Exception as e:
+            try:
+                from io import BytesIO
+                import qrcode as _qrmod
+                img_pil = _qrmod.make(url)
+                buf = BytesIO()
+                img_pil.save(buf, format="PNG")
+                px = QPixmap()
+                px.loadFromData(buf.getvalue())
+                self._qr_label.setPixmap(px.scaled(170, 170, Qt.AspectRatioMode.KeepAspectRatio))
+            except Exception:
+                self._qr_label.setText(url[:28])
+                self._qr_label.setFont(QFont("Courier New", 7))
+                self._qr_label.setStyleSheet(
+                    f"color: {C.PRI}; background: white; border-radius: 10px; padding: 4px;"
+                )
 
     def _tick(self):
         remaining = max(0, int(self._expiry - time.time()))
