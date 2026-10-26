@@ -1,3 +1,13 @@
+try:
+    from fastapi import FastAPI, Request
+    app = FastAPI()
+except Exception:
+    app = None
+    class Request: pass
+
+request_permissions = None
+Permission = None
+
 """Kivy Android companion for the GARUDA realtime voice WebSocket."""
 
 from __future__ import annotations
@@ -234,7 +244,7 @@ class GARUDARoot(BoxLayout):
             return
 
         try:
-            from android.permissions import Permission, request_permissions
+#             from android.permissions import Permission, request_permissions
 
             request_permissions(
                 [Permission.INTERNET, Permission.RECORD_AUDIO],

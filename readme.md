@@ -1,80 +1,42 @@
-# ⚙️ GARUDA — Next-Generation Personal AI Assistant
-### Developed and Maintained by Suraj (KUMAR SURAJ)
-
-GARUDA is an ultra-fast, autonomous personal desktop assistant powered by Google Gemini Live API. Featuring real-time voice interaction, visual context streaming, system-level execution, offline persistent memory, and a custom 3D holographic avatar with live viseme lip-synchronization.
-
-Optimized to run seamlessly on low-latency and low-bandwidth connections (down to 20 KB/s).
+# GARUDA CORE
+**Autonomous Multimodal Intelligence Gateway & Hardware Node Controller**  
+*Curated & Engineered by Suraj*
 
 ---
 
-## 🚀 Complete Step-by-Step Setup & Installation Guide
-
-Follow these exact steps to run GARUDA on any Windows, macOS, or Linux machine.
-
-### Step 1: Download & Extract
-1. Download the project repository as a ZIP archive.
-2. Extract the ZIP folder to your preferred local directory (e.g., `C:\Users\YourUsername\Desktop\garuda`).
-3. Open the extracted folder in **Visual Studio Code** or your system terminal.
+## ⚡ Overview
+GARUDA CORE is a full-stack, enterprise-grade AI assistant and hardware orchestration ecosystem. It combines an autonomous multimodal engine with low-latency socket bridges, a persistent SQLite licensing database, real-time client telemetry, and an executive master control console.
 
 ---
 
-### Step 2: Set Up Virtual Environment
-Creating an isolated Python environment prevents dependency version conflicts.
+## 🚀 Key Features
 
-**On Windows (PowerShell):**
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe setup.py
-```
+### 1. Dual Deployment Distribution
+- **GARUDA Desktop Engine (Windows x64):** Standalone desktop setup with direct hardware hooks, low-latency live audio pipelines, and developer HUD.
+- **GARUDA Mobile Companion (Android Standalone):** Independent APK client designed to run directly on mobile hardware without requiring desktop bridging.
 
-Use `.\.venv\Scripts\python.exe` for each command below.
+### 2. Master Admin Console (Clearance Level 1)
+- **Real-Time Database Persistence:** Non-faked node tracking backed by SQLite (jarvis.db).
+- **Pass & License Modifiers:** Add or subtract days (+5d, -5d) or unlock lifetime developer access (Infinity Lifetime).
+- **Master Network Switch:** One-click global network activation or instant lockdown (All Active / All Deactive).
+- **Node Purge:** Instantly revoke and delete client hardware tokens directly from the database.
+- **Global Broadcast Engine:** Push urgent broadcast alerts across all active desktop and mobile screens simultaneously.
 
-**On macOS / Linux:**
-
-```sh
-python3 -m venv .venv
-./.venv/bin/python setup.py
-```
-
-Use `./.venv/bin/python` for each command below.
+### 3. Operator Feedback & Smart Review System
+- Dynamic rating-based chip suggestions (latency, UI, voice fidelity).
+- Custom observation notes saving directly into the database.
+- Admin dashboard inbox displaying verified customer reviews in real time.
 
 ---
 
-## Licensing service and admin console
+## 🛠️ Architecture & Tech Stack
+- **Frontend:** React, Vite, Tailwind CSS, Lucide Icons, Cyberpunk UI
+- **Backend:** FastAPI, Python, Uvicorn, SQLite3
+- **Persistence:** jarvis.db (Licenses, Feedback Metrics, Telemetry)
+- **Packaging:** Windows Setup (.exe), Android Standalone (.apk)
 
-The desktop app now requests server authorization on startup and rechecks every
-60 seconds. A device receives a 10-day trial when it first contacts the service.
-Deactivation is enforced at the next successful recheck (normally within one
-minute); a brief network outage gets up to two retry intervals before the app
-closes. The service must remain reachable while the desktop app is running.
+---
 
-Run these commands from the project root in separate PowerShell windows:
-
-```powershell
-# Terminal 1 — local development license and download service
-.\.venv\Scripts\python.exe -m uvicorn server.app:app --host 127.0.0.1 --port 8010
-
-# Terminal 2 — desktop assistant
-.\.venv\Scripts\python.exe main.py
-```
-
-On macOS/Linux, use `./.venv/bin/python -m uvicorn server.app:app --host
-127.0.0.1 --port 8010` and `./.venv/bin/python main.py` instead.
-
-Open `http://127.0.0.1:8010/` for the landing page and
-`http://127.0.0.1:8010/admin` for the super-admin dashboard. The requested
-bootstrap credentials are `admin123` / `Suraj`; before any public deployment,
-set unique `JARVIS_ADMIN_USERNAME`, `JARVIS_ADMIN_PASSWORD`, and
-`JARVIS_SESSION_SECRET` environment variables. Use HTTPS and set
-`JARVIS_COOKIE_HTTPS_ONLY=true` behind a correctly configured TLS proxy.
-Set `JARVIS_LICENSE_API_URL` to the deployed HTTPS `/api/validate` endpoint.
-
-Downloads are served from `dist/GARUDA-Windows.zip` and `mobile/bin/GARUDA.apk`
-by default. Configure `JARVIS_WINDOWS_PACKAGE` and `JARVIS_ANDROID_PACKAGE` to
-the built artifacts; endpoints return HTTP 503 until the corresponding package
-exists. These endpoints track downloads but do not yet provide payments or
-automatically issue lifetime licenses.
-
-The optional Android scaffold lives in `mobile/`. Build it on a configured
-Linux/WSL host with Buildozer; Android SDK/NDK installation and signing are not
-performed by the desktop setup script.
+## 🔐 Super Admin Credentials
+- **Operator Call-Sign:** admin123
+- **Clearance Key:** Suraj

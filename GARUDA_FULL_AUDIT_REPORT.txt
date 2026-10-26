@@ -1,0 +1,170 @@
+================================================================================
+           GARUDA SYSTEM: COMPLETE CODEBASE AUDIT REPORT
+================================================================================
+
+1. SYNTAX & CODE INTEGRITY ISSUES (5 found):
+--------------------------------------------------
+  [!] apply_pro_styling.py: invalid non-printable character U+FEFF (apply_pro_styling.py, line 1)
+  [!] fix_js_crash.py: invalid non-printable character U+FEFF (fix_js_crash.py, line 1)
+  [!] package_jarvis.py: invalid non-printable character U+FEFF (package_jarvis.py, line 1)
+  [!] package_single_exe.py: invalid non-printable character U+FEFF (package_single_exe.py, line 1)
+  [!] server\database.py: invalid non-printable character U+FEFF (database.py, line 1)
+
+2. REMAINING 'JARVIS' REFERENCES (527 found):
+--------------------------------------------------
+  • fix_all.py:358 -> # ============================ Jarvis -> Garuda ============================
+  • fix_all.py:360 -> for old_n, new_n in (("J.A.R.V.I.S", "GARUDA"), ("JARVIS", "GARUDA"), ("Jarvis", "Garuda")):
+  • fix_all.py:362 -> obj.log.append("OK   Jarvis -> Garuda")
+  • garuda_report.txt:4 -> === 2. 'Jarvis' leftovers ===
+  • garuda_report.txt:5 -> [FAIL] no 'jarvis' in file contents  -> 703 lines in 43 files
+  • garuda_report.txt:31 -> [WARN] no file names containing 'jarvis'  -> jarvis.db, JARVIS.spec, jarvis_audit_report.txt, JARVIS
+  • garuda_report.txt:32 -> [WARN] project folder name  -> folder is 'jarvis' (renaming it breaks .venv, recreate venv if you re
+  • neon_lander.html:6 -> <title>JARVIS AI Assistant</title>
+  • neon_lander.html:55 -> <button class="neon-button neon-cta">Download JARVIS</button>
+  • ui.py:951 -> self._ai_name_lc = "jarvis"   # updated when assistant name changes
+  • ui.py:974 -> elif tl.startswith(_ai_pfx) or tl.startswith("jarvis:"): self._tag = "ai"
+  • ui.py:3469 -> ico_path = Path(__file__).resolve().parent / "config" / "jarvis.ico"
+  • ui.py:3512 -> '<string>com.jarvis.assistant</string>\n'
+  • ui.py:4633 -> / "com.jarvis.assistant.plist").exists()
+  • ui.py:4635 -> return (Path.home() / ".config" / "autostart" / "jarvis.desktop").exists()
+  • ui.py:4658 -> plist = plist_dir / "com.jarvis.assistant.plist"
+  • ui.py:4667 -> '  <key>Label</key><string>com.jarvis.assistant</string>\n'
+  • ui.py:4678 -> desk = desk_dir / "jarvis.desktop"
+  • dashboard\server.py:2 -> dashboard/server.py — JARVIS Local HTTP Dashboard
+  • dashboard\server.py:50 -> Path.home() / "Downloads" / "JARVIS Uploads",
+  • dashboard\server.py:51 -> Path.home() / "Documents" / "JARVIS Uploads",
+  • dashboard\server.py:76 -> _AES_SALT = b'JARVIS-DASHBOARD-v1'
+  • dashboard\server.py:122 -> port_rule = f"JARVIS Dashboard Port {port}"
+  • dashboard\server.py:123 -> prog_rule  = "JARVIS Dashboard Python"
+  • dashboard\server.py:227 -> print("[Dashboard] Phone connections may fail until JARVIS is run as Administrator.")
+  • dashboard\server.py:384 -> key_p = certs / "jarvis.key"
+  • dashboard\server.py:385 -> crt_p = certs / "jarvis.crt"
+  • dashboard\server.py:406 -> x509.NameAttribute(NameOID.COMMON_NAME, "JARVIS Dashboard"),
+  • dashboard\server.py:407 -> x509.NameAttribute(NameOID.ORGANIZATION_NAME, "JARVIS"),
+  • dashboard\server.py:551 -> return (certs / "jarvis.key").exists() and (certs / "jarvis.crt").exists()
+  • dashboard\server.py:677 -> <p>Press <strong style="color:#dde3ed">Remote Control</strong> in JARVIS to get a new QR code.</p>
+  • dashboard\server.py:708 -> <p>Connecting to JARVIS…</p>
+  • dashboard\server.py:934 -> ssl_key  = BASE_DIR / "config" / "certs" / "jarvis.key"
+  • dashboard\server.py:935 -> ssl_cert = BASE_DIR / "config" / "certs" / "jarvis.crt"
+  • dashboard\server.py:958 -> ssl_key  = BASE_DIR / "config" / "certs" / "jarvis.key"
+  • dashboard\server.py:959 -> ssl_cert = BASE_DIR / "config" / "certs" / "jarvis.crt"
+  • dashboard\server.py:971 -> print("[Dashboard] Press 'Remote Control' in JARVIS UI to get the QR code.")
+  • dashboard\static\login.html:6 -> <title>JARVIS by Suraj</title>
+  • dashboard\static\login.html:156 -> <p class="hint">Press <strong style="color:var(--text)">Remote Control</strong> in the JARVIS deskto
+  • dashboard\static\login.html:167 -> <code>Insecure origins treated as secure</code>, add your JARVIS URL, tap Relaunch.
+  • frontend\index.html:7 -> <title>JARVIS by Suraj</title>
+  • server\templates\admin.html:7 -> <title>{% if login %}Admin sign in{% else %}Super Admin{% endif %} Â· JARVIS</title>
+  • server\templates\admin.html:105 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+  • server\templates\admin.html:117 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+  • server\templates\admin.html:123 -> .jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+  • server\templates\admin.html:128 -> button, .jarvis-btn-primary, .purple-btn {
+  • server\templates\admin.html:147 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin.html:204 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+  • server\templates\admin.html:215 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover
+  • server\templates\admin.html:236 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin.html:253 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin.html:316 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin.html:323 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin.html:331 -> button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+  • server\templates\admin.html:435 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin.html:449 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin.html:457 -> button:active, .jarvis-btn-primary:active {
+  • server\templates\admin.html:482 -> var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+  • server\templates\admin.html:528 -> .jarvis-card, [class*="rounded-"], div[style*="background"] {
+  • server\templates\admin.html:590 -> button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+  • server\templates\admin.html:601 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+  • server\templates\admin.html:608 -> button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+  • server\templates\admin.html:705 -> <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Super admin control</div></div><span class="admi
+  • server\templates\admin.html:726 -> <div><h1>JARVIS by Suraj</h1><div class="brand-sub">Master control Â· Signed in as admin123</div></d
+  • server\templates\admin.html:1508 -> <style id="jarvis-coming-soon-lock-style">
+  • server\templates\admin.html:1529 -> <script id="jarvis-mobile-state-manager">
+  • server\templates\admin_portal.html:6 -> <title>JARVIS PORTAL // MASTER CONSOLE</title>
+  • server\templates\admin_portal.html:86 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+  • server\templates\admin_portal.html:98 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+  • server\templates\admin_portal.html:104 -> .jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+  • server\templates\admin_portal.html:109 -> button, .jarvis-btn-primary, .purple-btn {
+  • server\templates\admin_portal.html:128 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin_portal.html:185 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+  • server\templates\admin_portal.html:196 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover
+  • server\templates\admin_portal.html:217 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin_portal.html:234 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin_portal.html:297 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin_portal.html:304 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin_portal.html:312 -> button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+  • server\templates\admin_portal.html:416 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\admin_portal.html:430 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\admin_portal.html:438 -> button:active, .jarvis-btn-primary:active {
+  • server\templates\admin_portal.html:463 -> var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+  • server\templates\admin_portal.html:509 -> .jarvis-card, [class*="rounded-"], div[style*="background"] {
+  • server\templates\admin_portal.html:571 -> button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+  • server\templates\admin_portal.html:582 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+  • server\templates\admin_portal.html:589 -> button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+  • server\templates\admin_portal.html:691 -> <h1 class="font-cyber font-bold text-lg text-purple-200 title-accent-blue">JARVIS PORTAL</h1>
+  • server\templates\admin_portal.html:1776 -> <style id="jarvis-coming-soon-lock-style">
+  • server\templates\admin_portal.html:1797 -> <script id="jarvis-mobile-state-manager">
+  • server\templates\index.html:6 -> <title>JARVIS AI Control Matrix</title>
+  • server\templates\index.html:59 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+  • server\templates\index.html:71 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+  • server\templates\index.html:77 -> .jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+  • server\templates\index.html:82 -> button, .jarvis-btn-primary, .purple-btn {
+  • server\templates\index.html:101 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\index.html:158 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+  • server\templates\index.html:169 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover
+  • server\templates\index.html:190 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\index.html:207 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\index.html:270 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\index.html:277 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\index.html:285 -> button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+  • server\templates\index.html:389 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\index.html:403 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\index.html:411 -> button:active, .jarvis-btn-primary:active {
+  • server\templates\index.html:436 -> var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+  • server\templates\index.html:482 -> .jarvis-card, [class*="rounded-"], div[style*="background"] {
+  • server\templates\index.html:544 -> button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+  • server\templates\index.html:555 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+  • server\templates\index.html:562 -> button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+  • server\templates\index.html:659 -> <h1>JARVIS Operating System</h1>
+  • server\templates\index.html:1580 -> <style id="jarvis-coming-soon-lock-style">
+  • server\templates\index.html:1601 -> <script id="jarvis-mobile-state-manager">
+  • server\templates\landing.html:6 -> <title>JARVIS PORTAL</title>
+  • server\templates\landing.html:42 -> .glass-cyan, .jarvis-card,
+  • server\templates\landing.html:54 -> .jarvis-card:hover {
+  • server\templates\landing.html:60 -> button, .jarvis-btn-primary, .purple-btn, .cyber-btn {
+  • server\templates\landing.html:80 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, .cyber-btn:hover {
+  • server\templates\landing.html:88 -> button:active, .jarvis-btn-primary:active, .purple-btn:active {
+  • server\templates\landing.html:236 -> <span class="font-cyber font-bold text-base md:text-lg tracking-wider text-sky-200">JARVIS PORTAL</s
+  • server\templates\landing.html:296 -> <div class="card-front jarvis-card border border-sky-500/30 bg-slate-950/80">
+  • server\templates\landing.html:349 -> <div class="card-front jarvis-card border border-emerald-500/30 bg-slate-950/80">
+  • server\templates\landing.html:402 -> <div class="card-front jarvis-card border border-cyan-500/30 bg-slate-950/80">
+  • server\templates\mobile_dashboard.html:6 -> <title>JARVIS Mobile AI</title>
+  • server\templates\mobile_dashboard.html:133 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+  • server\templates\mobile_dashboard.html:145 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover {
+  • server\templates\mobile_dashboard.html:151 -> .jarvis-card:active, #REAL_FEEDBACK_SECTION:active, #ADMIN_LIVE_DESK:active {
+  • server\templates\mobile_dashboard.html:156 -> button, .jarvis-btn-primary, .purple-btn {
+  • server\templates\mobile_dashboard.html:175 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\mobile_dashboard.html:232 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK, #ADMIN_FEEDBACK_DESK,
+  • server\templates\mobile_dashboard.html:243 -> .jarvis-card:hover, #REAL_FEEDBACK_SECTION:hover, #ADMIN_LIVE_DESK:hover, #ADMIN_FEEDBACK_DESK:hover
+  • server\templates\mobile_dashboard.html:264 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\mobile_dashboard.html:281 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\mobile_dashboard.html:344 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\mobile_dashboard.html:351 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\mobile_dashboard.html:359 -> button svg, .jarvis-btn-primary svg, .purple-btn svg, .jarvis-btn-cyan svg {
+  • server\templates\mobile_dashboard.html:463 -> button, .jarvis-btn-primary, .purple-btn, .jarvis-btn-cyan {
+  • server\templates\mobile_dashboard.html:477 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover {
+  • server\templates\mobile_dashboard.html:485 -> button:active, .jarvis-btn-primary:active {
+  • server\templates\mobile_dashboard.html:510 -> var btn = e.target.closest('button, .jarvis-btn-primary, .purple-btn');
+  • server\templates\mobile_dashboard.html:556 -> .jarvis-card, [class*="rounded-"], div[style*="background"] {
+  • server\templates\mobile_dashboard.html:618 -> button, .jarvis-btn-primary, .purple-btn, a.purple-btn,
+  • server\templates\mobile_dashboard.html:629 -> button:hover, .jarvis-btn-primary:hover, .purple-btn:hover, a.purple-btn:hover {
+  • server\templates\mobile_dashboard.html:636 -> button:active, .jarvis-btn-primary:active, .purple-btn:active, a.purple-btn:active {
+  • server\templates\mobile_dashboard.html:731 -> <h3 style="color: var(--accent-color); letter-spacing: 1px;">JARVIS MOBILE</h3>
+  • server\templates\mobile_dashboard.html:1598 -> <style id="jarvis-coming-soon-lock-style">
+  • server\templates\mobile_dashboard.html:1619 -> <script id="jarvis-mobile-state-manager">
+  • server\templates\portal.html:6 -> <title>JARVIS PORTAL // OPERATOR CONSOLE</title>
+  • server\templates\portal.html:58 -> .jarvis-card, #REAL_FEEDBACK_SECTION, #ADMIN_LIVE_DESK {
+  ... and 377 more references.
+
+3. SYSTEM PROMPT & IDENTITY CHECKS:
+--------------------------------------------------
+  [OK] Prompt files include Suraj / Garuda definitions.
+

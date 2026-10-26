@@ -1321,6 +1321,7 @@ class SetupOverlay(QWidget):
         )
         self._sel_os = detected
         self.selected_gender = "Male"
+        self.err_lbl = QLabel("")
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(30, 20, 30, 20)
@@ -1474,13 +1475,14 @@ class SetupOverlay(QWidget):
         key = self._key_input.text().strip()
         name = self._name_input.text().strip()
         if not key:
+            self.err_lbl.setText("API key is required")
             self._key_input.setStyleSheet(self._key_input.styleSheet() + f" QLineEdit {{ border: 1px solid {C.RED}; }}")
             return
         if not name:
             self._name_input.setStyleSheet(self._name_input.styleSheet() + f" QLineEdit {{ border: 1px solid {C.RED}; }}")
             return
 
-        self.done.emit(key, self._sel_os)
+        # self.done.emit(key, self._sel_os)
 
         user_cfg = {
             "api_key": key,

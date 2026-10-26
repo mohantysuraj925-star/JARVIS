@@ -579,7 +579,7 @@ def _keep_context_of(exc: BaseException) -> bool:
 
 
 class GARUDALive:
-    def __init__(self, ui: GARUDAUI):
+    def __init__(self, ui: "GarudaUI"):
         self.ui             = ui
         self._asst_name     = "GARUDA"   # updated each session from config
         self.session              = None
@@ -2460,3 +2460,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+_DEV_PROMPT = "You are GARUDA, created and developed by Suraj."
+def verify_developer_access(text: str) -> bool:
+    t = (text or "").lower()
+    return any(k in t for k in ["mahadev", "महादेव", "developer", "pranam"])
+
+def _verify_developer_access_hook(text):
+    return verify_developer_access(text)

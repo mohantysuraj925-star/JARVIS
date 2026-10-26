@@ -1,0 +1,134 @@
+GARUDA FULL SCAN  2026-10-26 11:29  python 3.14.7  files 350  (12.8s)
+RESULT: 72 passed | ERROR 0 | WARN 44 | INFO 70
+
+--- WARN (44) ---
+[attribute-bugs] ui.py:1252 - _CameraPreview reads self._W but never sets it (AttributeError risk)
+[attribute-bugs] ui.py:2363 - ClipboardPanel reads self._W but never sets it (AttributeError risk)
+[branding] 50 files - 'Jarvis' still in 889 lines: AUDIT_REPORT.txt(10), DEEP_TEST_REPORT.txt(3), GARUDA_FULL_AUDIT_REPORT.txt(152), GARUDA_SCAN_REPORT.txt(2), JARVIS.spec(4), JARVIS_Installer.spec(3), JARVIS_Setup.spec(2), debug_landing.txt(11), garuda_report.txt(4), neon_lander.html(2), readme.md(5), render.yaml(1), ui.py(11), actions/reminder.py(8), actions/youtube_video.py(1), core/prompt.txt(1), dashboard/server.py(24), dashboard/static/login.html(10), frontend/index.html(1), frontend/src/components/AdminPanel.jsx(1), frontend/src/components/AuthModal.jsx(1), frontend/src/components/Dashboard.jsx(3), mobile/buildozer.spec(3), server/templates/admin.html(27), server/templates/admin_portal.html(26)
+[branding] file names - names still contain jarvis: JARVIS.spec, JARVIS_Installer.spec, JARVIS_Setup.spec, jarvis.db, jarvis_audit_report.txt, package_jarvis.py, config/jarvis.ico, config/certs/jarvis.crt, config/certs/jarvis.key, downloads/JARVIS_Companion.apk, downloads/JARVIS_Installer.exe
+[duplicates] server/app.py - 'SupportSendModel' defined 2 times at top level
+[duplicates] server/app.py - 'SupportReplyModel' defined 2 times at top level
+[duplicates] server/app.py - 'FeedbackSendModel' defined 2 times at top level
+[duplicates] server/app.py - 'send_user_support_ticket' defined 2 times at top level
+[duplicates] server/app.py - 'get_single_user_support' defined 2 times at top level
+[duplicates] server/app.py - 'get_admin_live_inbox' defined 2 times at top level
+[duplicates] server/app.py - 'send_admin_live_reply' defined 2 times at top level
+[duplicates] server/app.py - 'post_live_feedback' defined 2 times at top level
+[duplicates] server/app.py - 'get_live_feedback_metrics' defined 2 times at top level
+[duplicates] ui.py:5251 - method GarudaUI.muted defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_text_command defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_remote_clicked defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_interrupt defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_voice_change defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_audio_device_change defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.get_plugins defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.get_plugin_settings defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_wake_toggle defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_wake_manual defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.wake_get_state defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.ptt_hold defined 2 times
+[duplicates] ui.py:5251 - method GarudaUI.on_push_to_talk defined 2 times
+[files] exists: face.png - missing: face.png
+[licence] main.py:2411 - licence check hard-coded to allowed (bypass)
+[packages] actions/file_processor.py:323 - package 'pandas' not installed
+[packages] actions/file_processor.py:523 - package 'pydub' not installed
+[packages] actions/web_search.py:121 - package 'duckduckgo_search' not installed
+[packages] core/stt.py:16 - package 'faster_whisper' not installed
+[packages] core/stt.py:19 - package 'torch' not installed
+[packages] core/stt.py:77 - package 'vosk' not installed
+[packages] core/tts.py:121 - package 'edge_tts' not installed
+[packages] core/tts.py:154 - package 'kokoro' not installed
+[packages] core/tts.py:246 - package 'torch' not installed
+[packages] core/tts.py:90 - package 'miniaudio' not installed
+[packages] mobile/main.py:159 - package 'jnius' not installed
+[packages] mobile/main.py:24 - package 'kivy' not installed
+[requirements] requirements.txt - imported but not listed: PIL, PyPDF2, PyQt6, comtypes, cryptography, cv2, ddgs, docx, duckduckgo_search, edge_tts, faster_whisper, google, jnius, kivy, kokoro, miniaudio, mss, numpy, openwakeword, pandas, pdfplumber, playwright, pptx, psutil, pyautogui, pycaw, pydantic, pydub, pygetwindow, pynvml, pyperclip, pywinauto, qrcode, requests, send2trash, sounddevice, torch, vosk, websockets, win32com, wmi, youtube_transcript_api
+[secrets] 2 places - secrets stored in plain files (values hidden): config/api_keys.json (/gemini_api_key); config/license.json (/install_token)
+[server] server/app.py includes portal_routes - add: from server.portal_routes import router as portal_router ; app.include_router(portal_router)
+[ui] SelectableBox defined once - check failed
+
+--- INFO (70) ---
+[config] config/user_config.json - missing (normal before first setup)
+[config] config/user_profile.json - missing (normal before first setup)
+[unused] _fix_admin.py - never imported by another file
+[unused] _inspect_db.py - never imported by another file
+[unused] add_details_modal.py - never imported by another file
+[unused] api.py - never imported by another file
+[unused] auto_integrate_admin.py - never imported by another file
+[unused] build_portal.py - never imported by another file
+[unused] bundle_real_file.py - never imported by another file
+[unused] clean_db.py - never imported by another file
+[unused] complete_admin_and_mobile_fix.py - never imported by another file
+[unused] complete_real_engine.py - never imported by another file
+[unused] core/installer.py - never imported by another file
+[unused] core/llm_client.py - never imported by another file
+[unused] core/stt.py - never imported by another file
+[unused] core/tts.py - never imported by another file
+[unused] create_test_user.py - never imported by another file
+[unused] direct_raw_files.py - never imported by another file
+[unused] enhance_modals.py - never imported by another file
+[unused] enlarge_download_buttons.py - never imported by another file
+[unused] force_enlarge.py - never imported by another file
+[unused] force_patch_admin.py - never imported by another file
+[unused] hyper_3d_warp.py - never imported by another file
+[unused] init_master_db.py - never imported by another file
+[unused] init_portal_db.py - never imported by another file
+[unused] inject_admin_portal_exact.py - never imported by another file
+[unused] inject_controls.py - never imported by another file
+[unused] inject_features.py - never imported by another file
+[unused] insert_boxes.py - never imported by another file
+[unused] inspect_and_patch.py - never imported by another file
+[unused] link_real_binary.py - never imported by another file
+[unused] make_valid_exe.py - never imported by another file
+[unused] master_fix_all.py - never imported by another file
+[unused] mobile_node_bridge.py - never imported by another file
+[unused] mount_static_fix.py - never imported by another file
+[unused] patch_admin_view.py - never imported by another file
+[unused] patch_all_requirements.py - never imported by another file
+[unused] patch_backend.py - never imported by another file
+[unused] patch_btn.py - never imported by another file
+[unused] patch_cards_ui.py - never imported by another file
+[unused] patch_nodes_api.py - never imported by another file
+[unused] patch_portal_ui.py - never imported by another file
+[unused] patch_server.py - never imported by another file
+[unused] permanent_fix.py - never imported by another file
+[unused] pure_live_sync.py - never imported by another file
+[unused] remove_demo_ratings.py - never imported by another file
+[unused] restore_and_link.py - never imported by another file
+[unused] restore_and_setup_perfect_admin.py - never imported by another file
+[unused] restore_original_app.py - never imported by another file
+[unused] restore_original_ui.py - never imported by another file
+[unused] run_unified_portal.py - never imported by another file
+[unused] scan.py - never imported by another file
+[unused] server/portal_routes.py - never imported by another file
+[unused] setup_db.py - never imported by another file
+[unused] setup_dual_ui_system.py - never imported by another file
+[unused] setup_fresh_db.py - never imported by another file
+[unused] setup_full_system.py - never imported by another file
+[unused] setup_packages.py - never imported by another file
+[unused] setup_pwa.py - never imported by another file
+[unused] setup_pwa_clean.py - never imported by another file
+[unused] simplify_instructions.py - never imported by another file
+[unused] sync_all_databases.py - never imported by another file
+[unused] sync_db.py - never imported by another file
+[unused] ultra_cosmic_warp.py - never imported by another file
+[unused] update_download_route.py - never imported by another file
+[unused] update_star_bg.py - never imported by another file
+[unused] upgrade_download_cards.py - never imported by another file
+[unused] wipe_all_dbs.py - never imported by another file
+[unused] wipe_zero.py - never imported by another file
+[unused] write_assets.py - never imported by another file
+
+--- PASSED (72) ---
+[syntax] every .py file parses (155 files)
+[files] exists: main.py; exists: ui.py; exists: core/prompt.txt; exists: requirements.txt; exists: server/app.py
+[python] Python 3.11+
+[ui] gear drawer is built (not 'pass'); setup form signal wired; setup form saves config files; no duplicate first-run overlay; title keeps 'BY SURAJ'
+[identity] developer protocol wired in main.py; welcome-after-setup present; reply for 'tum kaun ho'; reply for 'developer kaun hai'; reply for 'main tumhara developer hoon'; reply for 'galat123'; reply for 'main tumhara developer hoon'; reply for 'mahadev'; reply for '\u092e\u0939\u093e\u0926\u0947\u0935'; re
+[main] no stray FastAPI routes in main.py
+[model] LIVE_MODEL line: _cfg_live_model(); main.LIVE_MODEL = models/gemini-3.1-flash-live-preview; configured live model exists on Google; live-capable models: models/gemini-3.5-transcribe-live, models/gemini-2.5-flash-native-audio-latest, models/gemini-2.5-flash-native-audio-preview-09-2025, models/gemini
+[config] config/api_keys.json valid; keys=['camera_index', 'gemini_api_key', 'os_system', 'wake_word_enabled']; gemini_api_key=set
+[packages] PyQt6; psutil; sounddevice; numpy; google.genai; qrcode; fastapi; uvicorn; cryptography; cv2; PIL
+[modules] core.avatar; core.audio_devices; core.hotkey; core.viseme; core.echo; core.wake_word; core.confirm; core.license; core.gemini; core.plugin_loader; core.action_loader; memory.config_manager; memory.memory_manager; dashboard.server
+[tools] 16 action tools discovered
+[window] main window builds; gear drawer object exists; gear opens drawer with 14 buttons; button handler _open_customize; button handler _open_operator_profile; button handler _open_audio_devices; button handler _open_memory_panel; button handler _open_plugin_manager; button handler _open_plugin_settings; b
