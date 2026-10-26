@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="winGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="#030914" />
+  <rect x="24" y="24" width="464" height="464" rx="90" fill="none" stroke="#06b6d4" stroke-width="6" opacity="0.4" />
+  <!-- Monitor Display Frame -->
+  <rect x="80" y="100" width="352" height="230" rx="20" fill="none" stroke="url(#winGrad)" stroke-width="16" />
+  <path d="M216 330 L216 400 L160 400 M296 330 L296 400 L352 400" stroke="url(#winGrad)" stroke-width="16" stroke-linecap="round" />
+  <!-- Center Core -->
+  <circle cx="256" cy="215" r="32" fill="#06b6d4" />
+  <text x="256" y="445" font-family="monospace" font-size="28" fill="#38bdf8" text-anchor="middle" font-weight="bold">GARUDA PC</text>
+</svg>

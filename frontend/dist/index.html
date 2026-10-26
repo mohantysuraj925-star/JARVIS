@@ -1,0 +1,111 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eff7f5" />
+    <title>GARUDA CORE | Autonomous Multimodal Intelligence Gateway</title>
+  
+    <!-- PWA Config -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
+        });
+      }
+    </script>
+
+  <script type="module" crossorigin src="/assets/index-CWMBPS0y.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B3Fp9yWS.css">
+</head>
+  <body>
+<div role="region" aria-label="Main content">
+    <div id="root"></div>
+  
+<script id="mobile-coming-soon-enforcer">
+(function() {
+    async function enforceMobileState() {
+        try {
+            const res = await fetch('/api/admin/mobile_status?t=' + Date.now(), { cache: 'no-store' });
+            const data = await res.json();
+            const isActive = (data.active === true || data.enabled === true || data.status === 'active');
+
+            // Find all Android / Mobile / APK links and buttons
+            const candidates = document.querySelectorAll('a, button');
+            candidates.forEach(el => {
+                const href = (el.getAttribute('href') || '').toLowerCase();
+                const text = (el.innerText || el.textContent || '').toLowerCase();
+                const id = (el.id || '').toLowerCase();
+                const cl = (el.className || '').toLowerCase();
+
+                // Target strictly Android / APK / Mobile downloads
+                const isMobileBtn = href.includes('.apk') || 
+                                    text.includes('android') || 
+                                    text.includes('mobile download') || 
+                                    text.includes('download apk') || 
+                                    id.includes('mobile') || 
+                                    id.includes('android') || 
+                                    cl.includes('mobile-download');
+
+                // Leave Windows / PC strictly untouched
+                const isWindows = href.includes('.exe') || href.includes('.zip') || text.includes('windows') || text.includes('pc');
+                if (isWindows) return;
+
+                if (isMobileBtn) {
+                    if (!isActive) {
+                        if (!el.dataset.originalContent) {
+                            el.dataset.originalContent = el.innerHTML;
+                            el.dataset.originalHref = el.getAttribute('href') || '#';
+                        }
+                        el.innerHTML = '<span class="inline-flex items-center gap-1.5 font-bold">🔥 Coming Soon</span>';
+                        el.removeAttribute('href');
+                        el.style.pointerEvents = 'none';
+                        el.style.opacity = '0.75';
+                        el.style.cursor = 'not-allowed';
+                    } else {
+                        if (el.dataset.originalContent) {
+                            el.innerHTML = el.dataset.originalContent;
+                            el.setAttribute('href', el.dataset.originalHref);
+                        }
+                        el.style.pointerEvents = 'auto';
+                        el.style.opacity = '1';
+                        el.style.cursor = 'pointer';
+                    }
+                }
+            });
+        } catch(err) {
+            console.error("Master mobile enforcement error:", err);
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", enforceMobileState);
+    setInterval(enforceMobileState, 2000);
+})();
+</script>
+
+
+
+
+</div>
+
+
+
+
+<div id="holo-universe" role="presentation" aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+  <div class="holo-stage">
+    <div class="h-ring h-x"></div>
+    <div class="h-ring h-y"></div>
+    <div class="h-ring h-z"></div>
+    <div class="h-ring h-diag"></div>
+    <div class="h-core-sphere"></div>
+  </div>
+</div>
+<style id="holo-style">.holo-stage{width:320px;height:320px;transform-style:preserve-3d;perspective:1200px;will-change:transform;animation:18s linear infinite holoWorldRotate;position:relative}.h-ring{transform-style:preserve-3d;will-change:transform;border:1.5px solid #93c5fd59;border-radius:50%;position:absolute;inset:0;box-shadow:0 0 16px #3b82f638,inset 0 0 16px #3b82f626}.h-x{animation:9s linear infinite spinX;transform:rotateX(80deg)}.h-y{animation:12s linear infinite reverse spinY;transform:rotateY(80deg)}.h-z{animation:15s linear infinite spinZ;transform:rotate(45deg)rotateX(45deg)}.h-diag{border-color:#60a5fa73;animation:10s linear infinite reverse spinDiag;transform:rotate3d(1,1,0,60deg)}.h-core-sphere{background:radial-gradient(circle,#fffffff2 0%,#60a5fa80 45%,#1e3a8a26 80%,#0000 100%);border-radius:50%;width:60px;height:60px;margin:-30px 0 0 -30px;animation:3s ease-in-out infinite alternate pulseCore;position:absolute;top:50%;left:50%;box-shadow:0 0 25px #3b82f68c}@keyframes holoWorldRotate{0%{transform:rotateX(15deg)rotateY(0)rotate(0)}50%{transform:rotateX(-15deg)rotateY(180deg)rotate(10deg)}to{transform:rotateX(15deg)rotateY(360deg)rotate(0)}}@keyframes spinX{0%{transform:rotateX(80deg)rotate(0)}to{transform:rotateX(80deg)rotate(360deg)}}@keyframes spinY{0%{transform:rotateY(80deg)rotate(0)}to{transform:rotateY(80deg)rotate(360deg)}}@keyframes spinZ{0%{transform:rotate(45deg)rotateX(45deg)rotate(0)}to{transform:rotate(45deg)rotateX(45deg)rotate(360deg)}}@keyframes spinDiag{0%{transform:rotate3d(1,1,0,60deg)rotate(0)}to{transform:rotate3d(1,1,0,60deg)rotate(360deg)}}@keyframes pulseCore{0%{opacity:.7;transform:scale(.9)}to{opacity:1;transform:scale(1.15)}}.title-accent-blue{text-shadow:0 2px 10px #2563eb73;color:#fff!important;font-weight:800!important}.sub-accent-blue{letter-spacing:.025em;color:#93c5fd!important;font-weight:700!important}</style>
+
+</body>
+</html>
+
