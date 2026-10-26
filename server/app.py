@@ -196,22 +196,21 @@ async def track_activity(request: Request, call_next):
             pass
     return await call_next(request)
 
-@app.get("/")
-async def root(request: Request):
-    uname = request.cookies.get("username")
-    role = request.cookies.get("role")
-    settings = _load_site_settings()
-    public_settings = {key: value for key, value in settings.items() if key != "phone"}
-    return templates.TemplateResponse(
-        request=request,
-        name="landing.html",
-        context={
-            "username": uname,
-            "role": role,
-            "settings": public_settings,
-        },
-    )
+# --- GARUDA CORE VITE MOUNT ---
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
+if os.path.exists("frontend/dist/assets"):
+    app.mount("/assets", StaticFiles(directory="frontend/dist/assets"), name="assets")
+
+@app.get("/", include_in_schema=False)
+async def serve_garuda_core():
+    dist_index = "frontend/dist/index.html"
+    if os.path.exists(dist_index):
+        return FileResponse(dist_index)
+    return {"message": "GARUDA CORE API Running. Please build frontend."}
+# ------------------------------
 @app.get("/dashboard")
 async def user_dashboard(request: Request):
     uname = request.cookies.get("username")
