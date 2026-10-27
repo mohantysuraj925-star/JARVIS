@@ -1820,3 +1820,32 @@ async def get_real_admin_db_data():
         }
     except Exception:
         return {"telemetry": 0, "trials": 0, "devices": []}
+
+
+from fastapi.responses import StreamingResponse
+import os
+
+@app.get("/download/windows")
+@app.get("/downloads/GARUDA_Desktop_Setup.exe")
+@app.get("/download/GARUDA_Installer.exe")
+async def stream_windows_installer():
+    target = os.path.join(os.getcwd(), 'downloads', 'GARUDA_Installer.exe')
+    if not os.path.exists(target):
+        target = os.path.join(os.getcwd(), 'dist', 'GARUDA_Installer.exe')
+    
+    if not os.path.exists(target):
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse("https://github.com/mohantysuraj925-star/garuda-core/releases/download/v2.0.0/GARUDA_Installer.exe")
+
+    file_size = os.path.getsize(target)
+    
+    def iterfile():
+        with open(target, mode="rb") as file_like:
+            while chunk := file_like.read(1024 * 1024):  # 1MB chunks
+                yield chunk
+
+    headers = {
+        'Content-Disposition': 'attachment; filename="GARUDA_Installer.exe"',
+        'Content-Length': str(file_size)
+    }
+    return StreamingResponse(iterfile(), headers=headers, media_type='application/octet-stream')

@@ -172,7 +172,7 @@ export default function Dashboard({ user, onLogout }) {
           </div>
           
           <a
-            href="http://127.0.0.1:8000/download/windows"
+            href="/download/windows"
             className="mt-6 inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-cyan-950/50 transition-all active:scale-[0.98]"
           >
             <Terminal size={15} /> Download Windows Setup (.exe)
